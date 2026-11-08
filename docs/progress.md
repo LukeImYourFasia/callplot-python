@@ -175,3 +175,42 @@ $ python3 tools/run-tests.py golden
 
 Done: vml and vxml are byte-identical to the oracle on every fixture,
 including the fixtures whose oracle run crashed mid-buffer.
+
+## Chunk P6 - OmniGraffle renderer
+
+Read: DESIGN.md 3.4.5, 3.6 (shared player/message ids and stagger counters via
+RunContext), 3.8 #6 (caption[0] mutation survives into the XML epilogue
+comments) and #7 (repeatLabel debug lines land on stderr, not stdout); the
+JS port's src/render/graffle.js.
+
+Build: src/callplot/render/graffle.py (emit, the seven fixed plist text blocks
+copied verbatim, graffleOn, drawPlayerGraffle, drawMessageGraffle).  Graffle
+draws messages BEFORE players (Flow.java:551-559); it shares printComment
+with render/text.py for the -xml epilogue; ids come from ctx.playerId/ctx.
+messageId so they carry across files like the Java statics; the repeatLabel
+debug line goes to ctx.err.  Registered in index.py's dispatch table;
+test_golden.py's MODES_DONE gains graffle.
+
+First run: the oracle caught the first RTF header line missing its
+`<string>` prefix (`{\rtf1...` vs `<string>{\rtf1...`) in all 44 fixtures
+whose graffle output has an RTF block; fixed in the port, never the golden:
+
+```
+$ python3 tools/run-tests.py golden
+[golden] pass 327 / fail 44
+... zero_caption_graffle graffle: stdout bytes differ
+-{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf110
++<string>{\rtf1\mac\ansicpg10000\cocoartf824\cocoasubrtf110
+```
+
+After the fix:
+
+```
+$ python3 tools/run-tests.py golden
+[golden] pass 371 / fail 0
+```
+
+Done: all seven landed modes (text, xml, pic, svg, vml, vxml, graffle) are
+byte-identical to the oracle on all 53 fixtures: 371 = 53 x 7, 0 fail,
+including the fixtures whose oracle run crashed (throw required, partial
+output cut at the 8192-byte PrintWriter boundary).

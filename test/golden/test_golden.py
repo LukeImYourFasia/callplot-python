@@ -27,6 +27,7 @@ MODES_DONE = {
     "svg": MODES["SVG"],
     "vml": MODES["VML"],
     "vxml": MODES["VML"] | MODES["XML"],
+    "graffle": MODES["GRAFFLE"],
 }
 
 # Section 3.14: the packet traces through the awk converter, with and without
