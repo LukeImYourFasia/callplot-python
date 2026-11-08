@@ -1,0 +1,5 @@
+{
+  "cmd": "prep",
+  "args": ["-"],
+  "stdin": "trace_sip.trace"
+}

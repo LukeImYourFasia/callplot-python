@@ -1,0 +1,12 @@
+usage: plottable [-debug] [-style style] {input_file}
+
+-debug retains the intermediate files for debugging
+
+The annotations can be added by putting 
+one or more lines beginning with ! after the message
+
+examples:
+a->b/MESSAGE
+!This is a very interesting message
+!Since it's going from a to b
+

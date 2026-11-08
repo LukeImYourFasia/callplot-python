@@ -24,7 +24,11 @@ from .table import tableOn
 def pickLayout(model, opts):
     """Layout choice, section 3.12.6 order: API option, then input opt line,
     then topbottom; a bad value throws before any output."""
-    raw = opts["htmlLayout"] if "htmlLayout" in opts else model["options"]["htmlLayout"]
+    # a missing/None option does not force: the flag -html clears any earlier
+    # force (JS's undefined), so the file's opt/htmlLayout then decides
+    raw = opts.get("htmlLayout")
+    if raw is None:
+        raw = model["options"]["htmlLayout"]
     if raw is None:
         return "topbottom"
     if raw == "topbottom" or raw == "sidebyside":

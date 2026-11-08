@@ -1,0 +1,3 @@
+{
+  "args": ["-html=sidebyside", "test/cli/inputs/layout_topbottom"]
+}

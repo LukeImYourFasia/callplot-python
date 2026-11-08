@@ -371,3 +371,64 @@ ladder (t takes $0 BEFORE the gsub triple escapes it), the ALIAS/GUYS
 letter-minting, the SIP/HTTP first-field removal (replace(f[0] + " ", "")
 always matches at 0) and the %.6g time lines all reproduce mawk byte for
 byte, with and without --links.
+
+## Chunk P11 - the three commands (callplot, callplot-prep, plottable)
+
+Read: DESIGN.md 3.7 (Main.java arg loop, verbatim usage text, error model,
+exit codes), 3.14 (callplot-prep), 3.13.5 (plottable: -debug/-style
+positionals, _x_<pid>.xml, unknown style exits 1), 4.4 (the 15 CLI cases:
+8 W0-golden against test/golden/cli, 7 W17 condition cases); the JS port's
+bin/{callplot,callplot-prep,plottable}.js, test/cli/test_cli.js.
+
+Build: bin/callplot.py (the Main.java loop; the 8192-byte PrintWriter flush
+model kept on crashed runs; `callplot: <Name>: msg` + exit 1; EPIPE exits 0
+silently; graffle -- debug from the shared ctx.err flushed to stderr per
+file; USAGE transcribed programmatically from the JS port's array - cmp of
+both commands' no-arg stderr proved it byte-identical, 3866 bytes),
+bin/callplot-prep.py (--links, --debug-file; the awk "debug" file is NOT
+written - section 3.14.4), bin/plottable.py (-debug keeps _x_<pid>.xml,
+unknown style exits 1 per 3.13.5, usage to stdout per the pinned
+plottable_usage.expected).  Corpus: test/cli/*.json, test/cli/inputs/ and
+plottable_usage.expected copied from the JS repo (language-neutral pins).
+test/cli/test_cli.py: the [cli] harness mirroring the JS runner - golden
+cases compare test/golden/cli/<name> {out,exit} (stdout bytes + exit code;
+the .err files exist but 4.4 never compares stderr), condition cases reuse
+existing goldens or check codes/pipe/temp-folder effects; an unhandled case
+fails as a programmer error.
+
+First run: 15/16 green; html_bad_layout_file (-html with a bad
+opt/htmlLayout in the FILE) exited 0 because pickLayout read "htmlLayout"
+in opts as a force, while JS's `opts.htmlLayout !== undefined` treats the
+CLI's cleared value (undefined) as NOT forcing: the port uses None the same
+way.  Fixed in the port (page.py picks opts.get(...) and falls through to
+the file's option when it is None), never the pinned case:
+
+```
+$ python3 tools/run-tests.py cli
+[cli] pass 15 / fail 1        # before
+[cli] pass 16 / fail 0        # after the pickLayout fix
+```
+
+Tests:
+
+```
+$ python3 tools/run-tests.py cli
+[cli] pass 16 / fail 0
+$ python3 tools/run-tests.py
+[cli] pass 16 / fail 0
+[golden] pass 697 / fail 0
+[snapshot] pass 212 / fail 0
+[unit] pass 38 / fail 0
+test: pass 963 / fail 0
+```
+
+16 = 8 oracle-golden cases + 8 condition cases (the DESIGN table's 15 rows
+plus epipe's own runner case counted once: table_bad_style/html_bad_layout/
+flag_wins/table_default/plottable usage+debug/prep_stdin/epipe).
+
+Done: the commands match the oracle CLI goldens byte for byte (stdout and
+exit code, crashed runs' stdout truncated at the 8192-byte flush boundary)
+and the condition cases behave: unknown style exits 1 with empty stdout,
+-html=sidebyside wins over the file's topbottom, plottable -debug retains
+_x_<pid>.xml equal to the XML golden, callplot-prep writes no "debug" file,
+a closed pipe exits 0 with empty stderr.
