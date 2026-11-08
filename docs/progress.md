@@ -334,3 +334,40 @@ it, exactly like the JS one.
 Done: every legacy table style reproduces the Xalan oracles byte for byte,
 including the styles' crash fixtures (bad bool/int inputs and the bare-&
 annotation fixtures that make Xalan exit 255).
+
+## Chunk P10 - packet-trace converter (prep, the awk oracle)
+
+Read: DESIGN.md 3.14 (rules in file order), 3.14.1 (pinned awk semantics:
+every rule in order, next stops the line, changing $0 re-splits, OFMT %.6g
+via awkNum, sub first-match/gsub all), 3.14.2 rule table, 3.14.3 quirks
+(first "from last" is the whole time of day; >52 addresses get an empty
+letter; INFO matches INFORMATION; dash rules fall through to the ! line),
+3.14.4 (debug lines are NOT written to a file named "debug" - the port
+returns them; Appendix B); the JS port's src/prep/prep.js.
+
+Build: src/callplot/prep.py (awkNum on top of jcompat's jsNum - %.6g then
+shortest round-trip print, awkNumPrefix/tollTime field scanners, splitFields
+with FS " " and fields padded to four, prep returning {"out", "debug"}).
+__init__.py re-exports prep (section 2.3 API); test_golden.py's PREP_DONE
+enables prep/prep-links over the four .trace fixtures.
+
+Tests:
+
+```
+$ python3 tools/run-tests.py golden
+[golden] pass 697 / fail 0
+$ python3 tools/run-tests.py
+[golden] pass 697 / fail 0
+[snapshot] pass 212 / fail 0
+[unit] pass 38 / fail 0
+test: pass 947 / fail 0
+```
+
+697 = 689 + 8 prep goldens (4 traces x {prep, prep-links}, mawk 1.3.4 oracles
+from gen-golden-extra.sh, recorded in reference/AWK_VERSION).
+
+Done: first run green, no slip: the whole awk rule ladder, the t0/lt/t
+ladder (t takes $0 BEFORE the gsub triple escapes it), the ALIAS/GUYS
+letter-minting, the SIP/HTTP first-field removal (replace(f[0] + " ", "")
+always matches at 0) and the %.6g time lines all reproduce mawk byte for
+byte, with and without --links.

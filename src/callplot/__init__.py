@@ -20,5 +20,7 @@ exists.
 from .index import parse, plotFlow, render, pictureFlow
 from .constants import MODES
 from .context import RunContext
+from .prep import prep
 
-__all__ = ["parse", "plotFlow", "render", "pictureFlow", "MODES", "RunContext"]
+__all__ = ["parse", "plotFlow", "render", "pictureFlow", "MODES", "RunContext",
+           "prep"]

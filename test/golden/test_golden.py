@@ -41,8 +41,8 @@ MODES_DONE = {
 }
 
 # Section 3.14: the packet traces through the awk converter, with and without
-# --links.  Lands with the prep chunk.
-PREP_DONE = {}
+# --links (mawk 1.3.4 goldens from gen-golden-extra.sh).
+PREP_DONE = {"prep": False, "prep-links": True}
 
 FIXTURES = "test/fixtures"
 GOLDEN = "test/golden"
