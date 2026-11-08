@@ -28,8 +28,12 @@ shots:
 refs:
 	$(PY) tools/gen-reference.py
 
+# DESIGN.md 4.5 runs at scale: the gate passes the seed/count defaults (fuzz.py
+# exits 2 without them).
+FUZZ_ARGS ?= --seed 42 --count 10000
+
 fuzz:
-	$(PY) tools/fuzz.py
+	$(PY) tools/fuzz.py $(FUZZ_ARGS)
 
 oracle-check:
 	$(PY) tools/oracle-check.py

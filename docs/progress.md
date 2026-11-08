@@ -432,3 +432,81 @@ and the condition cases behave: unknown style exits 1 with empty stdout,
 -html=sidebyside wins over the file's topbottom, plottable -debug retains
 _x_<pid>.xml equal to the XML golden, callplot-prep writes no "debug" file,
 a closed pipe exits 0 with empty stderr.
+
+## Chunk P12 - fuzz tooling (frame client, pool, oracle trust check, fuzz runner)
+
+Read: DESIGN.md 4.5 (grammar rules 1-6, 7 core modes, rule 5: java
+non-zero exits compare the exit code only, first 50 diffs -> fixtures),
+4.5.1 (CASE/RESULT byte frames, JAVA_TOOL_OPTIONS on every java leg,
+timeouts belong to the runner: no RESULT in 5 s -> SIGKILL, record 124,
+new harness; trust check: 300 seed-99 x 7 pool vs one-JVM-per-run, equal
+exit codes/stdout), 4.5.2 (the probe table and the 6 classes Edgar provides;
+FuzzOracle.java + probes were copied unchanged, cmp-identical to the JS
+repo's oracle files, compiled per the README into reference/build-{tools,
+probes}, both gitignored), 4.5.3 (traps: stderr is log-only - "Picked up
+JAVA_TOOL_OPTIONS" must never be read as data; reference/build must NOT be
+on -cp; per-case loader); W19a-W19e acceptance (1,000 FileProbe frames:
+sizes 0, 1, 8,191, 8,192, 8,193, 100,000, non-ASCII, holding "RESULT");
+tools/oracle/{client,pool,check-oracle}.js and tools/fuzz.js as the port.
+
+Build: tools/oracle/cases.py (the mulberry32 case generator; verified
+byte-identical to the JS tooling: 12-number RNG stream and the sha256 of
+every case of seed 99 x 300 match /tmp/opencode/{js,py}-cases.txt exactly),
+tools/oracle/client.py (OracleClient: one harness JVM via Popen, byte-frame
+buffer, deadline via select+os.read, stderr to a temp file, never read as
+protocol data), tools/oracle/pool.py (runHarnessTasks: 8 client threads off
+a shared queue; 5 s timeout -> SIGKILL + exit 124 + fresh harness process;
+a harness that died mid-run records 124 with the reason), tools/oracle-
+check.py (the 10 probe checks of the 4.5.2 table - ExitProbe 7/`hi\n`,
+ReturnProbe 0/`ok\n`, ThrowProbe 1/`a`, StaticProbe x3 all `1\n` in one
+process, FileProbe round-trip of `é/` + newline + 10,000 x, LoopProbe 124
+then the next case works - plus the W19a 1,000-file probe frame sizes check,
+then the 300 x 7 trust check; the one-JVM leg is the JS tools/jref.sh
+invocation inlined, no jref script in this repo), tools/fuzz.py (the 7 core
+modes, fresh Out/RunContext/opts per run on the port side, rule 5, first
+50 diffs as test/fixtures/fuzz/seedS_caseK).  Makefile fuzz: FUZZ_ARGS
+defaults --seed 42 --count 10000 (fuzz.py exits 2 without them, the JS
+usage error mirrored).
+
+First runs: two client slips, both fixed in the port, never in the oracle
+files: (a) select.select arity - 3.14's select.select is (rlist, wlist,
+xlist, timeout), the 3-argument call raised TypeError "arguments 1-3 must
+be sequences"; (b) bytes buffer - `del self.buf[:frameEnd]` raised
+TypeError on bytes (no item deletion); re-sliced instead.  After the fixes
+probes 10/10 green, seed-5 x 3 trust check clean, seed-42 x 30 fuzz clean.
+
+Tests:
+
+```
+$ make lint
+$ make oracle-check
+probes: pass 10 / fail 0
+trust check: seed 99, cases 300, modes 7
+runs: 2100
+harness path: 2.4 s
+jref path: 19.3 s (9 ms/run)
+diffs: 0
+TRUST CHECK PASS
+$ make fuzz
+cases: 10000, runs: 70000, diffs: 0, fixtures saved: 0
+time: 55.8 s
+$ python3 tools/run-tests.py
+[cli] pass 16 / fail 0
+[golden] pass 697 / fail 0
+[snapshot] pass 212 / fail 0
+[unit] pass 38 / fail 0
+test: pass 963 / fail 0
+```
+
+Measured times for 4.5.1 (recorded as the design asks): the harness path
+did 2,100 runs in 2.4 s against the one-JVM-per-run path's 19.3 s (9 ms/
+run, not the ~300 ms/start-up the design estimate assumed: this OpenJDK
+1.8 server VM pays ~9 ms warm per java leg); the pool is still ~8x faster
+per run, and the full fuzz of 70,000 runs took 55.8 s wall, minutes not
+hours as 4.5.1 expects.
+
+Done: the harness was checked before use (probes then the 2,100-run trust
+check, both green); 10,000 seed-42 cases x 7 modes match one-JVM-per-run
+java and the Python port with 0 differences, so no fuzz fixtures were
+needed and the golden corpus stays as it is; cases.py emits exactly the
+JS generator's stream, so both ports fuzz the same cases.
