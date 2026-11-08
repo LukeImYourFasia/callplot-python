@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Call flow</title>
+<style>
+.cpf{--cpf-page:#ffffff;--cpf-ink:#17232e;--cpf-mut:#5d6d7a;
+--cpf-line:#b7c2cc;--cpf-head:#e8eef4;--cpf-accent:#2f6b8f;
+--cpf-hl:rgba(255,212,89,.28);--cpf-note-fill:#fff8dd;--cpf-note-line:#c8b45f;
+--cpf-media:#008080;--cpf-pill:#eef3f8;
+container-type:inline-size;container-name:cpf;
+font-family:ui-sans-serif,system-ui,sans-serif;font-size:14px;
+color:var(--cpf-ink);background:var(--cpf-page)}
+@media (prefers-color-scheme:dark){.cpf{--cpf-page:#101821;--cpf-ink:#dbe4ec;
+--cpf-mut:#93a4b1;--cpf-line:#3a4652;--cpf-head:#1c2632;--cpf-accent:#4182ad;
+--cpf-hl:rgba(255,212,89,.16);--cpf-note-fill:#2c2b1c;--cpf-note-line:#c8b45f;
+--cpf-media:#3fc0b6;--cpf-pill:#243040}}
+.cpf-head h1{font-size:20px;margin:0}
+.cpf-head p{margin:0;color:var(--cpf-mut)}
+.cpf-radio{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.cpf-switch{display:inline-block;margin-top:8px}
+.cpf-switch label{cursor:pointer;margin-right:14px}
+.cpf:has(.cpf-radio[id$="lay-tb"]:focus-visible) .cpf-switch label[for$="lay-tb"]{outline:2px solid var(--cpf-accent);outline-offset:2px}
+.cpf:has(.cpf-radio[id$="lay-sbs"]:focus-visible) .cpf-switch label[for$="lay-sbs"]{outline:2px solid var(--cpf-accent);outline-offset:2px}
+.cpf-main{display:grid;grid-template-columns:1fr}
+.cpf-scroll{overflow-x:auto}
+.cpf-tscroll{overflow:auto}
+@container cpf (min-width:1100px){
+.cpf:has(.cpf-radio[id$="lay-sbs"]:checked) .cpf-main{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);height:var(--cpf-pane-h,100vh)}
+.cpf:has(.cpf-radio[id$="lay-sbs"]:checked) .cpf-flow,.cpf:has(.cpf-radio[id$="lay-sbs"]:checked) .cpf-detail{height:100%;overflow:hidden;display:flex;flex-direction:column}
+.cpf:has(.cpf-radio[id$="lay-sbs"]:checked) .cpf-scroll,.cpf:has(.cpf-radio[id$="lay-sbs"]:checked) .cpf-tscroll{flex:1;overflow:auto}
+}
+.cpf-svg{display:block}
+.lf{stroke:var(--cpf-line)}
+.pf-box{fill:var(--cpf-head);stroke:var(--cpf-line)}
+.lb,.cap,.bn{font-size:13px}
+.lb{font-family:ui-sans-serif,system-ui,sans-serif}
+.cap{font-family:ui-monospace,Menlo,Consolas,monospace}
+.ln{stroke:var(--cpf-ink);stroke-width:1.5}
+.cpf .ev-media .ln{stroke:var(--cpf-media)}
+.ah{stroke:none}
+.nt{fill:var(--cpf-note-fill);stroke:var(--cpf-note-line)}
+.bdg{fill:var(--cpf-accent)}
+.bn{font-family:ui-monospace,Menlo,Consolas,monospace}
+.badge text-decoration:none
+.hl{opacity:0}
+.cpf g:target>.hl{opacity:1;fill:var(--cpf-hl)}
+.ev{scroll-margin:40px 120px}
+@media (prefers-reduced-motion:reduce){.hl{transition:none}}
+@media (prefers-reduced-motion:no-reduce){.hl{transition:opacity .18s ease}}
+table{border-collapse:collapse;min-width:760px}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--cpf-line)}
+thead th{position:sticky;top:0;z-index:2;background:var(--cpf-head);color:var(--cpf-ink)}
+table th[scope="row"]{position:sticky;left:0;z-index:1;background:var(--cpf-page)}
+.back{color:var(--cpf-mut)}
+tr:target th,tr:target td{background:var(--cpf-hl)}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;background:var(--cpf-pill)}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
+td:nth-child(6){text-align:right;font-variant-numeric:tabular-nums}
+@media print{.cpf-radio{display:none}.cpf-switch{display:none}.cpf-main{grid-template-columns:1fr}.cpf-flow,.cpf-detail{height:auto}}
+
+</style>
+</head>
+<body>
+<div class="cpf">
+<input type="radio" name="layout" id="lay-tb" class="cpf-radio" checked>
+<input type="radio" name="layout" id="lay-sbs" class="cpf-radio">
+<header class="cpf-head">
+<h1>Call flow</h1>
+<p>7 participants · 61 events</p>
+<div class="cpf-switch" role="group" aria-label="Layout">
+<label for="lay-tb">Top and bottom</label>
+<label for="lay-sbs">Side by side</label>
+</div>
+</header>
+<div class="cpf-main">
+<section class="cpf-flow" aria-label="Diagram"><div class="cpf-scroll">
+<svg class="cpf-svg" xmlns="http://www.w3.org/2000/svg" width="1106" height="2894" viewBox="0 0 1106 2894" role="img" aria-label="Call flow diagram">
+<line class="lf" x1="103" x2="103" y1="46" y2="2882" stroke="var(--cpf-line, #b7c2cc)" stroke-dasharray="1 3"/>
+<line class="lf" x1="253" x2="253" y1="46" y2="2882" stroke="var(--cpf-line, #b7c2cc)" stroke-dasharray="1 3"/>
+<line class="lf" x1="403" x2="403" y1="46" y2="2882" stroke="var(--cpf-line, #b7c2cc)" stroke-dasharray="1 3"/>
+<line class="lf" x1="553" x2="553" y1="46" y2="2882" stroke="var(--cpf-line, #b7c2cc)" stroke-dasharray="1 3"/>
+<line class="lf" x1="703" x2="703" y1="46" y2="2882" stroke="var(--cpf-line, #b7c2cc)" stroke-dasharray="1 3"/>
+<line class="lf" x1="853" x2="853" y1="46" y2="2882" stroke="var(--cpf-line, #b7c2cc)" stroke-dasharray="1 3"/>
+<line class="lf" x1="1003" x2="1003" y1="46" y2="2882" stroke="var(--cpf-line, #b7c2cc)" stroke-dasharray="1 3"/>
+<g class="pf">
+<rect class="pf-box" x="72.2" y="16" width="61.599999999999994" height="30" rx="4" fill="var(--cpf-head, #e8eef4)" stroke="var(--cpf-line, #b7c2cc)"/>
+<text class="lb" x="103" y="27" fill="var(--cpf-ink, #17232e)" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" text-anchor="middle">Caller</text>
+</g>
+<g class="pf">
+<rect class="pf-box" x="237.4" y="16" width="31.2" height="30" rx="4" fill="var(--cpf-head, #e8eef4)" stroke="var(--cpf-line, #b7c2cc)"/>
+<text class="lb" x="253" y="27" fill="var(--cpf-ink, #17232e)" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" text-anchor="middle">GW</text>
+</g>
+<g class="pf">
+<rect class="pf-box" x="387.4" y="16" width="31.2" height="30" rx="4" fill="var(--cpf-head, #e8eef4)" stroke="var(--cpf-line, #b7c2cc)"/>
+<text class="lb" x="403" y="27" fill="var(--cpf-ink, #17232e)" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" text-anchor="middle">AS</text>
+</g>
+<g class="pf">
+<rect class="pf-box" x="537.4" y="16" width="31.2" height="30" rx="4" fill="var(--cpf-head, #e8eef4)" stroke="var(--cpf-line, #b7c2cc)"/>
+<text class="lb" x="553" y="27" fill="var(--cpf-ink, #17232e)" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" text-anchor="middle">MS</text>
+</g>
+<g class="pf">
+<rect class="pf-box" x="683.6" y="16" width="38.8" height="30" rx="4" fill="var(--cpf-head, #e8eef4)" stroke="var(--cpf-line, #b7c2cc)"/>
+<text class="lb" x="703" y="27" fill="var(--cpf-ink, #17232e)" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" text-anchor="middle">Web</text>
+</g>
+<g class="pf">
+<rect class="pf-box" x="822.2" y="16" width="61.599999999999994" height="30" rx="4" fill="var(--cpf-head, #e8eef4)" stroke="var(--cpf-line, #b7c2cc)"/>
+<text class="lb" x="853" y="27" fill="var(--cpf-ink, #17232e)" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" text-anchor="middle">RADIUS</text>
+</g>
+<g class="pf">
+<rect class="pf-box" x="972.2" y="16" width="61.599999999999994" height="30" rx="4" fill="var(--cpf-head, #e8eef4)" stroke="var(--cpf-line, #b7c2cc)"/>
+<text class="lb" x="1003" y="27" fill="var(--cpf-ink, #17232e)" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" text-anchor="middle">Callee</text>
+</g>
+<g class="ev ev-message" id="flow-e1">
+<rect class="hl" x="0" y="68" width="100%" height="46" fill="none"/>
+<line class="ln" x1="103" y1="107" x2="244" y2="107" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="253,107 244,103 244,111" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="178" y="88" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">Call #</text>
+<a class="badge" href="#detail-e1">
+<circle class="bdg" cx="178" cy="107" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="178" y="111" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">1</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e2">
+<rect class="hl" x="0" y="114" width="100%" height="46" fill="none"/>
+<line class="ln" x1="253" y1="153" x2="394" y2="153" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="403,153 394,149 394,157" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="134" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">INVITE SDP A</text>
+<a class="badge" href="#detail-e2">
+<circle class="bdg" cx="328" cy="153" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="157" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">2</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e3">
+<rect class="hl" x="0" y="160" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="199" x2="262" y2="199" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="253,199 262,195 262,203" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="180" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">183 Trying</text>
+<a class="badge" href="#detail-e3">
+<circle class="bdg" cx="328" cy="199" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="203" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">3</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e4">
+<rect class="hl" x="0" y="206" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="245" x2="544" y2="245" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="553,245 544,241 544,249" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="478" y="226" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">INVITE SDP A</text>
+<a class="badge" href="#detail-e4">
+<circle class="bdg" cx="478" cy="245" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="478" y="249" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">4</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e5">
+<rect class="hl" x="0" y="252" width="100%" height="46" fill="none"/>
+<line class="ln" x1="553" y1="291" x2="694" y2="291" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="703,291 694,287 694,295" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="628" y="272" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">HTTP GET</text>
+<a class="badge" href="#detail-e5">
+<circle class="bdg" cx="628" cy="291" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="628" y="295" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">5</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e6">
+<rect class="hl" x="0" y="298" width="100%" height="46" fill="none"/>
+<line class="ln" x1="703" y1="337" x2="562" y2="337" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="553,337 562,333 562,341" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="628" y="318" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK (VXML)</text>
+<a class="badge" href="#detail-e6">
+<circle class="bdg" cx="628" cy="337" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="628" y="341" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">6</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e7">
+<rect class="hl" x="0" y="344" width="100%" height="46" fill="none"/>
+<line class="ln" x1="553" y1="383" x2="412" y2="383" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="403,383 412,379 412,387" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="478" y="364" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK SDP B</text>
+<a class="badge" href="#detail-e7">
+<circle class="bdg" cx="478" cy="383" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="478" y="387" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">7</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e8">
+<rect class="hl" x="0" y="390" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="429" x2="262" y2="429" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="253,429 262,425 262,433" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="410" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK SDP B</text>
+<a class="badge" href="#detail-e8">
+<circle class="bdg" cx="328" cy="429" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="433" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">8</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e9">
+<rect class="hl" x="0" y="436" width="100%" height="46" fill="none"/>
+<line class="ln" x1="253" y1="475" x2="394" y2="475" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="403,475 394,471 394,479" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="456" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">ACK</text>
+<a class="badge" href="#detail-e9">
+<circle class="bdg" cx="328" cy="475" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="479" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">9</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e10">
+<rect class="hl" x="0" y="482" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="521" x2="544" y2="521" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="553,521 544,517 544,525" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="478" y="502" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">ACK</text>
+<a class="badge" href="#detail-e10">
+<circle class="bdg" cx="478" cy="521" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="478" y="525" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">10</text>
+</a>
+</g>
+<g class="ev ev-media" id="flow-e11">
+<rect class="hl" x="0" y="528" width="100%" height="46" fill="none"/>
+<line class="ln" x1="253" y1="567" x2="544" y2="567" stroke="#008080" stroke-dasharray="5 4"/>
+<text class="cap" x="403" y="548" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">RTP</text>
+<a class="badge" href="#detail-e11">
+<circle class="bdg" cx="403" cy="567" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="403" y="571" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">11</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e12">
+<rect class="hl" x="0" y="574" width="100%" height="46" fill="none"/>
+<line class="ln" x1="553" y1="613" x2="694" y2="613" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="703,613 694,609 694,617" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="628" y="594" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">HTTP POST</text>
+<a class="badge" href="#detail-e12">
+<circle class="bdg" cx="628" cy="613" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="628" y="617" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">12</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e13">
+<rect class="hl" x="0" y="620" width="100%" height="46" fill="none"/>
+<line class="ln" x1="703" y1="659" x2="562" y2="659" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="553,659 562,655 562,663" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="628" y="640" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e13">
+<circle class="bdg" cx="628" cy="659" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="628" y="663" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">13</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e14">
+<rect class="hl" x="0" y="666" width="100%" height="46" fill="none"/>
+<line class="ln" x1="703" y1="705" x2="844" y2="705" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="853,705 844,701 844,709" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="778" y="686" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">Authorize</text>
+<a class="badge" href="#detail-e14">
+<circle class="bdg" cx="778" cy="705" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="778" y="709" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">14</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e15">
+<rect class="hl" x="0" y="712" width="100%" height="46" fill="none"/>
+<line class="ln" x1="853" y1="751" x2="712" y2="751" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="703,751 712,747 712,755" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="778" y="732" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">Balance</text>
+<a class="badge" href="#detail-e15">
+<circle class="bdg" cx="778" cy="751" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="778" y="755" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">15</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e16">
+<rect class="hl" x="0" y="758" width="100%" height="46" fill="none"/>
+<line class="ln" x1="553" y1="797" x2="694" y2="797" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="703,797 694,793 694,801" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="628" y="778" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">HTTP POST</text>
+<a class="badge" href="#detail-e16">
+<circle class="bdg" cx="628" cy="797" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="628" y="801" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">16</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e17">
+<rect class="hl" x="0" y="804" width="100%" height="46" fill="none"/>
+<line class="ln" x1="703" y1="843" x2="562" y2="843" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="553,843 562,839 562,847" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="628" y="824" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e17">
+<circle class="bdg" cx="628" cy="843" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="628" y="847" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">17</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e18">
+<rect class="hl" x="0" y="850" width="100%" height="46" fill="none"/>
+<line class="ln" x1="703" y1="889" x2="844" y2="889" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="853,889 844,885 844,893" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="778" y="870" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">Callee Number</text>
+<a class="badge" href="#detail-e18">
+<circle class="bdg" cx="778" cy="889" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="778" y="893" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">18</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e19">
+<rect class="hl" x="0" y="896" width="100%" height="46" fill="none"/>
+<line class="ln" x1="853" y1="935" x2="712" y2="935" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="703,935 712,931 712,939" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="778" y="916" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">Time Remaining</text>
+<a class="badge" href="#detail-e19">
+<circle class="bdg" cx="778" cy="935" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="778" y="939" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">19</text>
+</a>
+</g>
+<g class="ev ev-media" id="flow-e20">
+<rect class="hl" x="0" y="942" width="100%" height="46" fill="none"/>
+<line class="ln" x1="253" y1="981" x2="544" y2="981" stroke="#008080" stroke-dasharray="5 4"/>
+<text class="cap" x="403" y="962" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">Music</text>
+<a class="badge" href="#detail-e20">
+<circle class="bdg" cx="403" cy="981" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="403" y="985" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">20</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e21">
+<rect class="hl" x="0" y="988" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="1027" x2="994" y2="1027" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="1003,1027 994,1023 994,1031" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="703" y="1008" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">INVITE</text>
+<a class="badge" href="#detail-e21">
+<circle class="bdg" cx="703" cy="1027" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="703" y="1031" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">21</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e22">
+<rect class="hl" x="0" y="1034" width="100%" height="46" fill="none"/>
+<line class="ln" x1="1003" y1="1073" x2="412" y2="1073" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="403,1073 412,1069 412,1077" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="703" y="1054" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e22">
+<circle class="bdg" cx="703" cy="1073" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="703" y="1077" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">22</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e23">
+<rect class="hl" x="0" y="1080" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="1119" x2="262" y2="1119" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="253,1119 262,1115 262,1123" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="1100" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">INVITE</text>
+<a class="badge" href="#detail-e23">
+<circle class="bdg" cx="328" cy="1119" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="1123" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">23</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e24">
+<rect class="hl" x="0" y="1126" width="100%" height="46" fill="none"/>
+<line class="ln" x1="253" y1="1165" x2="394" y2="1165" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="403,1165 394,1161 394,1169" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="1146" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e24">
+<circle class="bdg" cx="328" cy="1165" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="1169" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">24</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e25">
+<rect class="hl" x="0" y="1172" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="1211" x2="544" y2="1211" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="553,1211 544,1207 544,1215" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="478" y="1192" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">BYE</text>
+<a class="badge" href="#detail-e25">
+<circle class="bdg" cx="478" cy="1211" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="478" y="1215" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">25</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e26">
+<rect class="hl" x="0" y="1218" width="100%" height="46" fill="none"/>
+<line class="ln" x1="553" y1="1257" x2="412" y2="1257" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="403,1257 412,1253 412,1261" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="478" y="1238" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e26">
+<circle class="bdg" cx="478" cy="1257" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="478" y="1261" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">26</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e27">
+<rect class="hl" x="0" y="1264" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="1303" x2="262" y2="1303" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="253,1303 262,1299 262,1307" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="1284" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">ACK</text>
+<a class="badge" href="#detail-e27">
+<circle class="bdg" cx="328" cy="1303" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="1307" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">27</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e28">
+<rect class="hl" x="0" y="1310" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="1349" x2="994" y2="1349" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="1003,1349 994,1345 994,1353" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="703" y="1330" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">ACK</text>
+<a class="badge" href="#detail-e28">
+<circle class="bdg" cx="703" cy="1349" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="703" y="1353" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">28</text>
+</a>
+</g>
+<g class="ev ev-media" id="flow-e29">
+<rect class="hl" x="0" y="1356" width="100%" height="46" fill="none"/>
+<line class="ln" x1="253" y1="1395" x2="994" y2="1395" stroke="#008080" stroke-dasharray="5 4"/>
+<text class="cap" x="628" y="1376" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">PHONE CALL</text>
+<a class="badge" href="#detail-e29">
+<circle class="bdg" cx="628" cy="1395" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="628" y="1399" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">29</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e30">
+<rect class="hl" x="0" y="1402" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="1441" x2="544" y2="1441" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="553,1441 544,1437 544,1445" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="478" y="1422" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">INVITE</text>
+<a class="badge" href="#detail-e30">
+<circle class="bdg" cx="478" cy="1441" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="478" y="1445" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">30</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e31">
+<rect class="hl" x="0" y="1448" width="100%" height="46" fill="none"/>
+<line class="ln" x1="553" y1="1487" x2="694" y2="1487" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="703,1487 694,1483 694,1491" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="628" y="1468" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">HTTP GET</text>
+<a class="badge" href="#detail-e31">
+<circle class="bdg" cx="628" cy="1487" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="628" y="1491" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">31</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e32">
+<rect class="hl" x="0" y="1494" width="100%" height="46" fill="none"/>
+<line class="ln" x1="703" y1="1533" x2="562" y2="1533" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="553,1533 562,1529 562,1537" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="628" y="1514" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK (VXML)</text>
+<a class="badge" href="#detail-e32">
+<circle class="bdg" cx="628" cy="1533" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="628" y="1537" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">32</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e33">
+<rect class="hl" x="0" y="1540" width="100%" height="46" fill="none"/>
+<line class="ln" x1="553" y1="1579" x2="412" y2="1579" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="403,1579 412,1575 412,1583" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="478" y="1560" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e33">
+<circle class="bdg" cx="478" cy="1579" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="478" y="1583" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">33</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e34">
+<rect class="hl" x="0" y="1586" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="1625" x2="994" y2="1625" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="1003,1625 994,1621 994,1629" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="703" y="1606" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">INVITE (hold)</text>
+<a class="badge" href="#detail-e34">
+<circle class="bdg" cx="703" cy="1625" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="703" y="1629" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">34</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e35">
+<rect class="hl" x="0" y="1632" width="100%" height="46" fill="none"/>
+<line class="ln" x1="1003" y1="1671" x2="412" y2="1671" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="403,1671 412,1667 412,1675" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="703" y="1652" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e35">
+<circle class="bdg" cx="703" cy="1671" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="703" y="1675" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">35</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e36">
+<rect class="hl" x="0" y="1678" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="1717" x2="262" y2="1717" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="253,1717 262,1713 262,1721" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="1698" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">INVITE</text>
+<a class="badge" href="#detail-e36">
+<circle class="bdg" cx="328" cy="1717" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="1721" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">36</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e37">
+<rect class="hl" x="0" y="1724" width="100%" height="46" fill="none"/>
+<line class="ln" x1="253" y1="1763" x2="394" y2="1763" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="403,1763 394,1759 394,1767" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="1744" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e37">
+<circle class="bdg" cx="328" cy="1763" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="1767" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">37</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e38">
+<rect class="hl" x="0" y="1770" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="1809" x2="544" y2="1809" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="553,1809 544,1805 544,1813" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="478" y="1790" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">ACK</text>
+<a class="badge" href="#detail-e38">
+<circle class="bdg" cx="478" cy="1809" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="478" y="1813" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">38</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e39">
+<rect class="hl" x="0" y="1816" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="1855" x2="262" y2="1855" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="253,1855 262,1851 262,1859" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="1836" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">ACK</text>
+<a class="badge" href="#detail-e39">
+<circle class="bdg" cx="328" cy="1855" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="1859" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">39</text>
+</a>
+</g>
+<g class="ev ev-media" id="flow-e40">
+<rect class="hl" x="0" y="1862" width="100%" height="46" fill="none"/>
+<line class="ln" x1="553" y1="1901" x2="262" y2="1901" stroke="#008080" stroke-dasharray="5 4"/>
+<text class="cap" x="403" y="1882" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">Time Warning</text>
+<a class="badge" href="#detail-e40">
+<circle class="bdg" cx="403" cy="1901" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="403" y="1905" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">40</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e41">
+<rect class="hl" x="0" y="1908" width="100%" height="46" fill="none"/>
+<line class="ln" x1="553" y1="1947" x2="412" y2="1947" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="403,1947 412,1943 412,1951" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="478" y="1928" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">BYE</text>
+<a class="badge" href="#detail-e41">
+<circle class="bdg" cx="478" cy="1947" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="478" y="1951" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">41</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e42">
+<rect class="hl" x="0" y="1954" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="1993" x2="544" y2="1993" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="553,1993 544,1989 544,1997" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="478" y="1974" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e42">
+<circle class="bdg" cx="478" cy="1993" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="478" y="1997" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">42</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e43">
+<rect class="hl" x="0" y="2000" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="2039" x2="994" y2="2039" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="1003,2039 994,2035 994,2043" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="703" y="2020" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">INVITE</text>
+<a class="badge" href="#detail-e43">
+<circle class="bdg" cx="703" cy="2039" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="703" y="2043" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">43</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e44">
+<rect class="hl" x="0" y="2046" width="100%" height="46" fill="none"/>
+<line class="ln" x1="1003" y1="2085" x2="412" y2="2085" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="403,2085 412,2081 412,2089" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="703" y="2066" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e44">
+<circle class="bdg" cx="703" cy="2085" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="703" y="2089" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">44</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e45">
+<rect class="hl" x="0" y="2092" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="2131" x2="262" y2="2131" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="253,2131 262,2127 262,2135" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="2112" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">INVITE</text>
+<a class="badge" href="#detail-e45">
+<circle class="bdg" cx="328" cy="2131" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="2135" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">45</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e46">
+<rect class="hl" x="0" y="2138" width="100%" height="46" fill="none"/>
+<line class="ln" x1="253" y1="2177" x2="394" y2="2177" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="403,2177 394,2173 394,2181" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="2158" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e46">
+<circle class="bdg" cx="328" cy="2177" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="2181" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">46</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e47">
+<rect class="hl" x="0" y="2184" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="2223" x2="994" y2="2223" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="1003,2223 994,2219 994,2227" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="703" y="2204" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">ACK</text>
+<a class="badge" href="#detail-e47">
+<circle class="bdg" cx="703" cy="2223" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="703" y="2227" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">47</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e48">
+<rect class="hl" x="0" y="2230" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="2269" x2="262" y2="2269" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="253,2269 262,2265 262,2273" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="2250" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">ACK</text>
+<a class="badge" href="#detail-e48">
+<circle class="bdg" cx="328" cy="2269" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="2273" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">48</text>
+</a>
+</g>
+<g class="ev ev-media" id="flow-e49">
+<rect class="hl" x="0" y="2276" width="100%" height="46" fill="none"/>
+<line class="ln" x1="253" y1="2315" x2="994" y2="2315" stroke="#008080" stroke-dasharray="5 4"/>
+<text class="cap" x="628" y="2296" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">PHONE CALL</text>
+<a class="badge" href="#detail-e49">
+<circle class="bdg" cx="628" cy="2315" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="628" y="2319" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">49</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e50">
+<rect class="hl" x="0" y="2322" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="2361" x2="544" y2="2361" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="553,2361 544,2357 544,2365" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="478" y="2342" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">INVITE</text>
+<a class="badge" href="#detail-e50">
+<circle class="bdg" cx="478" cy="2361" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="478" y="2365" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">50</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e51">
+<rect class="hl" x="0" y="2368" width="100%" height="46" fill="none"/>
+<line class="ln" x1="553" y1="2407" x2="694" y2="2407" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="703,2407 694,2403 694,2411" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="628" y="2388" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">HTTP GET</text>
+<a class="badge" href="#detail-e51">
+<circle class="bdg" cx="628" cy="2407" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="628" y="2411" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">51</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e52">
+<rect class="hl" x="0" y="2414" width="100%" height="46" fill="none"/>
+<line class="ln" x1="703" y1="2453" x2="562" y2="2453" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="553,2453 562,2449 562,2457" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="628" y="2434" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK (VXML)</text>
+<a class="badge" href="#detail-e52">
+<circle class="bdg" cx="628" cy="2453" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="628" y="2457" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">52</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e53">
+<rect class="hl" x="0" y="2460" width="100%" height="46" fill="none"/>
+<line class="ln" x1="553" y1="2499" x2="412" y2="2499" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="403,2499 412,2495 412,2503" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="478" y="2480" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e53">
+<circle class="bdg" cx="478" cy="2499" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="478" y="2503" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">53</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e54">
+<rect class="hl" x="0" y="2506" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="2545" x2="994" y2="2545" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="1003,2545 994,2541 994,2549" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="703" y="2526" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">BYE</text>
+<a class="badge" href="#detail-e54">
+<circle class="bdg" cx="703" cy="2545" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="703" y="2549" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">54</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e55">
+<rect class="hl" x="0" y="2552" width="100%" height="46" fill="none"/>
+<line class="ln" x1="1003" y1="2591" x2="412" y2="2591" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="403,2591 412,2587 412,2595" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="703" y="2572" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e55">
+<circle class="bdg" cx="703" cy="2591" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="703" y="2595" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">55</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e56">
+<rect class="hl" x="0" y="2598" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="2637" x2="262" y2="2637" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="253,2637 262,2633 262,2641" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="2618" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">INVITE</text>
+<a class="badge" href="#detail-e56">
+<circle class="bdg" cx="328" cy="2637" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="2641" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">56</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e57">
+<rect class="hl" x="0" y="2644" width="100%" height="46" fill="none"/>
+<line class="ln" x1="253" y1="2683" x2="394" y2="2683" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="403,2683 394,2679 394,2687" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="2664" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e57">
+<circle class="bdg" cx="328" cy="2683" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="2687" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">57</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e58">
+<rect class="hl" x="0" y="2690" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="2729" x2="262" y2="2729" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="253,2729 262,2725 262,2733" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="2710" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">ACK</text>
+<a class="badge" href="#detail-e58">
+<circle class="bdg" cx="328" cy="2729" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="2733" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">58</text>
+</a>
+</g>
+<g class="ev ev-media" id="flow-e59">
+<rect class="hl" x="0" y="2736" width="100%" height="46" fill="none"/>
+<line class="ln" x1="553" y1="2775" x2="262" y2="2775" stroke="#008080" stroke-dasharray="5 4"/>
+<text class="cap" x="403" y="2756" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">Post-call Announcement</text>
+<a class="badge" href="#detail-e59">
+<circle class="bdg" cx="403" cy="2775" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="403" y="2779" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">59</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e60">
+<rect class="hl" x="0" y="2782" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="2821" x2="262" y2="2821" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="253,2821 262,2817 262,2825" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="2802" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">BYE</text>
+<a class="badge" href="#detail-e60">
+<circle class="bdg" cx="328" cy="2821" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="2825" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">60</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e61">
+<rect class="hl" x="0" y="2828" width="100%" height="46" fill="none"/>
+<line class="ln" x1="253" y1="2867" x2="394" y2="2867" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="403,2867 394,2863 394,2871" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="2848" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e61">
+<circle class="bdg" cx="328" cy="2867" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="2871" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">61</text>
+</a>
+</g>
+</svg>
+</div></section>
+<section class="cpf-detail" aria-label="Details"><div class="cpf-tscroll">
+<table class="cpf-table">
+<thead><tr><th>#</th><th>Kind</th><th>From → To</th><th>Message and details</th><th>Notes</th><th>Line</th></tr></thead>
+<tbody>
+<tr id="detail-e1">
+<th class="k" scope="row"><a class="back" href="#flow-e1" aria-label="Back to message 1 in the diagram">↑ 1</a></th>
+<td><span class="pill">message</span></td>
+<td>Caller → GW</td>
+<td><strong>Call #</strong></td>
+<td>—</td>
+<td>12</td>
+</tr>
+<tr id="detail-e2">
+<th class="k" scope="row"><a class="back" href="#flow-e2" aria-label="Back to message 2 in the diagram">↑ 2</a></th>
+<td><span class="pill">message</span></td>
+<td>GW → AS</td>
+<td><strong>INVITE SDP A</strong></td>
+<td>—</td>
+<td>13</td>
+</tr>
+<tr id="detail-e3">
+<th class="k" scope="row"><a class="back" href="#flow-e3" aria-label="Back to message 3 in the diagram">↑ 3</a></th>
+<td><span class="pill">reply</span></td>
+<td>AS → GW</td>
+<td><strong>183 Trying</strong></td>
+<td>—</td>
+<td>13</td>
+</tr>
+<tr id="detail-e4">
+<th class="k" scope="row"><a class="back" href="#flow-e4" aria-label="Back to message 4 in the diagram">↑ 4</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → MS</td>
+<td><strong>INVITE SDP A</strong></td>
+<td>—</td>
+<td>14</td>
+</tr>
+<tr id="detail-e5">
+<th class="k" scope="row"><a class="back" href="#flow-e5" aria-label="Back to message 5 in the diagram">↑ 5</a></th>
+<td><span class="pill">message</span></td>
+<td>MS → Web</td>
+<td><strong>HTTP GET</strong></td>
+<td>—</td>
+<td>15</td>
+</tr>
+<tr id="detail-e6">
+<th class="k" scope="row"><a class="back" href="#flow-e6" aria-label="Back to message 6 in the diagram">↑ 6</a></th>
+<td><span class="pill">reply</span></td>
+<td>Web → MS</td>
+<td><strong>200 OK (VXML)</strong></td>
+<td>—</td>
+<td>15</td>
+</tr>
+<tr id="detail-e7">
+<th class="k" scope="row"><a class="back" href="#flow-e7" aria-label="Back to message 7 in the diagram">↑ 7</a></th>
+<td><span class="pill">message</span></td>
+<td>MS → AS</td>
+<td><strong>200 OK SDP B</strong></td>
+<td>—</td>
+<td>16</td>
+</tr>
+<tr id="detail-e8">
+<th class="k" scope="row"><a class="back" href="#flow-e8" aria-label="Back to message 8 in the diagram">↑ 8</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → GW</td>
+<td><strong>200 OK SDP B</strong></td>
+<td>—</td>
+<td>17</td>
+</tr>
+<tr id="detail-e9">
+<th class="k" scope="row"><a class="back" href="#flow-e9" aria-label="Back to message 9 in the diagram">↑ 9</a></th>
+<td><span class="pill">message</span></td>
+<td>GW → AS</td>
+<td><strong>ACK</strong></td>
+<td>—</td>
+<td>18</td>
+</tr>
+<tr id="detail-e10">
+<th class="k" scope="row"><a class="back" href="#flow-e10" aria-label="Back to message 10 in the diagram">↑ 10</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → MS</td>
+<td><strong>ACK</strong></td>
+<td>—</td>
+<td>19</td>
+</tr>
+<tr id="detail-e11">
+<th class="k" scope="row"><a class="back" href="#flow-e11" aria-label="Back to message 11 in the diagram">↑ 11</a></th>
+<td><span class="pill">media</span></td>
+<td>GW ⋯ MS</td>
+<td><strong>RTP</strong></td>
+<td>—</td>
+<td>20</td>
+</tr>
+<tr id="detail-e12">
+<th class="k" scope="row"><a class="back" href="#flow-e12" aria-label="Back to message 12 in the diagram">↑ 12</a></th>
+<td><span class="pill">message</span></td>
+<td>MS → Web</td>
+<td><strong>HTTP POST</strong></td>
+<td>—</td>
+<td>21</td>
+</tr>
+<tr id="detail-e13">
+<th class="k" scope="row"><a class="back" href="#flow-e13" aria-label="Back to message 13 in the diagram">↑ 13</a></th>
+<td><span class="pill">reply</span></td>
+<td>Web → MS</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>21</td>
+</tr>
+<tr id="detail-e14">
+<th class="k" scope="row"><a class="back" href="#flow-e14" aria-label="Back to message 14 in the diagram">↑ 14</a></th>
+<td><span class="pill">message</span></td>
+<td>Web → RADIUS</td>
+<td><strong>Authorize</strong></td>
+<td>—</td>
+<td>22</td>
+</tr>
+<tr id="detail-e15">
+<th class="k" scope="row"><a class="back" href="#flow-e15" aria-label="Back to message 15 in the diagram">↑ 15</a></th>
+<td><span class="pill">reply</span></td>
+<td>RADIUS → Web</td>
+<td><strong>Balance</strong></td>
+<td>—</td>
+<td>22</td>
+</tr>
+<tr id="detail-e16">
+<th class="k" scope="row"><a class="back" href="#flow-e16" aria-label="Back to message 16 in the diagram">↑ 16</a></th>
+<td><span class="pill">message</span></td>
+<td>MS → Web</td>
+<td><strong>HTTP POST</strong></td>
+<td>—</td>
+<td>23</td>
+</tr>
+<tr id="detail-e17">
+<th class="k" scope="row"><a class="back" href="#flow-e17" aria-label="Back to message 17 in the diagram">↑ 17</a></th>
+<td><span class="pill">reply</span></td>
+<td>Web → MS</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>23</td>
+</tr>
+<tr id="detail-e18">
+<th class="k" scope="row"><a class="back" href="#flow-e18" aria-label="Back to message 18 in the diagram">↑ 18</a></th>
+<td><span class="pill">message</span></td>
+<td>Web → RADIUS</td>
+<td><strong>Callee Number</strong></td>
+<td>—</td>
+<td>24</td>
+</tr>
+<tr id="detail-e19">
+<th class="k" scope="row"><a class="back" href="#flow-e19" aria-label="Back to message 19 in the diagram">↑ 19</a></th>
+<td><span class="pill">reply</span></td>
+<td>RADIUS → Web</td>
+<td><strong>Time Remaining</strong></td>
+<td>—</td>
+<td>24</td>
+</tr>
+<tr id="detail-e20">
+<th class="k" scope="row"><a class="back" href="#flow-e20" aria-label="Back to message 20 in the diagram">↑ 20</a></th>
+<td><span class="pill">media</span></td>
+<td>GW ⋯ MS</td>
+<td><strong>Music</strong></td>
+<td>—</td>
+<td>25</td>
+</tr>
+<tr id="detail-e21">
+<th class="k" scope="row"><a class="back" href="#flow-e21" aria-label="Back to message 21 in the diagram">↑ 21</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → Callee</td>
+<td><strong>INVITE</strong></td>
+<td>—</td>
+<td>26</td>
+</tr>
+<tr id="detail-e22">
+<th class="k" scope="row"><a class="back" href="#flow-e22" aria-label="Back to message 22 in the diagram">↑ 22</a></th>
+<td><span class="pill">reply</span></td>
+<td>Callee → AS</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>26</td>
+</tr>
+<tr id="detail-e23">
+<th class="k" scope="row"><a class="back" href="#flow-e23" aria-label="Back to message 23 in the diagram">↑ 23</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → GW</td>
+<td><strong>INVITE</strong></td>
+<td>—</td>
+<td>27</td>
+</tr>
+<tr id="detail-e24">
+<th class="k" scope="row"><a class="back" href="#flow-e24" aria-label="Back to message 24 in the diagram">↑ 24</a></th>
+<td><span class="pill">reply</span></td>
+<td>GW → AS</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>27</td>
+</tr>
+<tr id="detail-e25">
+<th class="k" scope="row"><a class="back" href="#flow-e25" aria-label="Back to message 25 in the diagram">↑ 25</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → MS</td>
+<td><strong>BYE</strong></td>
+<td>—</td>
+<td>28</td>
+</tr>
+<tr id="detail-e26">
+<th class="k" scope="row"><a class="back" href="#flow-e26" aria-label="Back to message 26 in the diagram">↑ 26</a></th>
+<td><span class="pill">reply</span></td>
+<td>MS → AS</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>28</td>
+</tr>
+<tr id="detail-e27">
+<th class="k" scope="row"><a class="back" href="#flow-e27" aria-label="Back to message 27 in the diagram">↑ 27</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → GW</td>
+<td><strong>ACK</strong></td>
+<td>—</td>
+<td>29</td>
+</tr>
+<tr id="detail-e28">
+<th class="k" scope="row"><a class="back" href="#flow-e28" aria-label="Back to message 28 in the diagram">↑ 28</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → Callee</td>
+<td><strong>ACK</strong></td>
+<td>—</td>
+<td>30</td>
+</tr>
+<tr id="detail-e29">
+<th class="k" scope="row"><a class="back" href="#flow-e29" aria-label="Back to message 29 in the diagram">↑ 29</a></th>
+<td><span class="pill">media</span></td>
+<td>GW ⋯ Callee</td>
+<td><strong>PHONE CALL</strong></td>
+<td>—</td>
+<td>31</td>
+</tr>
+<tr id="detail-e30">
+<th class="k" scope="row"><a class="back" href="#flow-e30" aria-label="Back to message 30 in the diagram">↑ 30</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → MS</td>
+<td><strong>INVITE</strong></td>
+<td>—</td>
+<td>32</td>
+</tr>
+<tr id="detail-e31">
+<th class="k" scope="row"><a class="back" href="#flow-e31" aria-label="Back to message 31 in the diagram">↑ 31</a></th>
+<td><span class="pill">message</span></td>
+<td>MS → Web</td>
+<td><strong>HTTP GET</strong></td>
+<td>—</td>
+<td>33</td>
+</tr>
+<tr id="detail-e32">
+<th class="k" scope="row"><a class="back" href="#flow-e32" aria-label="Back to message 32 in the diagram">↑ 32</a></th>
+<td><span class="pill">reply</span></td>
+<td>Web → MS</td>
+<td><strong>200 OK (VXML)</strong></td>
+<td>—</td>
+<td>33</td>
+</tr>
+<tr id="detail-e33">
+<th class="k" scope="row"><a class="back" href="#flow-e33" aria-label="Back to message 33 in the diagram">↑ 33</a></th>
+<td><span class="pill">message</span></td>
+<td>MS → AS</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>34</td>
+</tr>
+<tr id="detail-e34">
+<th class="k" scope="row"><a class="back" href="#flow-e34" aria-label="Back to message 34 in the diagram">↑ 34</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → Callee</td>
+<td><strong>INVITE (hold)</strong></td>
+<td>—</td>
+<td>35</td>
+</tr>
+<tr id="detail-e35">
+<th class="k" scope="row"><a class="back" href="#flow-e35" aria-label="Back to message 35 in the diagram">↑ 35</a></th>
+<td><span class="pill">reply</span></td>
+<td>Callee → AS</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>35</td>
+</tr>
+<tr id="detail-e36">
+<th class="k" scope="row"><a class="back" href="#flow-e36" aria-label="Back to message 36 in the diagram">↑ 36</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → GW</td>
+<td><strong>INVITE</strong></td>
+<td>—</td>
+<td>36</td>
+</tr>
+<tr id="detail-e37">
+<th class="k" scope="row"><a class="back" href="#flow-e37" aria-label="Back to message 37 in the diagram">↑ 37</a></th>
+<td><span class="pill">reply</span></td>
+<td>GW → AS</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>36</td>
+</tr>
+<tr id="detail-e38">
+<th class="k" scope="row"><a class="back" href="#flow-e38" aria-label="Back to message 38 in the diagram">↑ 38</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → MS</td>
+<td><strong>ACK</strong></td>
+<td>—</td>
+<td>37</td>
+</tr>
+<tr id="detail-e39">
+<th class="k" scope="row"><a class="back" href="#flow-e39" aria-label="Back to message 39 in the diagram">↑ 39</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → GW</td>
+<td><strong>ACK</strong></td>
+<td>—</td>
+<td>38</td>
+</tr>
+<tr id="detail-e40">
+<th class="k" scope="row"><a class="back" href="#flow-e40" aria-label="Back to message 40 in the diagram">↑ 40</a></th>
+<td><span class="pill">media</span></td>
+<td>MS ⋯ GW</td>
+<td><strong>Time Warning</strong></td>
+<td>—</td>
+<td>39</td>
+</tr>
+<tr id="detail-e41">
+<th class="k" scope="row"><a class="back" href="#flow-e41" aria-label="Back to message 41 in the diagram">↑ 41</a></th>
+<td><span class="pill">message</span></td>
+<td>MS → AS</td>
+<td><strong>BYE</strong></td>
+<td>—</td>
+<td>40</td>
+</tr>
+<tr id="detail-e42">
+<th class="k" scope="row"><a class="back" href="#flow-e42" aria-label="Back to message 42 in the diagram">↑ 42</a></th>
+<td><span class="pill">reply</span></td>
+<td>AS → MS</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>40</td>
+</tr>
+<tr id="detail-e43">
+<th class="k" scope="row"><a class="back" href="#flow-e43" aria-label="Back to message 43 in the diagram">↑ 43</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → Callee</td>
+<td><strong>INVITE</strong></td>
+<td>—</td>
+<td>41</td>
+</tr>
+<tr id="detail-e44">
+<th class="k" scope="row"><a class="back" href="#flow-e44" aria-label="Back to message 44 in the diagram">↑ 44</a></th>
+<td><span class="pill">reply</span></td>
+<td>Callee → AS</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>41</td>
+</tr>
+<tr id="detail-e45">
+<th class="k" scope="row"><a class="back" href="#flow-e45" aria-label="Back to message 45 in the diagram">↑ 45</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → GW</td>
+<td><strong>INVITE</strong></td>
+<td>—</td>
+<td>42</td>
+</tr>
+<tr id="detail-e46">
+<th class="k" scope="row"><a class="back" href="#flow-e46" aria-label="Back to message 46 in the diagram">↑ 46</a></th>
+<td><span class="pill">reply</span></td>
+<td>GW → AS</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>42</td>
+</tr>
+<tr id="detail-e47">
+<th class="k" scope="row"><a class="back" href="#flow-e47" aria-label="Back to message 47 in the diagram">↑ 47</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → Callee</td>
+<td><strong>ACK</strong></td>
+<td>—</td>
+<td>43</td>
+</tr>
+<tr id="detail-e48">
+<th class="k" scope="row"><a class="back" href="#flow-e48" aria-label="Back to message 48 in the diagram">↑ 48</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → GW</td>
+<td><strong>ACK</strong></td>
+<td>—</td>
+<td>44</td>
+</tr>
+<tr id="detail-e49">
+<th class="k" scope="row"><a class="back" href="#flow-e49" aria-label="Back to message 49 in the diagram">↑ 49</a></th>
+<td><span class="pill">media</span></td>
+<td>GW ⋯ Callee</td>
+<td><strong>PHONE CALL</strong></td>
+<td>—</td>
+<td>45</td>
+</tr>
+<tr id="detail-e50">
+<th class="k" scope="row"><a class="back" href="#flow-e50" aria-label="Back to message 50 in the diagram">↑ 50</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → MS</td>
+<td><strong>INVITE</strong></td>
+<td>—</td>
+<td>46</td>
+</tr>
+<tr id="detail-e51">
+<th class="k" scope="row"><a class="back" href="#flow-e51" aria-label="Back to message 51 in the diagram">↑ 51</a></th>
+<td><span class="pill">message</span></td>
+<td>MS → Web</td>
+<td><strong>HTTP GET</strong></td>
+<td>—</td>
+<td>47</td>
+</tr>
+<tr id="detail-e52">
+<th class="k" scope="row"><a class="back" href="#flow-e52" aria-label="Back to message 52 in the diagram">↑ 52</a></th>
+<td><span class="pill">reply</span></td>
+<td>Web → MS</td>
+<td><strong>200 OK (VXML)</strong></td>
+<td>—</td>
+<td>47</td>
+</tr>
+<tr id="detail-e53">
+<th class="k" scope="row"><a class="back" href="#flow-e53" aria-label="Back to message 53 in the diagram">↑ 53</a></th>
+<td><span class="pill">message</span></td>
+<td>MS → AS</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>48</td>
+</tr>
+<tr id="detail-e54">
+<th class="k" scope="row"><a class="back" href="#flow-e54" aria-label="Back to message 54 in the diagram">↑ 54</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → Callee</td>
+<td><strong>BYE</strong></td>
+<td>—</td>
+<td>49</td>
+</tr>
+<tr id="detail-e55">
+<th class="k" scope="row"><a class="back" href="#flow-e55" aria-label="Back to message 55 in the diagram">↑ 55</a></th>
+<td><span class="pill">reply</span></td>
+<td>Callee → AS</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>49</td>
+</tr>
+<tr id="detail-e56">
+<th class="k" scope="row"><a class="back" href="#flow-e56" aria-label="Back to message 56 in the diagram">↑ 56</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → GW</td>
+<td><strong>INVITE</strong></td>
+<td>—</td>
+<td>50</td>
+</tr>
+<tr id="detail-e57">
+<th class="k" scope="row"><a class="back" href="#flow-e57" aria-label="Back to message 57 in the diagram">↑ 57</a></th>
+<td><span class="pill">reply</span></td>
+<td>GW → AS</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>50</td>
+</tr>
+<tr id="detail-e58">
+<th class="k" scope="row"><a class="back" href="#flow-e58" aria-label="Back to message 58 in the diagram">↑ 58</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → GW</td>
+<td><strong>ACK</strong></td>
+<td>—</td>
+<td>51</td>
+</tr>
+<tr id="detail-e59">
+<th class="k" scope="row"><a class="back" href="#flow-e59" aria-label="Back to message 59 in the diagram">↑ 59</a></th>
+<td><span class="pill">media</span></td>
+<td>MS ⋯ GW</td>
+<td><strong>Post-call Announcement</strong></td>
+<td>—</td>
+<td>52</td>
+</tr>
+<tr id="detail-e60">
+<th class="k" scope="row"><a class="back" href="#flow-e60" aria-label="Back to message 60 in the diagram">↑ 60</a></th>
+<td><span class="pill">message</span></td>
+<td>AS → GW</td>
+<td><strong>BYE</strong></td>
+<td>—</td>
+<td>53</td>
+</tr>
+<tr id="detail-e61">
+<th class="k" scope="row"><a class="back" href="#flow-e61" aria-label="Back to message 61 in the diagram">↑ 61</a></th>
+<td><span class="pill">reply</span></td>
+<td>GW → AS</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>53</td>
+</tr>
+</tbody>
+</table>
+</div></section>
+</div>
+</div>
+</body>
+</html>

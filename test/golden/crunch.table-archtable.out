@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html><body><pre><picture>
+          A         B
+          |one      |
+          |--------&gt;|
+          |two      |
+          |&lt;--------|
+          |three    |
+          |--------&gt;|
+</picture></pre><table border="true"/></body></html>

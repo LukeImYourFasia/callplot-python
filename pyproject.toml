@@ -1,0 +1,13 @@
+[project]
+name = "callplot-python"
+version = "0.1.0"
+description = "Bug-compatible Python port of callplot 0.2 (Java), with new modern outputs"
+license = "LGPL-2.1-only"
+authors = [{ name = "Edgar Villanueva" }]
+# Node 24 LTS was the JavaScript port's floor (DESIGN.md 1.2 D2); the Python
+# port's floor is 3.13, and every gate runs on the system's 3.14.4.
+requires-python = ">=3.13"
+dependencies = []  # DESIGN.md 1.2 D2: zero third-party runtime dependencies
+
+[project.urls]
+repository = "https://github.com/LukeImYourFasia/callplot-python"

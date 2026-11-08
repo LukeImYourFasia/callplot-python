@@ -1,0 +1,7 @@
+@startuml
+hide footbox
+participant "C" as p1
+participant "A" as p2
+participant "B" as p3
+p2 -> p3 : y
+@enduml

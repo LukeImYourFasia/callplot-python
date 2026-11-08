@@ -1,0 +1,16 @@
+         One       Two      Three
+                  lines     line
+                            three
+          |         |         |
+          |         |         |
+          |         |         |
+          |msg one  |         |
+          |-------->|         |
+          |         |         |
+          |         |         |
+          |         |msg two  |
+          |         |-------->|
+          |         |         |
+         One       Two      Three
+                  lines     line
+                            three

@@ -1,0 +1,10 @@
+opt/columnPitch/15
+opt/bottomLabel/yes
+guy/f/Fred^Flintstone
+guy/b/Barney^Rubble^Esquire
+f->b/Please^give^me the ball.
+note/b/Gives^bowling ball
+b->f/Stuff
+b..f/RTP^(real-time^protocol)
+f->b/Thank You
+b->f/You're Welcome

@@ -1,0 +1,7 @@
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+Exception in thread "main" java.lang.IllegalArgumentException: no player named z
+	at com.dynamicsoft.callplot.Flow.columnOf(Flow.java:286)
+	at com.dynamicsoft.callplot.Message.drawPictureOn(Message.java:286)
+	at com.dynamicsoft.callplot.Flow.drawPictureOn(Flow.java:553)
+	at com.dynamicsoft.callplot.Flow.plot(Flow.java:78)
+	at com.dynamicsoft.callplot.Main.main(Main.java:73)

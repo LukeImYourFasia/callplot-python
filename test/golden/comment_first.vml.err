@@ -1,0 +1,5 @@
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+Exception in thread "main" java.lang.NullPointerException
+	at com.dynamicsoft.callplot.Parser.parse(Parser.java:64)
+	at com.dynamicsoft.callplot.Flow.plot(Flow.java:73)
+	at com.dynamicsoft.callplot.Main.main(Main.java:73)

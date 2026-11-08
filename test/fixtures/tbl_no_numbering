@@ -1,0 +1,14 @@
+opt/columnPitch/15
+opt/links/on
+guy/f/Fred
+guy/b/Barney
+f->b/Please
+!Fred: "Please"
+!!Fred is asking Barney for his bowling ball nicely.
+note/b/Gives bowling ball
+b->f/Stuff
+!!Barney gives Fred the ball.
+f->b/Thank You
+!!Fred thanks Barney
+b->f/You're Welcome
+!!Barney replies

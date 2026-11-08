@@ -1,0 +1,10 @@
+@startuml
+title ~<script>alert(&#34;t&#34;)~<
+hide footbox
+participant "~<b>A~<" as p1
+participant "B &#34;quoted&#34; #1; ~~x~~ ~*y~*" as p2
+p1 -> p2 : (1) ~<script>alert(1)~<
+p2 --> p1 : (2) script>\nx & y; #z
+' e2 note: ~<img src=x onerror=alert(2)>
+' e2 comment: it's &#34;fine&#34; & ~<i>ok~<~/i>
+@enduml

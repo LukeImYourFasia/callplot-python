@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html><body><small><small><pre><picture>
+        alice     proxy   10.0.0.3
+          |(1) INVITE         |
+          |--------&gt;|         |
+          |(2) 100 Trying     |
+          |&lt;--------|         |
+          |         |(3) INVITE
+          |         |--------&gt;|
+</picture></pre></small></small><table border="1"><tr><th>Seq</th><th>Message and Details</th><th>Notes</th></tr><tr><td><message><a name="t1"/><a href="#m1">1</a></message></td><td><strong>INVITE</strong><br/><code>
+Date 11/05/2026 10:00:00.000
+</code><br/><code>
+    0 from initial
+</code><br/><code>
+    36000 from last
+</code><br/><code>
+Source Address: 10.0.0.1 (alice)
+</code><br/><code>
+Destination Address: 10.0.0.2 (proxy)
+</code><br/></td><td>
+INVITE sip:bob@example.com SIP/2.0
+<br/>
+Via: SIP/2.0/UDP 10.0.0.1
+<br/></td></tr><tr><td><message><a name="t2"/><a href="#m2">2</a></message></td><td><strong>100 Trying</strong><br/><code>
+Date 11/05/2026 10:00:00.120
+</code><br/><code>
+    0.12 from initial
+</code><br/><code>
+    0.12 from last
+</code><br/><code>
+Source Address: 10.0.0.2 (proxy)
+</code><br/><code>
+Destination Address: 10.0.0.1 (alice)
+</code><br/></td><td>
+SIP/2.0 100 Trying
+<br/></td></tr><tr><td><message><a name="t3"/><a href="#m3">3</a></message></td><td><strong>INVITE</strong><br/><code>
+Date 11/05/2026 10:00:00.450
+</code><br/><code>
+    0.45 from initial
+</code><br/><code>
+    0.33 from last
+</code><br/><code>
+Source Address: 10.0.0.2 (proxy)
+</code><br/><code>
+Destination Address: 10.0.0.3 (a)
+</code><br/></td><td>
+INVITE sip:bob@example.com SIP/2.0
+<br/></td></tr></table></body></html>

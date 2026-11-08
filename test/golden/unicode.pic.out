@@ -1,0 +1,6 @@
+.PS    
+PZoë: { box "Zoë's café ☎"; down; LZoë: line 1.75i from last box.s }; right; move 2i
+Pb: { box "B"; down; Lb: line 1.75i from last box.s }; right; move 2i
+{ arrow "café ☎ caption" "" from LZoë.start + (0,-0.8333333333333334) to Lb.start + (0,-0.8333333333333334);  }
+.PE
+

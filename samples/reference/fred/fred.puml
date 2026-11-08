@@ -1,0 +1,11 @@
+@startuml
+hide footbox
+participant "Fred" as p1
+participant "Barney" as p2
+p1 -> p2 : Please
+note right of p2 : Gives bowling ball
+p2 -> p1 : Stuff
+p2 <-[#008080]-> p1 : RTP
+p1 -> p2 : Thank You
+p2 -> p1 : You're Welcome
+@enduml

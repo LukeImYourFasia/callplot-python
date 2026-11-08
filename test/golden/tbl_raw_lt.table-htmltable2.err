@@ -1,0 +1,3 @@
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+
+file:///tmp/tmp.UP0iFte1gy; Line 23; Column 4; XSLT Error (javax.xml.transform.TransformerException): The content of elements must consist of well-formed character data or markup.

@@ -1,0 +1,44 @@
+<plot>
+<picture>
+<html xmlns:v='urn:schemas-microsoft-com:vml'
+xmlns='http://www.w3.org/TR/REC-html40'>
+
+<head>
+
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+
+</head>
+
+<body>
+<!-- totalHeight =9-->
+<!-- totalWidth =40-->
+<v:group style='position:relative;left:1pt;top:2pt;width:172pt;height:77pt;' coordsize='40,18' >
+
+<v:rect fillcolor='red' style='position:absolute;left:5.5;top:-4.0;width:9;height:4.0'>  <v:stroke     />
+</v:rect> <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:-1.8;left:5.8;width:9;height:4.0' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="A" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:center'/> 
+ </v:shape> 
+<v:line  from='10.0,0.0' to='10.0,18'>  <v:stroke   />
+</v:line><v:rect fillcolor='red' style='position:absolute;left:15.5;top:-4.0;width:9;height:4.0'>  <v:stroke     />
+</v:rect> <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:-1.8;left:15.8;width:9;height:4.0' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="B" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:center'/> 
+ </v:shape> 
+<v:line  from='20.0,0.0' to='20.0,18'>  <v:stroke   />
+</v:line> <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:8;left:11;width:1;height:1' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="(1) REQ" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:left' /> 
+ </v:shape> 
+ <v:line from='10,10' to='20,10'>
+  <v:stroke     EndArrow='Open' />
+ </v:line>
+
+</v:group>
+</body>
+</html>   

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html><body><pre><picture>
+        Alice     Proxy      Bob
+         UA                  UA
+          |         |         |
+          |         |         |
+          |(<a href="#t1">1</a>)<a name="m1"/> INVITE         |
+          |SDP A    |         |
+          |--------&gt;|         |
+          |         |         |
+          |         |         |
+          |(<a href="#t2">2</a>)<a name="m2"/> 100 Trying     |
+          |&lt;--------|         |
+          |         |         |
+          |         |(<a href="#t3">3</a>)<a name="m3"/> INVITE
+          |         |SDP A    |
+          |         |--------&gt;|
+          |         |         |
+          |         |         |
+          |         |(<a href="#t4">4</a>)<a name="m4"/> 180 Ringing
+          |         |&lt;--------|
+          |         |         |
+          |         |         |
+          |(<a href="#t5">5</a>)<a name="m5"/> 180 Ringing    |
+          |&lt;--------|         |
+          |         |         |
+          |         |         |
+          |         |         |Phone rings
+          |         |         |
+          |         |         |
+          |         |(<a href="#t6">6</a>)<a name="m6"/> 200 OK
+          |         |SDP B    |
+          |         |&lt;--------|
+          |         |         |
+          |(<a href="#t7">7</a>)<a name="m7"/> 200 OK         |
+          |SDP B    |         |
+          |&lt;--------|         |
+          |         |         |
+          |         |         |
+          |(<a href="#t8">8</a>)<a name="m8"/> ACK  |         |
+          |------------------&gt;|
+          |         |         |
+          |         |         |
+          |(<a href="#t9">9</a>)<a name="m9"/> RTP (Opus)     |
+          |...................|
+          |         |         |
+          |         |         |
+          |Hold timer         |
+          |         |         |
+          |         |         |
+          |         |         |
+          |         |(<a href="#t10">10</a>)<a name="m10"/> BYE |
+          |         |&lt;--------|
+          |         |         |
+          |         |         |
+          |         |(<a href="#t11">11</a>)<a name="m11"/> 200 OK
+          |         |--------&gt;|
+          |         |         |
+          |         |         |
+          |(<a href="#t12">12</a>)<a name="m12"/> BYE |         |
+          |&lt;--------|         |
+          |         |         |
+          |         |         |
+          |(<a href="#t13">13</a>)<a name="m13"/> 200 OK        |
+          |--------&gt;|         |
+          |         |         |
+          |         |         |
+          |         |         |
+          |         |         |
+</picture></pre><table border="true"><tr><td><message>1</message></td><td>INVITE<br/>SDP A<br/>
+Alice offers PCMU and Opus.
+<br/></td><td><tt/></td></tr><tr><td><message>2</message></td><td>100 Trying<br/></td><td><tt>
+Stops INVITE retransmits from Alice.
+<br/></tt></td></tr><tr><td><message>3</message></td><td>INVITE<br/>SDP A<br/></td><td><tt/></td></tr><tr><td><message>4</message></td><td>180 Ringing<br/></td><td><tt/></td></tr><tr><td><message>5</message></td><td>180 Ringing<br/></td><td><tt/></td></tr><tr><td><message>6</message></td><td>200 OK<br/>SDP B<br/>
+Bob answers. SDP B selects Opus.
+<br/></td><td><tt/></td></tr><tr><td><message>7</message></td><td>200 OK<br/>SDP B<br/></td><td><tt/></td></tr><tr><td><message>8</message></td><td>ACK<br/>
+ACK goes end to end.
+<br/></td><td><tt>
+The proxy did not Record-Route.
+<br/></tt></td></tr><tr><td><message>9</message></td><td>RTP (Opus)<br/></td><td><tt/></td></tr><tr><td><message>10</message></td><td>BYE<br/></td><td><tt/></td></tr><tr><td><message>11</message></td><td>200 OK<br/></td><td><tt/></td></tr><tr><td><message>12</message></td><td>BYE<br/></td><td><tt/></td></tr><tr><td><message>13</message></td><td>200 OK<br/></td><td><tt/></td></tr></table></body></html>

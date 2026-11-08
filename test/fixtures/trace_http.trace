@@ -1,0 +1,12 @@
+----------------------------------------
+Date 11/05/2026 10:00:01.000
+Source Address: 192.168.1.10
+Destination Address: 192.168.1.20
+GET /index.html HTTP/1.1
+Host: example.com
+----------------------------------------
+Date 11/05/2026 10:00:01.250
+Source Address: 192.168.1.20
+Destination Address: 192.168.1.10
+HTTP/1.1 200 OK
+Content-Type: text/html

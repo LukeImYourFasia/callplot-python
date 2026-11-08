@@ -1,0 +1,8 @@
+.PS    
+Pa: { box "A"; down; La: line 4.083333333333334i from last box.s }; right; move 2i
+Pb: { box "B"; down; Lb: line 4.083333333333334i from last box.s }; right; move 2i
+{ arrow "one" "" from La.start + (0,-0.8333333333333334) to Lb.start + (0,-0.8333333333333334);  }
+{ arrow "two" "" from Lb.start + (0,-1.8333333333333333) to La.start + (0,-1.8333333333333333);  }
+{ arrow "three" "" from La.start + (0,-2.8333333333333335) to Lb.start + (0,-2.8333333333333335);  }
+.PE
+

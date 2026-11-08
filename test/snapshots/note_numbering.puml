@@ -1,0 +1,9 @@
+@startuml
+hide footbox
+participant "A" as p1
+participant "B" as p2
+p1 -> p2 : (1) req
+note right of p1 : (2) note one
+p2 -> p1 : (3) resp
+note right of p2 : (4) note two
+@enduml

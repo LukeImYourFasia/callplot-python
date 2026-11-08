@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html><body><pre><picture>
+          A         B
+          |         |
+          |         |
+          |         |
+          |(<a href="#t1">1</a>)<a name="m1"/> REQ  |
+          |--------&gt;|
+          |         |
+          |         |
+          |(<a href="#t2">2</a>)<a name="m2"/> RESP |
+          |&lt;--------|
+          |         |
+          |         |
+          |         |
+          |         |
+</picture></pre><table border="1"><tr><td><message><a name="t1"/><a href="#m1">1</a></message></td><td>REQ<br/></td><td><tt/></td></tr><tr><td><message><a name="t2"/><a href="#m2">2</a></message></td><td>RESP<br/>
+detail
+<br/></td><td><tt>
+comment
+<br/></tt></td></tr></table></body></html>

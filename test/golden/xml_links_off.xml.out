@@ -1,0 +1,66 @@
+<plot>
+<picture>
+          A         B
+          |         |
+          |         |
+          |         |
+          |(1) (abc) x
+          |--------&gt;|
+          |         |
+          |         |
+          |(2) (+3) y
+          |&lt;--------|
+          |         |
+          |         |
+          |(3) a&lt;b&gt;c & d
+          |--------&gt;|
+          |         |
+          |         |
+          |(4) (5   |
+          |&lt;--------|
+          |         |
+          |         |
+          |         |
+          |         |
+</picture>
+<message>
+<number>1</number>
+<captions>
+<caption>(abc) x</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>2</number>
+<captions>
+<caption>(+3) y</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>3</number>
+<captions>
+<caption>a<b>c & d</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>4</number>
+<captions>
+<caption>(5</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+</plot>

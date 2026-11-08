@@ -1,0 +1,27 @@
+---
+title: Basic SIP call through a proxy
+---
+sequenceDiagram
+    participant p1 as Alice<br/>UA
+    participant p2 as Proxy
+    participant p3 as Bob<br/>UA
+    p1->>p2: (1) INVITE<br/>SDP A
+    %% e1 note: Alice offers PCMU and Opus.
+    p2->>p1: (2) 100 Trying
+    %% e2 comment: Stops INVITE retransmits from Alice.
+    p2->>p3: (3) INVITE<br/>SDP A
+    p3->>p2: (4) 180 Ringing
+    p2->>p1: (5) 180 Ringing
+    Note right of p3: Phone rings
+    p3->>p2: (6) 200 OK<br/>SDP B
+    %% e7 note: Bob answers. SDP B selects Opus.
+    p2->>p1: (7) 200 OK<br/>SDP B
+    p1->>p3: (8) ACK
+    %% e9 note: ACK goes end to end.
+    %% e9 comment: The proxy did not Record-Route.
+    p1-->p3: (9) RTP (Opus)
+    p1->>p1: Hold timer
+    p3->>p2: (10) BYE
+    p2-->>p3: (11) 200 OK
+    p2->>p1: (12) BYE
+    p1-->>p2: (13) 200 OK

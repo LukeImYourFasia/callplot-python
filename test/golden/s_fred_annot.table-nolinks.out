@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html><body><pre><picture>
+        Fred          Barney
+          |              |
+          |              |
+          |              |
+          |(<a href="#t1">1</a>)<a name="m1"/> Please    |
+          |-------------&gt;|
+          |              |
+          |              |
+          |              |Gives bowling ball
+          |              |
+          |              |
+          |              |
+          |(<a href="#t2">2</a>)<a name="m2"/> Stuff     |
+          |&lt;-------------|
+          |              |
+          |              |
+          |(<a href="#t3">3</a>)<a name="m3"/> Thank You |
+          |-------------&gt;|
+          |              |
+          |              |
+          |(<a href="#t4">4</a>)<a name="m4"/> You're Welcome
+          |&lt;-------------|
+          |              |
+          |              |
+          |              |
+          |              |
+</picture></pre><table border="true"><tr><td><message>1</message></td><td>Please<br/>
+Fred is asking Barney for his bowling ball nicely.
+<br/></td><td><tt>
+Fred: "Please"
+<br/></tt></td></tr><tr><td><message>2</message></td><td>Stuff<br/>
+Barney gives Fred the ball.
+<br/></td><td><tt/></td></tr><tr><td><message>3</message></td><td>Thank You<br/>
+Fred thanks Barney
+<br/></td><td><tt/></td></tr><tr><td><message>4</message></td><td>You're Welcome<br/>
+Barney replies
+<br/></td><td><tt/></td></tr></table></body></html>

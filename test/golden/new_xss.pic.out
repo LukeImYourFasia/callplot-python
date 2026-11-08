@@ -1,0 +1,7 @@
+.PS    
+Pa: { box "<b>A<"; down; La: line 2.4166666666666665i from last box.s }; right; move 2i
+Pb: { box "B "quoted" #1; ~x~ *y*"; down; Lb: line 2.4166666666666665i from last box.s }; right; move 2i
+{ arrow "<script>alert(1)<" "" from La.start + (0,-0.8333333333333334) to Lb.start + (0,-0.8333333333333334);  }
+{ arrow "script>" "x & y; #z" "" from Lb.start + (0,-1.5) to La.start + (0,-1.5);  }
+.PE
+

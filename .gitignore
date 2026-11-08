@@ -1,0 +1,16 @@
+# Local junk only ever seen on a developer's machine: build artifacts,
+# editor leftovers, macOS resource forks, the scratch dumps the oracle runs
+# produced.  Nothing here is part of the repo layout (DESIGN.md section 2.4).
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+._*
+dmesg*
+DESIGN.html
+DESIGN.md
+DESIGN.md~
+rendered/
+reference/build-tools/
+reference/build-probes/
+node_modules/

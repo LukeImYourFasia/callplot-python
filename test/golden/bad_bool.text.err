@@ -1,0 +1,7 @@
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+Exception in thread "main" java.lang.RuntimeException: Bad value for boolean option
+	at com.dynamicsoft.callplot.Flow.getBooleanValueOr(Flow.java:111)
+	at com.dynamicsoft.callplot.Flow.honorOpts(Flow.java:228)
+	at com.dynamicsoft.callplot.Flow.layout(Flow.java:251)
+	at com.dynamicsoft.callplot.Flow.plot(Flow.java:75)
+	at com.dynamicsoft.callplot.Main.main(Main.java:73)

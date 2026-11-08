@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant p1 as Fred
+    participant p2 as Barney
+    p1->>p2: (1) Please
+    %% e1 note: Fred is asking Barney for his bowling ball nicely.
+    %% e1 comment: Fred: #quot;Please#quot;
+    Note right of p2: Gives bowling ball
+    p2->>p1: (2) Stuff
+    %% e3 note: Barney gives Fred the ball.
+    p1->>p2: (3) Thank You
+    %% e4 note: Fred thanks Barney
+    p2->>p1: (4) You're Welcome
+    %% e5 note: Barney replies

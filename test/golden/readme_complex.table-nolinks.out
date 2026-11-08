@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html><body><pre><picture>
+          |         |         |         |         |         |         |
+          |         |         |         |         |         |         |
+          |         |         |         |         |         |         |
+          |(<a href="#t1">1</a>)<a name="m1"/> Call #         |         |         |         |         |
+          |--------&gt;|         |         |         |         |         |
+          |         |(<a href="#t2">2</a>)<a name="m2"/> INVITE SDP A   |         |         |         |
+          |         |--------&gt;|         |         |         |         |
+          |         |(<a href="#t3">3</a>)<a name="m3"/> 183 Trying     |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |         |(<a href="#t4">4</a>)<a name="m4"/> INVITE SDP A   |         |         |
+          |         |         |--------&gt;|         |         |         |
+          |         |         |         |(<a href="#t5">5</a>)<a name="m5"/> HTTP GET       |         |
+          |         |         |         |--------&gt;|         |         |
+          |         |         |         |(<a href="#t6">6</a>)<a name="m6"/> 200 OK (VXML)  |         |
+          |         |         |         |&lt;--------|         |         |
+          |         |         |(<a href="#t7">7</a>)<a name="m7"/> 200 OK SDP B   |         |         |
+          |         |         |&lt;--------|         |         |         |
+          |         |(<a href="#t8">8</a>)<a name="m8"/> 200 OK SDP B   |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href="#t9">9</a>)<a name="m9"/> ACK  |         |         |         |         |
+          |         |--------&gt;|         |         |         |         |
+          |         |         |(<a href="#t10">10</a>)<a name="m10"/> ACK |         |         |         |
+          |         |         |--------&gt;|         |         |         |
+          |         |(<a href="#t11">11</a>)<a name="m11"/> RTP |         |         |         |         |
+          |         |...................|         |         |         |
+          |         |         |         |(<a href="#t12">12</a>)<a name="m12"/> HTTP POST     |         |
+          |         |         |         |--------&gt;|         |         |
+          |         |         |         |(<a href="#t13">13</a>)<a name="m13"/> 200 OK        |         |
+          |         |         |         |&lt;--------|         |         |
+          |         |         |         |         |(<a href="#t14">14</a>)<a name="m14"/> Authorize     |
+          |         |         |         |         |--------&gt;|         |
+          |         |         |         |         |(<a href="#t15">15</a>)<a name="m15"/> Balance       |
+          |         |         |         |         |&lt;--------|         |
+          |         |         |         |(<a href="#t16">16</a>)<a name="m16"/> HTTP POST     |         |
+          |         |         |         |--------&gt;|         |         |
+          |         |         |         |(<a href="#t17">17</a>)<a name="m17"/> 200 OK        |         |
+          |         |         |         |&lt;--------|         |         |
+          |         |         |         |         |(<a href="#t18">18</a>)<a name="m18"/> Callee Number |
+          |         |         |         |         |--------&gt;|         |
+          |         |         |         |         |(<a href="#t19">19</a>)<a name="m19"/> Time Remaining|
+          |         |         |         |         |&lt;--------|         |
+          |         |(<a href="#t20">20</a>)<a name="m20"/> Music         |         |         |         |
+          |         |...................|         |         |         |
+          |         |         |(<a href="#t21">21</a>)<a name="m21"/> INVITE        |         |         |
+          |         |         |--------------------------------------&gt;|
+          |         |         |(<a href="#t22">22</a>)<a name="m22"/> 200 OK        |         |         |
+          |         |         |&lt;--------------------------------------|
+          |         |(<a href="#t23">23</a>)<a name="m23"/> INVITE        |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href="#t24">24</a>)<a name="m24"/> 200 OK        |         |         |         |
+          |         |--------&gt;|         |         |         |         |
+          |         |         |(<a href="#t25">25</a>)<a name="m25"/> BYE |         |         |         |
+          |         |         |--------&gt;|         |         |         |
+          |         |         |(<a href="#t26">26</a>)<a name="m26"/> 200 OK        |         |         |
+          |         |         |&lt;--------|         |         |         |
+          |         |(<a href="#t27">27</a>)<a name="m27"/> ACK |         |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |         |(<a href="#t28">28</a>)<a name="m28"/> ACK |         |         |         |
+          |         |         |--------------------------------------&gt;|
+          |         |(<a href="#t29">29</a>)<a name="m29"/> PHONE CALL    |         |         |         |
+          |         |.................................................|
+          |         |         |(<a href="#t30">30</a>)<a name="m30"/> INVITE        |         |         |
+          |         |         |--------&gt;|         |         |         |
+          |         |         |         |(<a href="#t31">31</a>)<a name="m31"/> HTTP GET      |         |
+          |         |         |         |--------&gt;|         |         |
+          |         |         |         |(<a href="#t32">32</a>)<a name="m32"/> 200 OK (VXML) |         |
+          |         |         |         |&lt;--------|         |         |
+          |         |         |(<a href="#t33">33</a>)<a name="m33"/> 200 OK        |         |         |
+          |         |         |&lt;--------|         |         |         |
+          |         |         |(<a href="#t34">34</a>)<a name="m34"/> INVITE (hold) |         |         |
+          |         |         |--------------------------------------&gt;|
+          |         |         |(<a href="#t35">35</a>)<a name="m35"/> 200 OK        |         |         |
+          |         |         |&lt;--------------------------------------|
+          |         |(<a href="#t36">36</a>)<a name="m36"/> INVITE        |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href="#t37">37</a>)<a name="m37"/> 200 OK        |         |         |         |
+          |         |--------&gt;|         |         |         |         |
+          |         |         |(<a href="#t38">38</a>)<a name="m38"/> ACK |         |         |         |
+          |         |         |--------&gt;|         |         |         |
+          |         |(<a href="#t39">39</a>)<a name="m39"/> ACK |         |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href="#t40">40</a>)<a name="m40"/> Time Warning  |         |         |         |
+          |         |...................|         |         |         |
+          |         |         |(<a href="#t41">41</a>)<a name="m41"/> BYE |         |         |         |
+          |         |         |&lt;--------|         |         |         |
+          |         |         |(<a href="#t42">42</a>)<a name="m42"/> 200 OK        |         |         |
+          |         |         |--------&gt;|         |         |         |
+          |         |         |(<a href="#t43">43</a>)<a name="m43"/> INVITE        |         |         |
+          |         |         |--------------------------------------&gt;|
+          |         |         |(<a href="#t44">44</a>)<a name="m44"/> 200 OK        |         |         |
+          |         |         |&lt;--------------------------------------|
+          |         |(<a href="#t45">45</a>)<a name="m45"/> INVITE        |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href="#t46">46</a>)<a name="m46"/> 200 OK        |         |         |         |
+          |         |--------&gt;|         |         |         |         |
+          |         |         |(<a href="#t47">47</a>)<a name="m47"/> ACK |         |         |         |
+          |         |         |--------------------------------------&gt;|
+          |         |(<a href="#t48">48</a>)<a name="m48"/> ACK |         |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href="#t49">49</a>)<a name="m49"/> PHONE CALL    |         |         |         |
+          |         |.................................................|
+          |         |         |(<a href="#t50">50</a>)<a name="m50"/> INVITE        |         |         |
+          |         |         |--------&gt;|         |         |         |
+          |         |         |         |(<a href="#t51">51</a>)<a name="m51"/> HTTP GET      |         |
+          |         |         |         |--------&gt;|         |         |
+          |         |         |         |(<a href="#t52">52</a>)<a name="m52"/> 200 OK (VXML) |         |
+          |         |         |         |&lt;--------|         |         |
+          |         |         |(<a href="#t53">53</a>)<a name="m53"/> 200 OK        |         |         |
+          |         |         |&lt;--------|         |         |         |
+          |         |         |(<a href="#t54">54</a>)<a name="m54"/> BYE |         |         |         |
+          |         |         |--------------------------------------&gt;|
+          |         |         |(<a href="#t55">55</a>)<a name="m55"/> 200 OK        |         |         |
+          |         |         |&lt;--------------------------------------|
+          |         |(<a href="#t56">56</a>)<a name="m56"/> INVITE        |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href="#t57">57</a>)<a name="m57"/> 200 OK        |         |         |         |
+          |         |--------&gt;|         |         |         |         |
+          |         |(<a href="#t58">58</a>)<a name="m58"/> ACK |         |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href="#t59">59</a>)<a name="m59"/> Post-call Announcement  |         |         |
+          |         |...................|         |         |         |
+          |         |(<a href="#t60">60</a>)<a name="m60"/> BYE |         |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href="#t61">61</a>)<a name="m61"/> 200 OK        |         |         |         |
+          |         |--------&gt;|         |         |         |         |
+          |         |         |         |         |         |         |
+       Caller      GW        AS        MS        Web     RADIUS    Callee
+</picture></pre><table border="true"><tr><td><message>1</message></td><td>Call #<br/></td><td><tt/></td></tr><tr><td><message>2</message></td><td>INVITE SDP A<br/></td><td><tt/></td></tr><tr><td><message>3</message></td><td>183 Trying<br/></td><td><tt/></td></tr><tr><td><message>4</message></td><td>INVITE SDP A<br/></td><td><tt/></td></tr><tr><td><message>5</message></td><td>HTTP GET<br/></td><td><tt/></td></tr><tr><td><message>6</message></td><td>200 OK (VXML)<br/></td><td><tt/></td></tr><tr><td><message>7</message></td><td>200 OK SDP B<br/></td><td><tt/></td></tr><tr><td><message>8</message></td><td>200 OK SDP B<br/></td><td><tt/></td></tr><tr><td><message>9</message></td><td>ACK<br/></td><td><tt/></td></tr><tr><td><message>10</message></td><td>ACK<br/></td><td><tt/></td></tr><tr><td><message>11</message></td><td>RTP<br/></td><td><tt/></td></tr><tr><td><message>12</message></td><td>HTTP POST<br/></td><td><tt/></td></tr><tr><td><message>13</message></td><td>200 OK<br/></td><td><tt/></td></tr><tr><td><message>14</message></td><td>Authorize<br/></td><td><tt/></td></tr><tr><td><message>15</message></td><td>Balance<br/></td><td><tt/></td></tr><tr><td><message>16</message></td><td>HTTP POST<br/></td><td><tt/></td></tr><tr><td><message>17</message></td><td>200 OK<br/></td><td><tt/></td></tr><tr><td><message>18</message></td><td>Callee Number<br/></td><td><tt/></td></tr><tr><td><message>19</message></td><td>Time Remaining<br/></td><td><tt/></td></tr><tr><td><message>20</message></td><td>Music<br/></td><td><tt/></td></tr><tr><td><message>21</message></td><td>INVITE<br/></td><td><tt/></td></tr><tr><td><message>22</message></td><td>200 OK<br/></td><td><tt/></td></tr><tr><td><message>23</message></td><td>INVITE<br/></td><td><tt/></td></tr><tr><td><message>24</message></td><td>200 OK<br/></td><td><tt/></td></tr><tr><td><message>25</message></td><td>BYE<br/></td><td><tt/></td></tr><tr><td><message>26</message></td><td>200 OK<br/></td><td><tt/></td></tr><tr><td><message>27</message></td><td>ACK<br/></td><td><tt/></td></tr><tr><td><message>28</message></td><td>ACK<br/></td><td><tt/></td></tr><tr><td><message>29</message></td><td>PHONE CALL<br/></td><td><tt/></td></tr><tr><td><message>30</message></td><td>INVITE<br/></td><td><tt/></td></tr><tr><td><message>31</message></td><td>HTTP GET<br/></td><td><tt/></td></tr><tr><td><message>32</message></td><td>200 OK (VXML)<br/></td><td><tt/></td></tr><tr><td><message>33</message></td><td>200 OK<br/></td><td><tt/></td></tr><tr><td><message>34</message></td><td>INVITE (hold)<br/></td><td><tt/></td></tr><tr><td><message>35</message></td><td>200 OK<br/></td><td><tt/></td></tr><tr><td><message>36</message></td><td>INVITE<br/></td><td><tt/></td></tr><tr><td><message>37</message></td><td>200 OK<br/></td><td><tt/></td></tr><tr><td><message>38</message></td><td>ACK<br/></td><td><tt/></td></tr><tr><td><message>39</message></td><td>ACK<br/></td><td><tt/></td></tr><tr><td><message>40</message></td><td>Time Warning<br/></td><td><tt/></td></tr><tr><td><message>41</message></td><td>BYE<br/></td><td><tt/></td></tr><tr><td><message>42</message></td><td>200 OK<br/></td><td><tt/></td></tr><tr><td><message>43</message></td><td>INVITE<br/></td><td><tt/></td></tr><tr><td><message>44</message></td><td>200 OK<br/></td><td><tt/></td></tr><tr><td><message>45</message></td><td>INVITE<br/></td><td><tt/></td></tr><tr><td><message>46</message></td><td>200 OK<br/></td><td><tt/></td></tr><tr><td><message>47</message></td><td>ACK<br/></td><td><tt/></td></tr><tr><td><message>48</message></td><td>ACK<br/></td><td><tt/></td></tr><tr><td><message>49</message></td><td>PHONE CALL<br/></td><td><tt/></td></tr><tr><td><message>50</message></td><td>INVITE<br/></td><td><tt/></td></tr><tr><td><message>51</message></td><td>HTTP GET<br/></td><td><tt/></td></tr><tr><td><message>52</message></td><td>200 OK (VXML)<br/></td><td><tt/></td></tr><tr><td><message>53</message></td><td>200 OK<br/></td><td><tt/></td></tr><tr><td><message>54</message></td><td>BYE<br/></td><td><tt/></td></tr><tr><td><message>55</message></td><td>200 OK<br/></td><td><tt/></td></tr><tr><td><message>56</message></td><td>INVITE<br/></td><td><tt/></td></tr><tr><td><message>57</message></td><td>200 OK<br/></td><td><tt/></td></tr><tr><td><message>58</message></td><td>ACK<br/></td><td><tt/></td></tr><tr><td><message>59</message></td><td>Post-call Announcement<br/></td><td><tt/></td></tr><tr><td><message>60</message></td><td>BYE<br/></td><td><tt/></td></tr><tr><td><message>61</message></td><td>200 OK<br/></td><td><tt/></td></tr></table></body></html>

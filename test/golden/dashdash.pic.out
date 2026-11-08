@@ -1,0 +1,10 @@
+.PS    
+Pa: { box "A"; down; La: line 3.0833333333333335i from last box.s }; right; move 2i
+Pb: { box "B"; down; Lb: line 3.0833333333333335i from last box.s }; right; move 2i
+Pc: { box "C"; down; Lc: line 3.0833333333333335i from last box.s }; right; move 2i
+Pd: { box "D"; down; Ld: line 3.0833333333333335i from last box.s }; right; move 2i
+{ line dotted "RTP" "" from La.start + (0,-0.8333333333333334) to Ld.start + (0,-0.8333333333333334);  }
+{ line dotted "x" "y" "" from Lb.start + (0,-1.5) to Lc.start + (0,-1.5);  }
+{ line dotted "dots" "" from La.start + (0,-2.1666666666666665) to Ld.start + (0,-2.1666666666666665);  }
+.PE
+

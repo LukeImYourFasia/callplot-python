@@ -1,0 +1,9 @@
+.PS    
+Palice: { box "alice"; down; Lalice: line 3.0833333333333335i from last box.s }; right; move 2i
+Pproxy: { box "proxy"; down; Lproxy: line 3.0833333333333335i from last box.s }; right; move 2i
+Pa: { box "10.0.0.3"; down; La: line 3.0833333333333335i from last box.s }; right; move 2i
+{ arrow "INVITE" "" from Lalice.start + (0,-0.8333333333333334) to Lproxy.start + (0,-0.8333333333333334);  }
+{ arrow "100 Trying" "" from Lproxy.start + (0,-1.5) to Lalice.start + (0,-1.5);  }
+{ arrow "INVITE" "" from Lproxy.start + (0,-2.1666666666666665) to La.start + (0,-2.1666666666666665);  }
+.PE
+

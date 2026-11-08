@@ -1,0 +1,10 @@
+---
+title: #lt;script#gt;alert(#quot;t#quot;)#lt;
+---
+sequenceDiagram
+    participant p1 as #lt;b#gt;A#lt;
+    participant p2 as B #quot;quoted#quot; #35;1#59; ~x~ *y*
+    p1->>p2: (1) #lt;script#gt;alert(1)#lt;
+    p2-->>p1: (2) script#gt;<br/>x & y#59; #35;z
+    %% e2 note: #lt;img src=x onerror=alert(2)#gt;
+    %% e2 comment: it's #quot;fine#quot; & #lt;i#gt;ok#lt;/i#gt;

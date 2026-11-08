@@ -1,0 +1,27 @@
+<plot>
+<picture>
+          A         B
+          |         |
+          |         |
+          |         |
+          |(<a href='#t1'>1</a>)<a name='m1'/> REQ  |
+          |--------&gt;|
+          |         |
+          |         |
+          |         |
+          |         |
+</picture>
+<message>
+<number>1</number>
+<captions>
+<caption>REQ</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+<comment>
+a & b
+</comment>
+</comments>
+</message>
+</plot>

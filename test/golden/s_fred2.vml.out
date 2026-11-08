@@ -1,0 +1,94 @@
+<html xmlns:v='urn:schemas-microsoft-com:vml'
+xmlns='http://www.w3.org/TR/REC-html40'>
+
+<head>
+
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+
+</head>
+
+<body>
+<!-- totalHeight =31-->
+<!-- totalWidth =55-->
+<v:group style='position:relative;left:1pt;top:2pt;width:237pt;height:267pt;' coordsize='55,62' >
+
+<v:rect fillcolor='red' style='position:absolute;left:3.5;top:-4.0;width:13;height:4.0'>  <v:stroke     />
+</v:rect> <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:-1.8;left:3.8;width:13;height:4.0' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="Fred" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:center'/> 
+ </v:shape> 
+<v:line  from='10.0,0.0' to='10.0,62'>  <v:stroke   />
+</v:line><v:rect fillcolor='red' style='position:absolute;left:18.5;top:-4.0;width:13;height:4.0'>  <v:stroke     />
+</v:rect> <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:-1.8;left:18.8;width:13;height:4.0' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="Barney" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:center'/> 
+ </v:shape> 
+<v:line  from='25.0,0.0' to='25.0,62'>  <v:stroke   />
+</v:line> <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:12;left:11;width:1;height:1' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="Please" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:left' /> 
+ </v:shape> 
+ <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:14;left:11;width:1;height:1' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="give" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:left' /> 
+ </v:shape> 
+ <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:16;left:11;width:1;height:1' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="me the ball." style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:left' /> 
+ </v:shape> 
+ <v:line from='10,18' to='25,18'>
+  <v:stroke     EndArrow='Open' />
+ </v:line>
+ <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:20;left:26;width:1;height:1' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="Gives" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:left' /> 
+ </v:shape> 
+ <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:22;left:26;width:1;height:1' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="bowling ball" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:left' /> 
+ </v:shape> 
+ <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:28;left:11;width:1;height:1' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="Stuff" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:left' /> 
+ </v:shape> 
+ <v:line from='25,30' to='10,30'>
+  <v:stroke     EndArrow='Open' />
+ </v:line>
+ <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:36;left:11;width:1;height:1' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="RTP" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:left' /> 
+ </v:shape> 
+ <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:38;left:11;width:1;height:1' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="(real-time" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:left' /> 
+ </v:shape> 
+ <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:40;left:11;width:1;height:1' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="protocol)" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:left' /> 
+ </v:shape> 
+ <v:line from='25,42' to='10,42'>
+  <v:stroke DashStyle='dot'    />
+ </v:line>
+ <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:44;left:11;width:1;height:1' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="Thank You" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:left' /> 
+ </v:shape> 
+ <v:line from='10,46' to='25,46'>
+  <v:stroke     EndArrow='Open' />
+ </v:line>
+ <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:52;left:11;width:1;height:1' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="You're Welcome" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:left' /> 
+ </v:shape> 
+ <v:line from='25,54' to='10,54'>
+  <v:stroke     EndArrow='Open' />
+ </v:line>
+
+</v:group>
+</body>
+</html>   

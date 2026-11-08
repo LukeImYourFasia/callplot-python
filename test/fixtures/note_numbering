@@ -1,0 +1,8 @@
+opt/messageNumbering/on
+opt/noteNumbering/on
+guy/a/A
+guy/b/B
+a->b/req
+note/a/note one
+b->a/resp
+note/b/note two

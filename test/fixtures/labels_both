@@ -1,0 +1,7 @@
+opt/topLabel/on
+opt/bottomLabel/on
+guy/a/One
+guy/b/Two^lines
+guy/c/Three^line^three
+a->b/msg one
+b->c/msg two

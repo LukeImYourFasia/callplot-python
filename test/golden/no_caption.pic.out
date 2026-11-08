@@ -1,0 +1,5 @@
+.PS    
+Pa: { box "A"; down; La: line 1.0833333333333335i from last box.s }; right; move 2i
+Pb: { box "B"; down; Lb: line 1.0833333333333335i from last box.s }; right; move 2i
+.PE
+

@@ -1,0 +1,11 @@
+<plot>
+<picture>
+          A         B
+          |one      |
+          |--------&gt;|
+          |two      |
+          |&lt;--------|
+          |three    |
+          |--------&gt;|
+</picture>
+</plot>

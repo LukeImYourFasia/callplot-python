@@ -1,0 +1,11 @@
+@startuml
+hide footbox
+participant "Fred\nFlintstone" as p1
+participant "Barney\nRubble\nEsquire" as p2
+p1 -> p2 : Please\ngive\nme the ball.
+note right of p2 : Gives\nbowling ball
+p2 -> p1 : Stuff
+p2 <-[#008080]-> p1 : RTP\n(real~-time\nprotocol)
+p1 -> p2 : Thank You
+p2 -> p1 : You're Welcome
+@enduml
