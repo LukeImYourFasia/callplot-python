@@ -152,3 +152,26 @@ $ python3 tools/run-tests.py golden
 
 Done: svg is byte-identical to the oracle on all 53 fixtures (212 = 53 x 4
 modes text/xml/pic/svg).
+
+## Chunk P5 - VML renderer (also drives -vxml)
+
+Read: DESIGN.md 3.4.4, 3.8 #1 (the unclosed <plot>/<picture> bug kept), 3.8 #5
+(arrows drawn at the final Y), 3.5 typing rule; the JS port's src/render/vml.js.
+
+Build: src/callplot/render/vml.py (vmlOn, drawPlayerVml, drawMessageVml).
+Kept bug-compatible on purpose: the VML epilogue never closes <plot>/<picture>,
+wid stays Java-int through the idiv/parseJavaInt chain so it prints without a
+".0" while the doubles print with one, and the caption's first line is read
+through arrAt so an empty caption still throws IndexError.
+
+Tests (first run, no port bug found this chunk):
+
+```
+$ python3 tools/run-tests.py golden
+[golden] pass 318 / fail 0
+```
+
+318 = 53 fixtures x {text, xml, pic, svg, vml, vxml}.
+
+Done: vml and vxml are byte-identical to the oracle on every fixture,
+including the fixtures whose oracle run crashed mid-buffer.

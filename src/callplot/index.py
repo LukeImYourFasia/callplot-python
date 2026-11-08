@@ -20,6 +20,7 @@ from .parser import parse as parseDoc
 from .render.text import plotOn
 from .render.pic import picOn
 from .render.svg import svgOn
+from .render.vml import vmlOn
 from .out import Out
 from .constants import MODES
 from .context import RunContext
@@ -39,8 +40,9 @@ _LANDED = {
     "text": plotOn,
     "pic": picOn,
     "svg": svgOn,
-    # vml and graffle land with their chunks; mermaid/plantuml/html,
-    # the table styles and the packet-trace converter land with theirs.
+    "vml": vmlOn,
+    # graffle lands with its chunk; mermaid/plantuml/html, the table styles
+    # and the packet-trace converter land with theirs.
 }
 
 
