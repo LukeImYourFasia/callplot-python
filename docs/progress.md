@@ -30,3 +30,65 @@ Tests: none yet (no port code).
 
 Done: the oracle corpus is committed, byte-identical to the JS port's.
 
+
+## Chunk P1 - core package
+
+Read: DESIGN.md 2.2, 3.1-3.9, 3.5, 3.6; the JS port's src/{constants,jcompat,
+out,context,model,escape,flow,parser,ir,index}.js; test/unit/{jcompat,parser,
+flow}.test.js.
+
+Build: src/callplot/{constants,jcompat,out,context,model,escape,flow,parser,
+ir,index}.py plus test/unit suites and tools/run-tests.py, the [unit]/[golden]/
+[cli]/[snapshot] tag runner with node-test-style counts.  Java-faithful
+details pinned here: `idiv` truncates toward zero; `javaTrim` strips only
+code points <= 0x20; `parseJavaInt` is strict and int-ranged; `javaSplit`
+keeps Java's trailing-empty drop and the all-empty -> [] case (probed on the
+reference JVM when the corpus was generated); Parser.java:75's slash rule is
+a fixed-width lookbehind that `re` compiles as is, so no scanner rewrite was
+needed; Parser.java:85's `tkn++` is mirrored by an explicit index; `from` is
+a Python keyword, so Message.from is `from_`.
+
+Tests:
+
+```
+$ python3 tools/run-tests.py unit
+[unit] pass 38 / fail 0
+```
+
+Done: the core parses and lays out every fixture exactly like the Java
+oracle's goldens expect (the unit tests pin the parser/flow state machine;
+the goldens themselves are compared in P2).
+
+## Chunk P2 - TEXT and XML renderers + golden harness
+
+Read: DESIGN.md 3.4 (TEXT/XML line loop, CharBuf, crunch, the XML link scan
+that can run past the buffer end), 4.1; the JS port's src/render/text.js,
+test/golden.test.js.
+
+Build: src/callplot/render/text.py (plotOn, drawTextLines, writeLineXml,
+drawPlayer, drawMessage, copyCaption, printComment) with the Java line
+ranges in comments; test/golden/test_golden.py: byte compare, exit-code
+semantics (a non-zero golden exit requires a throw), the 8192-byte
+PrintWriter flush model for crashed runs, and a unified diff printed on
+mismatch (DESIGN.md 4.1, which the JS port never implemented).
+
+Tests:
+
+```
+$ python3 tools/run-tests.py golden
+[golden] pass 106 / fail 0
+$ python3 tools/run-tests.py unit
+[unit] pass 38 / fail 0
+$ python3 tools/run-tests.py
+[golden] pass 106 / fail 0
+[unit] pass 38 / fail 0
+test: pass 144 / fail 0 in 0.05s
+```
+
+106 = 53 fixtures x {text, xml}: the 4 packet traces have no text/xml goldens
+(their goldens are prep goldens, which land with the prep chunk).
+
+Done: text and xml outputs are byte-identical to the oracle on every fixture,
+including the fixtures whose oracle run crashed.  Modes whose renderer has
+not landed raise RendererNotPortedError, so their goldens cannot pass by
+accident.
