@@ -548,3 +548,61 @@ test: pass 963 / fail 0
 Done: every non-empty Mermaid snapshot parses in mermaid-cli and every
 non-empty PlantUML snapshot parses in the archive's plantuml.jar; the
 gate exits 0 and matches the JS port's gate counts exactly.
+
+## Chunk P14 - the refs gate, the screenshot tool, the README, Appendix B
+
+Read: DESIGN.md 4.10 (samples/reference: every output for every sample;
+compatible outputs from the oracle - jref one-JVM-per-run for the 7 core
+modes, the plottable pipeline jref -xml + Xalan per archive .xsl for the
+6 table styles, htmltable built from tmltable.xsl per 3.13.2; new outputs
+byte-copied from the approved snapshots; trace_sip: .msd from the
+archive's prep.awk in a fresh temp dir (the 0.2 awk drops a debug file in
+the cwd), verified against the trace_sip.prep.out golden, its 4 new
+outputs rendered by the port, the raw .trace copied; index.html one
+table, every cell a link, fred/fred2 legacy-table cells marked "(no
+numbered messages)"; 5 x 17 = 85), 4.7 shots (README sample-output
+pictures from committed HTML), Appendix C README draft, Appendix B errata
+format; the JS port's tools/gen-reference.js, tools/screenshot.js,
+README.md.
+
+Build: tools/gen-reference.py (the same pipeline: the jref invocation
+inlined - no jref script in this repo - awk prep with drift check against
+the golden, Xalan over the archive .xsl files, new outputs copied from
+test/snapshots or rendered by the port for trace_sip, index.html, count
+check 85), tools/screenshot.py (the puppeteer capture runs in node from
+the repo's gitignored node_modules, driven as a module -e so bare imports
+resolve; the two JS-tool notes kept: sidebyside captured at 1500 px,
+wordtable body re-wrapped for the capture only; PNGs under 8,000 bytes
+fail), README.md (Appendix C draft adapted: python entry points,
+make-target development section, embedded docs/images PNGs),
+docs/appendix-b.md (the 4 DESIGN Appendix B rows + the port's own notes:
+CLI error line instead of a JVM stack trace; the JS CLI never flushed
+ctx.err for graffle's System.err debug lines - this port does, verified
+against ../callplot-js/bin/callplot.js; EPIPE exit 0).
+
+Gates: refs regenerated all 85 outputs and git showed ZERO drift against
+the committed samples/reference - the oracle pipeline and the approved
+snapshots reproduce the committed bytes, including the port-rendered
+trace_sip new outputs. shots: 8/8 PNGs, all well above the 8,000-byte
+floor (smallest 58,787; verified visually: numbered rows, annotation
+columns, both html layouts). syntax gate landed green in P13 (96/10).
+
+Tests:
+
+```
+$ make refs
+wrote 85 outputs + trace_sip.trace + trace_sip.msd + index.html under samples/reference
+$ git status --porcelain samples/reference   # (drift check)
+$ make shots
+docs/images/fred_annot-table-archtable.png: 58787 bytes (clip 1004x538)
+... 8 shots, exit 0
+$ make syntax
+syntax: 96 accepted, 10 empty skipped
+$ python3 tools/run-tests.py
+test: pass 963 / fail 0
+```
+
+Done: samples/reference is complete and drift-free, docs/images shows the
+table styles and html layouts as non-blank pictures, the README carries
+the Sample output section with them, and Appendix B records the errata
+including this port's fixes over the JS port's slips.
