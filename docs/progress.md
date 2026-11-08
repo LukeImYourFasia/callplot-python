@@ -510,3 +510,41 @@ check, both green); 10,000 seed-42 cases x 7 modes match one-JVM-per-run
 java and the Python port with 0 differences, so no fuzz fixtures were
 needed and the golden corpus stays as it is; cases.py emits exactly the
 JS generator's stream, so both ports fuzz the same cases.
+
+## Chunk P13 - the syntax gate (mmdc + plantuml.jar over the snapshots)
+
+Read: DESIGN.md 4.2/4.7 ("syntax": mmdc on every Mermaid snapshot, java
+-jar plantuml.jar -checkonly on every PlantUML snapshot; empty snapshots
+are the crashing fixtures' flushed output - skipped, counted; exit 0 =
+every non-empty accepted; section 2.6: tools/ only, exec with argument
+arrays, never a built shell string); the JS port's tools/syntax-check.js
+and tools/mmdc-puppeteer.json (--no-sandbox for the headless fd check).
+
+Build: tools/syntax-check.py (walks test/snapshots, .mmd -> node
+node_modules/@mermaid-js/mermaid-cli/src/cli.js -i ... -o /tmp/opencode/
+syntax/... -p tools/mmdc-puppeteer.json, .puml -> java -jar reference/
+plantuml.jar -checkonly; failures print the stderr head, then the counts),
+tools/mmdc-puppeteer.json (same one-line puppeteer config as the JS repo).
+Toolchain setup (gitignored, never committed): node_modules copied
+byte-identical from the JS repo's proven tree (same mermaid-cli 12.2.0 +
+puppeteer versions; 522 M, node_modules/ is in .gitignore, so the repo
+stays a Python repo with no package.json).
+
+First run: green on the first try, no slips: 96 accepted, 10 empty
+skipped - the same split as the JS gate (212 snapshots total in the
+[snapshot] harness; the 106 mmd/puml ones minus the 10 the crashing
+fixtures flush as empty).
+
+Tests:
+
+```
+$ make lint
+$ make syntax
+syntax: 96 accepted, 10 empty skipped
+$ python3 tools/run-tests.py
+test: pass 963 / fail 0
+```
+
+Done: every non-empty Mermaid snapshot parses in mermaid-cli and every
+non-empty PlantUML snapshot parses in the archive's plantuml.jar; the
+gate exits 0 and matches the JS port's gate counts exactly.
