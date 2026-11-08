@@ -118,3 +118,37 @@ test: pass 197 / fail 0 in 0.06s
 159 = 53 fixtures x {text, xml, pic}.
 
 Done: pic output is byte-identical to the oracle on every fixture.
+
+## Chunk P4 - svg renderer
+
+Read: DESIGN.md 3.4.3, 3.5 typing rule; the JS port's src/render/svg.js.
+
+Build: src/callplot/render/svg.py (svgOn, drawPlayerSvg, textout,
+drawMessageSvg) with the fixed SVG text copied character for character from
+the Java literals; f.vmlXSize/vmlYSize are set by the prologue; the stagger
+ternary bumps ctx.mynum only when stagger is on; every number goes through
+fmtI/fmtD and column*width uses Java int division via idiv.
+
+First run exposed a real porting slip caught by the oracle, not by the goldens
+being edited:
+
+```
+$ python3 tools/run-tests.py golden
+[golden] pass 164 / fail 48
+... [golden] zero_pitch svg: stdout bytes differ
+--- port zero_pitch svg
++++ oracle zero_pitch svg
+-<svg width='1' height='1' viewBox='0 0 10 9'>
++<svg width='1in' height='1in' viewBox='0 0 10 9'>
+```
+
+The port had dropped the "in" units in the <svg> element; after fixing the
+literal (never the golden):
+
+```
+$ python3 tools/run-tests.py golden
+[golden] pass 212 / fail 0
+```
+
+Done: svg is byte-identical to the oracle on all 53 fixtures (212 = 53 x 4
+modes text/xml/pic/svg).

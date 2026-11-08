@@ -19,6 +19,7 @@ renderer is ported.
 from .parser import parse as parseDoc
 from .render.text import plotOn
 from .render.pic import picOn
+from .render.svg import svgOn
 from .out import Out
 from .constants import MODES
 from .context import RunContext
@@ -37,7 +38,8 @@ def _renderer(name):
 _LANDED = {
     "text": plotOn,
     "pic": picOn,
-    # svg, vml and graffle land with their chunks; mermaid/plantuml/html,
+    "svg": svgOn,
+    # vml and graffle land with their chunks; mermaid/plantuml/html,
     # the table styles and the packet-trace converter land with theirs.
 }
 

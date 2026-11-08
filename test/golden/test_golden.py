@@ -24,6 +24,7 @@ MODES_DONE = {
     "text": MODES["TEXT"],
     "xml": MODES["XML"],
     "pic": MODES["PIC"],
+    "svg": MODES["SVG"],
 }
 
 # Section 3.14: the packet traces through the awk converter, with and without
