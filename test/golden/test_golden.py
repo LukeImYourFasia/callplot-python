@@ -28,6 +28,9 @@ MODES_DONE = {
     "vml": MODES["VML"],
     "vxml": MODES["VML"] | MODES["XML"],
     "graffle": MODES["GRAFFLE"],
+    # mermaid, plantuml and html are the new outputs: the oracle pins them as
+    # approved snapshots, not goldens (DESIGN.md 4.2), so they are not in
+    # this map.  They run through the [snapshot] harness instead.
 }
 
 # Section 3.14: the packet traces through the awk converter, with and without

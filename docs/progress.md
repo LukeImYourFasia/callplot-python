@@ -214,3 +214,41 @@ Done: all seven landed modes (text, xml, pic, svg, vml, vxml, graffle) are
 byte-identical to the oracle on all 53 fixtures: 371 = 53 x 7, 0 fail,
 including the fixtures whose oracle run crashed (throw required, partial
 output cut at the 8192-byte PrintWriter boundary).
+
+## Chunk P7 - mermaid + plantuml renderers, snapshot harness
+
+Read: DESIGN.md 3.9 (IR), 3.10 (mermaid), 3.11 (plantuml + its escape table),
+4.7 (approved snapshots, the stdout model of 4.4); the JS port's
+src/render/{mermaid,plantuml}.js, test/snapshot.test.js.
+
+Build: src/callplot/render/{mermaid,plantuml}.py, one-to-one with the IR
+dicts; registered in index.py's dispatch table (they read buildModel(f), not
+Flow).  test/snapshot/test_snapshot.py: the [snapshot] harness mirroring the
+JS one: render fresh through plotFlow, byte-compare test/snapshots/<fixture>
+.<ext>, the same 8192-byte PrintWriter truncation on a throw, unified diff
+printed on mismatch, a missing snapshot fails as a programmer error rather
+than passing.
+
+Decision pinned here: mermaid, plantuml and html have NO goldens - the Java
+oracle never produced them (section 4.7).  The oracle for these three is the
+212 approved snapshots (53 fixtures x {mmd, puml, html-topbottom,
+html-sidebyside}), and the golden harness's mode map stays at the 13
+Java-pinned modes + 8 prep.  The html layout entries join NEW_MODES_DONE
+when the html renderer lands.
+
+Tests:
+
+```
+$ python3 tools/run-tests.py snapshot
+[snapshot] pass 106 / fail 0
+$ python3 tools/run-tests.py
+[golden] pass 371 / fail 0
+[snapshot] pass 106 / fail 0
+[unit] pass 38 / fail 0
+test: pass 515 / fail 0 in 0.14s
+```
+
+106 = 53 fixtures x {mmd, puml}.
+
+Done: mermaid and plantuml reproduce the approved snapshots byte for byte on
+every fixture, on the first run, no porting slip.

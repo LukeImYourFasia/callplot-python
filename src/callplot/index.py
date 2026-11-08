@@ -22,6 +22,8 @@ from .render.pic import picOn
 from .render.svg import svgOn
 from .render.vml import vmlOn
 from .render.graffle import graffleOn
+from .render.mermaid import mermaidOn
+from .render.plantuml import plantumlOn
 from .out import Out
 from .constants import MODES
 from .context import RunContext
@@ -43,8 +45,10 @@ _LANDED = {
     "svg": svgOn,
     "vml": vmlOn,
     "graffle": graffleOn,
-    # mermaid/plantuml/html, the table styles and the packet-trace
-    # converter land with their chunks.
+    "mermaid": mermaidOn,
+    "plantuml": plantumlOn,
+    # html, the table styles and the packet-trace converter land with
+    # their chunks.
 }
 
 
