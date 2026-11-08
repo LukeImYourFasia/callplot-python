@@ -17,6 +17,7 @@ no astral characters, so the two agree for everything the tool is ever
 asked to render; that caveat is pinned in test/unit/test_corpus.py.
 """
 
+import math
 import re
 
 # --- Error model: names after the Java exceptions -------------------------
@@ -142,7 +143,27 @@ def parseJavaInt(s):
     return v
 
 
-# --- Java string utilities ------------------------------------------------
+# --- JS number printing (the -html geometry is JS arithmetic) -------------
+
+
+def jsNum(v):
+    """Number -> string the way JavaScript template literals do it: an
+    integral double prints without a decimal point ("75", "116"), and a
+    non-integral one prints with the shortest round-trip decimal, same
+    rule as repr on Python floats.  Magnitudes here are page pixels, so
+    the JS exponent forms (>=1e21, <1e-7) never occur."""
+    if isinstance(v, bool):
+        raise CallplotError("jsNum: not a number")
+    if isinstance(v, int):
+        return str(v)
+    if v == int(v):
+        return str(int(v))
+    return repr(v)
+
+
+def jsRound(v):
+    """Math.round: half toward +Infinity (Python round() is half-to-even)."""
+    return math.floor(v + 0.5)
 
 
 def arrAt(a, i):

@@ -252,3 +252,46 @@ test: pass 515 / fail 0 in 0.14s
 
 Done: mermaid and plantuml reproduce the approved snapshots byte for byte on
 every fixture, on the first run, no porting slip.
+
+## Chunk P8 - html page renderer (layout + style + svg + table + page)
+
+Read: DESIGN.md 3.12.2 (page contract), 3.12.3 (link/back-ref contract),
+3.12.4 (geometry: estimated text width, pitch clamp 150..300, band stacking),
+3.12.5 (detail table), 3.12.6 (radio-switch layouts), 3.12.7 (one CSS string);
+the JS port's src/render/html/{layout,style,svg,table,page}.js.
+
+Build: src/callplot/render/html/{layout,style,svg,table,page}.py plus the
+package __init__.py, one module per JS module (DESIGN.md 2.2 file map); the
+html geometry is JS floating-point arithmetic, so jcompat.py gains jsNum
+(JS number -> string: integral doubles print bare, others shortest round-trip
+repr) and jsRound (Math.round is half-toward-+Inf, Python round is
+half-to-even - a real trap on the pitch step).  Geometry and drawing share
+computeLayout, so they cannot drift.  Registered as _LANDED["html"] = pageOn;
+NEW_MODES_DONE gains html_topbottom/html_sidebyside.
+
+First run: 96 failures, all one class - five CSS var/property lines had the
+trailing , and ; swapped against the approved snapshots.  Fixed in the port,
+never the snapshots:
+
+```
+$ python3 tools/run-tests.py snapshot
+[snapshot] pass 116 / fail 96          # before
+[snapshot] pass 212 / fail 0           # after the css fix
+```
+
+Tests:
+
+```
+$ python3 tools/run-tests.py snapshot
+[snapshot] pass 212 / fail 0
+$ python3 tools/run-tests.py
+[golden] pass 371 / fail 0
+[snapshot] pass 212 / fail 0
+[unit] pass 38 / fail 0
+test: pass 621 / fail 0 in 0.2s
+```
+
+Done: all four new outputs (mmd, puml, html-topbottom html, html-sidebyside
+html) reproduce the 212 approved snapshots byte for byte on all 53 fixtures,
+including the crash fixtures (html throws before the first byte on the
+bad-option ones, matching the truncated snapshots).

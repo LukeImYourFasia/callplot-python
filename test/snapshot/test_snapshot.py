@@ -25,9 +25,12 @@ from callplot.context import RunContext
 NEW_MODES_DONE = {
     "mermaid": {"flag": MODES["MERMAID"], "ext": "mmd", "opts": {}},
     "plantuml": {"flag": MODES["PLANTUML"], "ext": "puml", "opts": {}},
-    # html_topbottom / html_sidebyside join this map when html lands:
-    # "html_topbottom": {flag MODES.HTML, ext "html-topbottom.html",
-    #                    opts {"htmlLayout": "topbottom"}}
+    "html_topbottom": {"flag": MODES["HTML"],
+                       "ext": "html-topbottom.html",
+                       "opts": {"htmlLayout": "topbottom"}},
+    "html_sidebyside": {"flag": MODES["HTML"],
+                        "ext": "html-sidebyside.html",
+                        "opts": {"htmlLayout": "sidebyside"}},
 }
 
 FIXTURES = os.path.join("test", "fixtures")
