@@ -23,6 +23,7 @@ from callplot.index import RendererNotPortedError
 MODES_DONE = {
     "text": MODES["TEXT"],
     "xml": MODES["XML"],
+    "pic": MODES["PIC"],
 }
 
 # Section 3.14: the packet traces through the awk converter, with and without

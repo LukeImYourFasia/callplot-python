@@ -92,3 +92,29 @@ Done: text and xml outputs are byte-identical to the oracle on every fixture,
 including the fixtures whose oracle run crashed.  Modes whose renderer has
 not landed raise RendererNotPortedError, so their goldens cannot pass by
 accident.
+
+## Chunk P3 - pic renderer
+
+Read: DESIGN.md 3.4.2 (PIC/XPICTURE), 3.8 #8; the JS port's src/render/pic.js.
+
+Build: src/callplot/render/pic.py (picOn, drawPlayerPic, drawMessagePic) with
+the Java line ranges in comments; registered in index.py's static dispatch
+table; test/golden/test_golden.py's MODES_DONE gains pic.  PIC keeps the
+shared drawPictureOn skeleton, prints .PS/.PE, never calls columnOf, so the
+fixtures with unknown aliases stay clean here, and every number goes through
+fmtD (the -1.0 * line / 6.0 double math).
+
+Tests:
+
+```
+$ python3 tools/run-tests.py golden
+[golden] pass 159 / fail 0
+$ python3 tools/run-tests.py
+[golden] pass 159 / fail 0
+[unit] pass 38 / fail 0
+test: pass 197 / fail 0 in 0.06s
+```
+
+159 = 53 fixtures x {text, xml, pic}.
+
+Done: pic output is byte-identical to the oracle on every fixture.
