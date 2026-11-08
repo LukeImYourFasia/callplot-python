@@ -25,6 +25,7 @@ from .render.graffle import graffleOn
 from .render.mermaid import mermaidOn
 from .render.plantuml import plantumlOn
 from .render.html.page import pageOn
+from .render.table.index import tableOn
 from .out import Out
 from .constants import MODES
 from .context import RunContext
@@ -49,7 +50,8 @@ _LANDED = {
     "mermaid": mermaidOn,
     "plantuml": plantumlOn,
     "html": pageOn,
-    # the table styles and the packet-trace converter land with their chunks.
+    "table": tableOn,
+    # the packet-trace converter (prep) lands with its chunk.
 }
 
 

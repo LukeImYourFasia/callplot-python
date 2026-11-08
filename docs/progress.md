@@ -295,3 +295,42 @@ Done: all four new outputs (mmd, puml, html-topbottom html, html-sidebyside
 html) reproduce the 212 approved snapshots byte for byte on all 53 fixtures,
 including the crash fixtures (html throws before the first byte on the
 bad-option ones, matching the truncated snapshots).
+
+## Chunk P9 - six legacy table styles
+
+Read: DESIGN.md 3.13 (pipeline), 3.13.1 (no XML intermediate, D8), 3.13.2
+(per-style columns), 3.13.3 (Xalan serializer rules: XML decl first line,
+no trailing line end, empty element -> <foo/>, <tt/> stays), 3.13.4 (Xalan
+parse errors: bare &, raw '<' -> TableInputError, exit 255 goldens); the
+JS port's src/render/table/{index,common,archtable,htmltable,htmltable2,htmltable3,nolinks,wordtable}.js.
+
+Build: src/callplot/render/table/{__init__,common,index,archtable,htmltable,htmltable2,htmltable3,nolinks,wordtable}.py.
+index.py: drawTextLines (XML lines, links follow the file's option - the
+oracle runs jref -xml + Xalan, and W20 found the file's value beats a
+forced one), checkPictureLine (bare & throws), fixLinkQuotes (Xalan's
+double re-quote), escapeAnnotated (entity decode + rule-8 reprint, bad
+char refs throw), rows per numbered message, STYLES map with the tmltable
+alias (lib/tmltable.xsl is a byte copy of htmltable.xsl, section 1.3),
+TABLE_STYLES exported for the CLI's style validation.  wordtable fixed
+text copied from the goldens byte for byte (attribute order and the
+".5pt;  " double space included).
+
+Tests:
+
+```
+$ python3 tools/run-tests.py golden
+[golden] pass 689 / fail 0
+$ python3 tools/run-tests.py
+[golden] pass 689 / fail 0
+[snapshot] pass 212 / fail 0
+[unit] pass 38 / fail 0
+test: pass 939 / fail 0
+```
+
+689 = 53 fixtures x 13 modes (text, xml, pic, svg, vml, vxml, graffle +
+six table styles); table-xml has only .err goldens, so the harness skips
+it, exactly like the JS one.
+
+Done: every legacy table style reproduces the Xalan oracles byte for byte,
+including the styles' crash fixtures (bad bool/int inputs and the bare-&
+annotation fixtures that make Xalan exit 255).

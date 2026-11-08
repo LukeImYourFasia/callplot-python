@@ -28,9 +28,16 @@ MODES_DONE = {
     "vml": MODES["VML"],
     "vxml": MODES["VML"] | MODES["XML"],
     "graffle": MODES["GRAFFLE"],
-    # mermaid, plantuml and html are the new outputs: the oracle pins them as
-    # approved snapshots, not goldens (DESIGN.md 4.2), so they are not in
-    # this map.  They run through the [snapshot] harness instead.
+    "table-archtable": MODES["TABLE"],
+    "table-htmltable": MODES["TABLE"],
+    "table-htmltable2": MODES["TABLE"],
+    "table-htmltable3": MODES["TABLE"],
+    "table-nolinks": MODES["TABLE"],
+    "table-wordtable": MODES["TABLE"],
+    # table-xml has no .out goldens (Xalan never ran for that style), so the
+    # harness skips it.  mermaid, plantuml and html are the new outputs: the
+    # oracle pins them as approved snapshots, not goldens (DESIGN.md 4.2);
+    # they run through the [snapshot] harness instead.
 }
 
 # Section 3.14: the packet traces through the awk converter, with and without
