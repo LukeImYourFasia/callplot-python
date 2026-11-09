@@ -1,9 +1,6 @@
 # callplot-js — Design and Work Plan
-<!-- Committed copy: the DRM archive sample stays out of both repos, so its
- identifiers are neutralized here (s_drm_sample, drm_sample.msd/html stand for
- the sample that W22 removed); the corpus therefore has no s_drm_sample fixture. -->
 
-Status: Ready for implementation · Author: Edgar Villanueva (with Claude) · Version: 9 · Date: 2026-11-07 · Runtime: Node.js 24 LTS · Reference runtime: OpenJDK 1.8.0_504
+Status: Ready for implementation · Author: Edgar Villanueva (with Claude) · Version: 11 · Date: 2026-11-08 · Runtime: Node.js 24 LTS · Reference runtime: OpenJDK 1.8.0_504
 
 This document is the full contract for the builder. The builder is a coding agent or a junior developer. It tells you what to build, how to build it, and how to prove it is correct. You do not need to know the history of the project. Everything you need is here or in a file this document names.
 
@@ -78,15 +75,13 @@ There are 2 archives. Extract each one into its own folder under `reference/`. D
 | `plottable.sh` | Runs `callplot -xml`, then Xalan with one stylesheet, then writes HTML to stdout. Flags: `-debug`, `-style name`. | Port as the `-table` mode and the `plottable` command (section 3.13). |
 | `lib/*.xsl` (7 files) | Table stylesheets: `archtable`, `htmltable`, `tmltable`, `htmltable2`, `htmltable3`, `nolinks`, `wordtable`. `tmltable` is a byte copy of `htmltable`. | Port all 6 unique styles (section 3.13). |
 | `lib/prep.awk` | Turns a text packet trace into callplot input. | Port as `callplot-prep` (section 3.14). |
-| `drm_sample.msd`, `drm_sample.html`, `Makefile` | A real 19-participant sample, and its `htmltable3` output. The Makefile runs `plottable.sh -style htmltable3`. | Use `drm_sample` as a fixture and a reference sample. |
 | `README.txt`, `README_commands.txt` | Older docs. The 0.2 README contains all of `README_commands.txt` and more. `README.txt` explains plottable. | Sources for the repo README (Appendix C). |
 | `lib/xalan.jar`, `xercesImpl.jar`, `xml-apis.jar` | The 2008 XSLT runtime. | Test oracle only. Never ship them. |
 
 **Verified facts about the archives:**
 
-- ✅ The 2002 jar plus the bundled Xalan, run on Java 8, reproduces `drm_sample.html` **byte for byte**. So the old toolchain still runs correctly on Java 8.
-- ✅ The 0.2 core gives the same `drm_sample` diagram as the 2002 jar, except for 1 extra line of bars at the top. So the table goldens come from the **0.2 core plus Xalan**, not from the 2008 `drm_sample.html` file.
-- ✅ All 7 stylesheets run with exit code 0 on the 0.2 `-xml` output for `drm_sample` (from the zip) and `sip_annot`. `sip_annot` is **not** from either archive. It was written for this design (section 4.3.1).
+- ✅ The 0.2 core gives the same diagram as the 2002 jar, except for 1 extra line of bars at the top. So the table goldens come from the **0.2 core plus Xalan**, not from the 2008 files.
+- ✅ All 7 stylesheets run with exit code 0 on the 0.2 `-xml` output for `sip_annot`. `sip_annot` is **not** from either archive. It was written for this design (section 4.3.1).
 
 Warnings about the 0.2 source:
 
@@ -251,7 +246,7 @@ callplot-js/
 │   ├── cli/                  CLI case files (*.json)
 │   └── browser/              Playwright tests for -html
 ├── samples/
-│   ├── fred, fred2, fred_annot, drm_sample.msd, sip_annot, trace_sip.trace
+│   ├── fred, fred2, fred_annot, sip_annot, trace_sip.trace
 │   └── reference/            every output for every sample (section 4.10)
 ├── tools/                    jref.sh, gen-golden.sh, gen-golden-extra.sh, fuzz.js, gen-reference.js
 ├── reference/                the 2 extracted archives + compiled Java (not shipped)
@@ -350,6 +345,329 @@ One GitHub Actions workflow, `.github/workflows/ci.yml`, runs on every push.
 | `fuzz` | Manual or nightly only. `npm run fuzz -- --seed 1 --count 2000` | Yes |
 
 ---
+
+### 2.7 Diagrams of the tool
+
+These 3 diagrams are callplot input, drawn by the 0.2 Java tool in text mode. The sources and the text output are in `docs/diagrams/*.msd` and `docs/diagrams/*.txt`. They are examples, not fixtures. They add no golden files. After the port works, `callplot` must draw each `.msd` file as the same `.txt` file.
+
+#### 2.7.1 What happens inside one run
+
+A run of `callplot -svg fred > fred.svg`. Read it from top to bottom. The `-mermaid`, `-plantuml`, and `-html` modes add step 15 to 17. The compatible modes stop at step 14.
+
+```
+        User              bin           render()         parser.js         flow.js          render            ir.js            html          jcompat.js
+        shell                           index.js                        Flow + layout                          IR
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |(1) callplot -svg fred > fred.svg|                |                |                |                |                |                |
+          |--------------->|                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |scan flags (Java rules)          |                |                |                |                |                |
+          |                |pick mode + options              |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |read file bytes (fs)             |                |                |                |                |                |
+          |                |decode as UTF-8 |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |(2) render(text, mode, ctx, options)              |                |                |                |                |
+          |                |--------------->|                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |(3) parse(text) |                |                |                |                |                |
+          |                |                |--------------->|                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |(4) javaTrim, javaSplit          |                |                |                |
+          |                |                |                |----------------------------------------------------------------------------------->|
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |(5) clean tokens|                |                |                |                |
+          |                |                |                |<-----------------------------------------------------------------------------------|
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |(6) Flow with players[], messages[]               |                |                |                |
+          |                |                |<---------------|                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |(7) layout(): options, columns, numbering         |                |                |                |
+          |                |                |-------------------------------->|                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |(8) fmtD, idiv, parseJavaInt     |                |                |
+          |                |                |                |                |------------------------------------------------------------------>|
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |(9) Java-exact numbers           |                |                |
+          |                |                |                |                |<------------------------------------------------------------------|
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |(10) positions and widths ready  |                |                |                |                |
+          |                |                |<--------------------------------|                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |Compatible outputs read Flow.    |                |                |                |                |
+          |                |                |New outputs read the IR.         |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |(11) draw(Flow, ctx)             |                |                |                |                |
+          |                |                |static switch on mode            |                |                |                |                |
+          |                |                |------------------------------------------------->|                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |text, pic, svg, vml, graffle, table               |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |(12) string     |                |                |                |                |                |
+          |                |                |<-------------------------------------------------|                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |(13) buildModel(Flow)            |                |                |                |                |
+          |                |                |only for -mermaid, -plantuml, -html               |                |                |                |
+          |                |                |------------------------------------------------------------------>|                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |(14) events e1..eN + srcLine     |
+          |                |                |                |                |                |                |--------------->|                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |(15) string     |                |                |                |                |                |
+          |                |                |<-----------------------------------------------------------------------------------|                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |(16) output string               |                |                |                |                |                |
+          |                |<---------------|                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |(17) stdout bytes, exit code 0   |                |                |                |                |                |                |
+          |<---------------|                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+          |                |                |                |                |                |                |                |                |
+```
+
+#### 2.7.2 How a person uses the tool
+
+The path from a command to a picture in the browser. The page is one file. It needs no server.
+
+```
+      Engineer        Terminal        callplot          Files          Browser
+          |               |               |               |               |
+          |               |               |               |               |
+          |(1) write calls.msd            |               |               |
+          |guy, arrows, ! comments        |               |               |
+          |---------------------------------------------->|               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |(2) callplot -html calls.msd > calls.html      |               |
+          |-------------->|               |               |               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |(3) run command|               |               |
+          |               |-------------->|               |               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |(4) read calls.msd             |
+          |               |               |-------------->|               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |(5) text       |               |
+          |               |               |<--------------|               |
+          |               |               |               |               |
+          |               |               |parse, layout, draw            |
+          |               |               |diagram + table + links        |
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |(6) one HTML page on stdout    |               |
+          |               |<--------------|               |               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |(7) save calls.html            |               |
+          |               |------------------------------>|               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |(8) open calls.html            |               |               |
+          |-------------------------------------------------------------->|
+          |               |               |               |               |
+          |               |               |               |(9) load the file
+          |               |               |               |no server, no network
+          |               |               |               |<--------------|
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |               |(10) self-contained page
+          |               |               |               |-------------->|
+          |               |               |               |               |
+          |               |               |               |               |
+          |(11) diagram on top, table below               |               |
+          |<--------------------------------------------------------------|
+          |               |               |               |               |
+          |               |               |               |               |
+          |(12) click badge 7 on the diagram              |               |
+          |-------------------------------------------------------------->|
+          |               |               |               |               |
+          |               |               |               |               |jump to row 7
+          |               |               |               |               |row is highlighted
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |(13) click row 7 back link     |               |               |
+          |-------------------------------------------------------------->|
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |               |               |scroll diagram to event 7
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |               |               |The back link is in the left c*
+          |               |               |               |               |It stays in view when the tabl*
+          |               |               |               |               |
+          |               |               |               |               |
+          |(14) switch to side by side    |               |               |
+          |radio switch, no JS            |               |               |
+          |-------------------------------------------------------------->|
+          |               |               |               |               |
+          |               |               |               |               |
+          |(15) edit calls.msd, run callplot again        |               |
+          |-------------->|               |               |               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |               |               |
+```
+
+#### 2.7.3 Example: a fictional API that calls many systems
+
+`POST /orders` on a made-up `ShopAPI`. One request reaches a cache, a database, an AI model, a payment API, an event bus, and a warehouse system. A person can write a diagram like this from a trace or from design notes. It shows what callplot draws well: many participants, replies, notes, and calls that run later (`async`).
+
+```
+     Mobile app        API gateway      Order service       Postgres         Redis cache        Event bus         AI model         Payment API        Warehouse
+                                                                                                  Kafka        fraud + upsell       external          external
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |(1) POST         |                 |                 |                 |                 |                 |                 |                 |
+          |---------------->|                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |(2) orders (JWT) |                 |                 |                 |                 |                 |                 |                 |
+          |<----------------|                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |verify JWT, rate limit             |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |(3) createOrder(cart)              |                 |                 |                 |                 |                 |
+          |                 |---------------->|                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |(4) order id     |                 |                 |                 |                 |                 |                 |
+          |                 |<----------------|                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(5) GET cart:42  |                 |                 |                 |                 |                 |
+          |                 |                 |---------------------------------->|                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(6) miss         |                 |                 |                 |                 |                 |
+          |                 |                 |<----------------------------------|                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(7) SELECT cart, prices, stock     |                 |                 |                 |                 |
+          |                 |                 |---------------->|                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(8) rows         |                 |                 |                 |                 |                 |
+          |                 |                 |<----------------|                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(9) score order risk               |                 |                 |                 |                 |
+          |                 |                 |---------------------------------------------------------------------->|                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(10) risk 0.07   |                 |                 |                 |                 |                 |
+          |                 |                 |<----------------------------------------------------------------------|                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(11) BEGIN, INSERT order, INSERT items, UPDATE stock |                 |                 |                 |
+          |                 |                 |---------------->|                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(12) ok          |                 |                 |                 |                 |                 |
+          |                 |                 |<----------------|                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(13) charge card (idempotency key) |                 |                 |                 |                 |
+          |                 |                 |---------------------------------------------------------------------------------------->|                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(14) 402 declined|                 |                 |                 |                 |                 |
+          |                 |                 |<----------------------------------------------------------------------------------------|                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(15) charge card, retry            |                 |                 |                 |                 |
+          |                 |                 |---------------------------------------------------------------------------------------->|                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(16) 200 paid    |                 |                 |                 |                 |                 |
+          |                 |                 |<----------------------------------------------------------------------------------------|                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(17) UPDATE order SET status = PAID|                 |                 |                 |                 |
+          |                 |                 |---------------->|                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(18) ok          |                 |                 |                 |                 |                 |
+          |                 |                 |<----------------|                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(19) publish order.paid            |                 |                 |                 |                 |
+          |                 |                 |async            |                 |                 |                 |                 |                 |
+          |                 |                 |---------------------------------------------------->|                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |(20) order.paid  |                 |                 |
+          |                 |                 |                 |                 |                 |---------------------------------------------------->|
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |(21) ack         |                 |                 |
+          |                 |                 |                 |                 |                 |<----------------------------------------------------|
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |(22) shipment.created              |                 |
+          |                 |                 |                 |                 |                 |async            |                 |                 |
+          |                 |                 |                 |                 |                 |<----------------------------------------------------|
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(23) shipment.created              |                 |                 |                 |                 |
+          |                 |                 |<----------------------------------------------------|                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(24) UPDATE order SET shipment = ...                 |                 |                 |                 |
+          |                 |                 |---------------->|                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |(25) DEL cart:42 |                 |                 |                 |                 |                 |
+          |                 |                 |---------------------------------->|                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |(26) 201 Created |                 |                 |                 |                 |                 |                 |
+          |                 |<----------------|                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |(27) 201 + order id                |                 |                 |                 |                 |                 |                 |
+          |<----------------|                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |Other consumers get the event:     |                 |
+          |                 |                 |                 |                 |                 |email, analytics, loyalty points.  |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+          |                 |                 |                 |                 |                 |                 |                 |                 |
+```
+
+To draw it as a page: `callplot -html docs/diagrams/api.msd > api.html`.
 
 ## 3. Detailed Design
 
@@ -1301,7 +1619,7 @@ Java 8 is installed (`openjdk version "1.8.0_504"`). Do not install another JDK.
    - Write the exit code to `test/golden/F.M.exit`.
 7. Write `tools/gen-golden-extra.sh`:
    - **Tables:** for each fixture `F` and each style `S`: run `tools/jref.sh -xml test/fixtures/F` into a temporary file. Then run `java -cp xalan.jar:xml-apis.jar:xercesImpl.jar org.apache.xalan.xslt.Process -IN tmp.xml -XSL lib/S.xsl -OUT test/golden/F.table-S.out`. Record the exit code. If the `-xml` step failed, record that exit code instead.
-   - Run the tables step only for the 54 callplot-input fixtures, never for a `.trace` file.
+   - Run the tables step only for the 53 callplot-input fixtures, never for a `.trace` file.
    - **Do not run `plottable.sh`.** It is a script from inside an untrusted archive (section 1.3). The 2 steps above are its whole pipeline, with the 0.2 core in place of its 2002 jar.
    - **Prep:** for each trace fixture `T` (file `test/fixtures/T.trace`): in a new temporary folder, run `/usr/bin/awk -f lib/prep.awk test/fixtures/T.trace > test/golden/T.prep.out`. Run it again with `-v LINKS=y` into `test/golden/T.prep-links.out`. Write each exit code to `T.prep.exit` and `T.prep-links.exit`. Delete the `debug` file. (`.trace` is removed from the golden name: `trace_sip.trace` → `trace_sip.prep.out`.)
    - Running `prep.awk` with `/usr/bin/awk` is allowed. awk reads the file as a program. It does not run it as a shell script.
@@ -1325,15 +1643,15 @@ Check after generation: `test/golden/s_fred.text.out` must start like this. ✅ 
 
 ### 4.3 Fixture corpus (`test/fixtures/`)
 
-There are 58 fixtures: **54 callplot inputs** and **4 packet traces**. Each one tests one behavior. "per Java" means the golden file decides.
+There are 57 fixtures: **53 callplot inputs** and **4 packet traces**. Each one tests one behavior. "per Java" means the golden file decides.
 
 Golden outputs per fixture:
 
 | Fixture type | Count | Goldens each | Total |
 |---|---:|---|---:|
-| callplot input (`test/fixtures/<F>`) | 54 | 7 core modes + 6 table styles = 13 | 702 |
+| callplot input (`test/fixtures/<F>`) | 53 | 7 core modes + 6 table styles = 13 | 689 |
 | packet trace (`test/fixtures/<T>.trace`) | 4 | `prep` + `prep-links` = 2 | 8 |
-| **All** | 58 | | **710** |
+| **All** | 57 | | **697** |
 
 A trace is not callplot input. It gets no core or table goldens.
 
@@ -1382,11 +1700,10 @@ A trace is not callplot input. It gets no core or table goldens.
 | `zero_pitch` | `opt/columnPitch/0`, 2 guys, 1 message | per Java |
 | `start_overrides` | `opt/startLine/0`, `opt/startColumn/20` | ok |
 
-**Table, prep, and new-output fixtures (16).** The table below gives each fixture's purpose. Its exact text is in section 4.3.2. Do not write these fixtures from the short descriptions.
+**Table, prep, and new-output fixtures (15).** The table below gives each fixture's purpose. Its exact text is in section 4.3.2. Do not write these fixtures from the short descriptions.
 
 | Fixture | Content and intent | Expect |
 |---|---|---|
-| `s_drm_sample` | `drm_sample.msd` from the zip (19 participants, `noteNumbering`, `stagger`, `columnPitch 22`) | ok in every mode. The wide-diagram test. |
 | `s_sip_annot` | `samples/sip_annot`, written for this design (section 4.3.1). 3 participants, 15 events (13 numbered), notes, comments, media, a note message, a self-message, `opt/title`. | ok in every mode |
 | `tbl_entities` | `messageNumbering on`, `!a &lt;b&gt; &amp; c`, `!x > y` | ✅ tables exit 0 |
 | `tbl_raw_lt` | `messageNumbering on`, `!a < b` | ✅ tables exit non-zero. Core modes ok. |
@@ -1463,7 +1780,7 @@ What it tests:
 
 #### 4.3.2 Exact text of the new fixtures
 
-Copy each file exactly. Each line ends with `\n`, unless a note says otherwise. `s_drm_sample` is a byte copy of `drm_sample.msd` from the zip. `s_sip_annot` is a byte copy of section 4.3.1.
+Copy each file exactly. Each line ends with `\n`, unless a note says otherwise. `s_sip_annot` is a byte copy of section 4.3.1.
 
 A `!` or `!!` line before any message throws (section 3.8, item 12). So each fixture starts with 2 guys and 1 message (the **scaffold**), and its test lines come after that.
 
@@ -1618,7 +1935,7 @@ Each case lists `args` and an optional `stdin` file. The "Expected from" column 
 | `plottable_usage` | `plottable` (no file) | `test/cli/plottable_usage.expected` (below) | stdout equals that file. exit 1. |
 | `plottable_debug` | `plottable -debug -style htmltable3 s_sip_annot` | `s_sip_annot.table-htmltable3.out` and `s_sip_annot.xml.out` | stdout equals the table golden. `_x_<pid>.xml` exists and equals the XML golden. stderr has the `retaining xml intermediate file` line. Run it in a temporary folder. |
 | `prep_stdin` | `callplot-prep -` with stdin = `trace_sip.trace` | `trace_sip.prep.out` | stdout equals that golden. No `debug` file is made. |
-| `epipe` | `callplot s_drm_sample` | conditions only | The test starts the command, reads 1 line, then closes the pipe. exit 0. Empty stderr. |
+| `epipe` | `callplot s_fred` | conditions only | The test starts the command, reads 1 line, then closes the pipe. exit 0. Empty stderr. |
 
 **`test/cli/inputs/layout_topbottom`**
 ```
@@ -1879,10 +2196,10 @@ Run each test in Chromium at 2 widths: 1600×1000 and 390×844. Run each test in
 
 | Test | Steps | Pass when |
 |---|---|---|
-| Back link, top and bottom | Open `s_drm_sample.html`. Scroll the table sideways to the far right. Click the back link of row 30. | `#flow-e30` is in view, both up and down and sideways inside the diagram box. |
+| Back link, top and bottom | Open `s_sip_annot.html` at 390px. Scroll the table sideways to the far right. Click the back link of row 13. | `#flow-e13` is in view, both up and down and sideways inside the diagram box. |
 | Pinned column | Scroll the table sideways. | Column 1 (back links) is still fully visible. |
 | Forward link | Click the badge of event 10. | Row `#detail-e10` is in view and highlighted. |
-| Side by side | Open `s_drm_sample.html` with `sidebyside` at 1600px. Click a back link. | The diagram pane scrolls. The table pane does **not** move. |
+| Side by side | Open `s_sip_annot.html` with `sidebyside` at 1600px. Click a back link. | The diagram pane scrolls. The table pane does **not** move. |
 | Fallback | Same file at 390px. | The page shows top and bottom. |
 | Switch | Click "Side by side", then "Top and bottom". | The layout changes each time. No reload. |
 | Bad layout | Run `callplot -html` on `new_layout_bad`. | Exit 1. |
@@ -1903,12 +2220,11 @@ These run in CI (section 2.6) on every push:
 
 These are user-facing examples. They show every output for every sample. They are separate from `test/golden/`, which has many more small fixtures.
 
-**Samples (6):**
+**Samples (5):**
 
 | Sample | Source |
 |---|---|
 | `fred`, `fred2`, `fred_annot` | The 0.2 archive |
-| `drm_sample` | The zip archive |
 | `sip_annot` | Written for this design (section 4.3.1) |
 | `trace_sip` | Written for this design (section 3.14.5). Its `.msd` comes from `callplot-prep`. |
 
@@ -1933,7 +2249,7 @@ Plus, for `trace_sip`: `trace_sip.trace` (input) and `trace_sip.msd` (from awk).
 
 Rules:
 
-1. Put each sample's files in `samples/reference/<sample>/`. That is 6 × 17 = 102 output files.
+1. Put each sample's files in `samples/reference/<sample>/`. That is 5 × 17 = 85 output files.
 2. `tools/gen-reference.js` makes them: compatible outputs from the oracle, new outputs by copying the approved snapshots.
 3. `samples/reference/index.html` is a plain page with one table: one row per sample, one column per output, each cell a link.
 4. A test `[golden]` renders each sample with JS and checks that it equals each stored file.
@@ -1995,7 +2311,7 @@ For each chunk: **Read** the listed sections. **Build** the listed files. **Done
 
 | Chunk | Read | Build | Done when |
 |---|---|---|---|
-| **W0** Oracle harness | 1.3, 4.2, 4.3, 4.4, 3.14.5 | `reference/`, `tools/jref.sh`, `tools/gen-golden.sh`, `tools/gen-golden-extra.sh`, `test/fixtures/*` (58), `test/golden/*` (710 outputs + 8 CLI goldens), `test/cli/inputs/*`, `test/cli/plottable_usage.expected`, `samples/sip_annot` (copy from 4.3.1), `samples/trace_sip.trace` (copy from 3.14.5) | The `s_fred` check passes. Each of the 54 callplot inputs has 13 golden outputs. Each of the 4 traces has 2. Every output has an `.exit` file. The 8 W0 CLI goldens exist. The legacy-jar check reproduces `drm_sample.html`. |
+| **W0** Oracle harness | 1.3, 4.2, 4.3, 4.4, 3.14.5 | `reference/`, `tools/jref.sh`, `tools/gen-golden.sh`, `tools/gen-golden-extra.sh`, `test/fixtures/*` (57), `test/golden/*` (697 outputs + 8 CLI goldens), `test/cli/inputs/*`, `test/cli/plottable_usage.expected`, `samples/sip_annot` (copy from 4.3.1), `samples/trace_sip.trace` (copy from 3.14.5) | The `s_fred` check passes. Each of the 53 callplot inputs has 13 golden outputs. Each of the 4 traces has 2. Every output has an `.exit` file. The 8 W0 CLI goldens exist. |
 | **W1** Scaffold | 2.4, 2.5, 2.6 | `package.json` (`"type":"module"`, `engines`, `exports`, `bin`, `files`, scripts), `.nvmrc`, `.npmrc`, `eslint.config.js`, `jsconfig.json`, CI workflow, `src/constants.js`, `src/out.js`, `src/context.js`, LGPL file headers | `npm test` runs with 0 tests. `npm run lint` and `npm run typecheck` pass. |
 | **W2** jcompat | 3.5 | `src/jcompat.js`, `test/unit/jcompat.test.js` | The `fmtD` table and all helper tests pass. |
 | **W3** Parser + model | 3.1, 3.2 | `src/parser.js`, `src/model.js`, unit tests | The dummy logic, split, escapes, parse errors, `srcLine`, and `isReply` are tested. The 100,000-character line test passes in under 1 s. |
@@ -2006,7 +2322,7 @@ For each chunk: **Read** the listed sections. **Build** the listed files. **Done
 | **W8** SVG | 3.4.3 | `src/render/svg.js` | All `svg` goldens pass. |
 | **W9** VML | 3.4.4 | `src/render/vml.js` | All `vml` and `vxml` goldens pass. |
 | **W10** Graffle | 3.4.5 | `src/render/graffle.js` | All `graffle` goldens pass. |
-| **W11** Table styles | 3.13.1–3.13.4 | `src/render/table/index.js`, 6 style files | All 6 × 54 table goldens pass (with the non-zero exit rule). |
+| **W11** Table styles | 3.13.1–3.13.4 | `src/render/table/index.js`, 6 style files | All 6 × 53 table goldens pass (with the non-zero exit rule). |
 | **W12** Mermaid | 3.10 | `src/render/mermaid.js`, `src/escape.js` (`escMermaid`) | Snapshots are written. `escMermaid` unit tests pass, including the one-pass test. |
 | **W13** PlantUML | 3.11 | `src/render/plantuml.js`, `escPlantuml` | Snapshots are written. The pinned `plantuml.jar` renders every snapshot on Java 8. The jar version is recorded in `reference/PLANTUML_VERSION`. |
 | **W14** HTML layout + SVG | 3.12.4 | `src/render/html/layout.js`, `svg.js` | Layout unit tests pass (pitch rule, heights, widths). The SVG for `sip_annot` shows dashed replies and teal media lines. |
@@ -2015,7 +2331,7 @@ For each chunk: **Read** the listed sections. **Build** the listed files. **Done
 | **W17** CLI + commands | 3.7, 3.13.5, 3.14 | `bin/callplot.js`, `bin/plottable.js`, `bin/callplot-prep.js`, `test/cli.test.js` | All CLI cases pass, including `epipe`. |
 | **W18** Syntax + browser checks | 4.7, 4.8 | `test/browser/*.spec.js`, syntax-check scripts | `mmdc` and PlantUML accept every snapshot. All browser tests pass at both widths and in both layouts. |
 | **W19** Fuzz | 4.5, 4.5.1–4.5.3, 5.3.1 | `tools/oracle/client.js` (`FuzzOracle.java` and the probes are provided), `tools/fuzz.js`, new fuzz fixtures | All 6 steps W19a–W19f in section 5.3.1 pass their checks. The trust check passes (300 cases × 7 modes, 0 differences). Then 10,000 cases, 0 diffs. Each fix has a fixture. The report gives the measured run time. |
-| **W20** Reference samples | 4.10 | `tools/gen-reference.js`, `samples/reference/**`, `index.html` | 102 files exist. The reference test passes. |
+| **W20** Reference samples | 4.10 | `tools/gen-reference.js`, `samples/reference/**`, `index.html` | 85 files exist. The reference test passes. |
 | **W21** README + docs | Appendix C | `README.md` (copy Appendix C, then update the real outputs) | All criteria in section 4.6 are true. |
 
 #### 5.3.1 W19 in steps
@@ -2066,7 +2382,7 @@ Do the steps in order. Each step ends with a check. Do not start the next step u
 
 | Chunk | Low | Likely | High | Main risk |
 |-------|----:|-------:|-----:|-----------|
-| W0 Oracle harness + 58 fixtures + 710 goldens | 35 m | 60 m | 90 m | Writing fixtures. Java 8 charset setup. Xalan class path. |
+| W0 Oracle harness + 57 fixtures + 697 goldens | 35 m | 60 m | 90 m | Writing fixtures. Java 8 charset setup. Xalan class path. |
 | W1 Scaffold (Node 24, lint, typecheck, CI) | 5 m | 10 m | 15 m | — |
 | W2 jcompat | 15 m | 20 m | 30 m | `javaSplit` edge cases |
 | W3 Parser + model | 15 m | 30 m | 45 m | Dummy state machine |
@@ -2086,7 +2402,7 @@ Do the steps in order. Each step ends with a check. Do not start the next step u
 | W17 CLI + 3 commands | 25 m | 40 m | 60 m | Usage text. Exit codes. EPIPE. |
 | W18 Syntax + browser checks | 30 m | 45 m | 90 m | Playwright setup. Scroll checks. |
 | W19 Fast oracle + fuzz + fix loop | 30 m | 55 m | 105 m | The harness is provided. The client byte framing is the main risk. Each fuzz rerun is faster, so the fix loop is shorter. |
-| W20 Reference samples | 25 m | 45 m | 70 m | 102 files |
+| W20 Reference samples | 25 m | 45 m | 70 m | 85 files |
 | W21 README + docs | 10 m | 20 m | 30 m | — |
 | **Total, one agent, in order** | **8.4 h** | **13.5 h** | **22.3 h** | |
 | **Total, 5 tracks at the same time** | **4.6 h** | **7.6 h** | **12.3 h** | Merge conflicts in `src/index.js` (small) |
@@ -2124,7 +2440,7 @@ The builder records each case where the original tool did something different fr
 
 | Date | Section | Spec said | Original tool does | Fixture |
 |------|---------|-----------|-----------|---------|
-| 2026-11-05 | 1.3 | — | The 2002 jar's diagram has 1 fewer bar line at the top than the 0.2 core. The goldens use the 0.2 core. | `s_drm_sample` |
+| 2026-11-05 | 1.3 | — | The 2002 jar's diagram has 1 fewer bar line at the top than the 0.2 core. The goldens use the 0.2 core. | — |
 | 2026-11-05 | 3.14.4 | — | `prep.awk` writes a `debug` file in the current folder. The JS port writes it only with `--debug-file`. (Deliberate.) | `prep_stdin` |
 | 2026-11-05 | 3.13.4 | — | Xalan exits 255 on bad annotation text. JS exits 1. (Deliberate.) | `tbl_raw_lt`, `tbl_bare_amp` |
 | 2026-11-05 | 3.7 | — | Java can leak up to 8 KB of partial output when it fails. JS writes nothing for a failed file. (Accepted.) | `long_label_crash` |
@@ -2342,8 +2658,8 @@ LGPL-2.1-only, the same as the original callplot. Original code © dynamicsoft.
 
 | # | Optimization | Expected gain | How to make it safe |
 |---|---|---|---|
-| D1 | **Prune the golden matrix.** 710 goldens is generous. Many core-behavior fixtures add nothing to the 6 table styles. Error fixtures repeat the same exit code in every mode. Run coverage per golden, then drop each golden that covers no line or branch that the others do not already cover. | Fewer files. A faster test run. Easier review. | Coverage must stay the same (lines and branches) after the prune. Keep every golden that is named in section 3.8 or Appendix B. |
-| D2 | **Store goldens without duplicates.** Some outputs are equal byte for byte (for example, the empty stdout of error cases). Some are large (the `drm_sample` `wordtable` output is about 79 KB). Store each unique output once, named by its SHA-256 hash, with an index file that maps `fixture.mode` to the hash. | A smaller repo and smaller diffs. | The test still compares full bytes. `tools/gen-golden*.sh` writes the index. |
+| D1 | **Prune the golden matrix.** 697 goldens is generous. Many core-behavior fixtures add nothing to the 6 table styles. Error fixtures repeat the same exit code in every mode. Run coverage per golden, then drop each golden that covers no line or branch that the others do not already cover. | Fewer files. A faster test run. Easier review. | Coverage must stay the same (lines and branches) after the prune. Keep every golden that is named in section 3.8 or Appendix B. |
+| D2 | **Store goldens without duplicates.** Some outputs are equal byte for byte (for example, the empty stdout of error cases). Some are large (the `wordtable` outputs are large). Store each unique output once, named by its SHA-256 hash, with an index file that maps `fixture.mode` to the hash. | A smaller repo and smaller diffs. | The test still compares full bytes. `tools/gen-golden*.sh` writes the index. |
 | D3 | **Speed up the test suite.** Group the golden tests by fixture, so each input is read and parsed once per mode. Turn on `node --test` concurrency. | A shorter CI run and a faster dev loop. | The test count and the results must not change. |
 
 ### D.2 Only if real inputs need it
