@@ -13,3 +13,8 @@ rendered/
 reference/build-tools/
 reference/build-probes/
 node_modules/
+# This design's own build and gate artifacts (DESIGN-PYTHON.md 2.6 dist job,
+# 4.7 coverage gate); none of it is shipped.
+dist/
+.coverage
+.coverage.*

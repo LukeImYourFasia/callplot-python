@@ -1,4 +1,4 @@
-"""Data model for players and messages.
+"""Data model for players and messages (DESIGN.md section 3.2).
 
 Copyright (C) 2004 dynamicsoft, Inc.
 
@@ -9,85 +9,88 @@ your option) any later version.  A copy of the license is in LICENSE.
 
 Port of Player.java:35-97 (fields, ctor, digest) and Message.java:35-124
 (fields, ctors, digest, addComment/addNote) plus the derived predicates of
-DESIGN.md section 3.2.
-Captions are stored as Python str indexed by code point, like Java char[]
-indexed by code unit: the oracle corpus has no astral characters.
+DESIGN.md section 3.2.  DESIGN-PYTHON.md section 2.5: fixed shapes are
+``@dataclass(slots=True)`` classes with plain fields; the Java field
+``from`` is ``from_`` (a Python keyword clash).  Captions are unit strings
+(jcompat section 3.2): len() counts UTF-16 code units like Java.
 """
 
-from .jcompat import tokenize
+from dataclasses import dataclass, field
+
+from callplot.jcompat import tokenize
 
 
-def digest(captionRaw):
+def digest(caption_raw: str) -> tuple[list[str], str]:
     """Shared caption digest (Player.java:74-90, Message.java:72-88).
 
     StringTokenizer on "^" drops empty tokens; PIC wants caption lines
-    joined with quote-space-quote.  Returns (lines, captionString).
+    joined with quote-space-quote.  Returns (lines, caption_string).
     """
-    caption = tokenize(captionRaw, "^")
-    captionString = ""
-    for i in range(len(caption)):
-        if i != 0:
-            captionString += '" "'
-        captionString += caption[i]
-    return caption, captionString
+    caption = tokenize(caption_raw, "^")
+    return caption, '" "'.join(caption)
 
 
+@dataclass(slots=True)
 class Player:
     """Flow.java:255-263 assigns column via setColumn; it defaults to 10."""
 
-    def __init__(self, name, captionRaw):
-        caption, captionString = digest(captionRaw)
-        self.name = name  # alias is NOT trimmed (Parser.java:88)
-        self.caption = caption
-        self.captionString = captionString
-        self.column = 10
+    name: str = ""
+    caption_raw: str = ""  # ctor input: the raw "a^b" caption (Player.java:74-90)
+    caption: list[str] = field(default_factory=list)
+    caption_string: str = ""
+    column: int = 10
 
-    def getCaptionLines(self):
+    def __post_init__(self) -> None:
+        self.caption, self.caption_string = digest(self.caption_raw)
+
+    def get_caption_lines(self) -> int:
         return len(self.caption)  # Player.java:66-68
 
 
+@dataclass(slots=True)
 class Message:
-    """Message.java:103-119 ctor; repeatLabel defaults false (99-101)."""
+    """Message.java:103-119 ctor; repeat_label defaults false (99-101)."""
 
-    def __init__(self, from_, to, captionRaw, filler, arrowFrom, arrowTo,
-                 repeatLabel=False):
-        caption, captionString = digest(captionRaw)
-        self.from_ = from_  # Python keyword clash: Java's "from" is from_
-        self.to = to
-        # mutable: Graffle mutates caption[0] (section 3.8 #6)
-        self.caption = caption
-        self.captionString = captionString
-        self.filler = filler  # '-', '.' or ' '
-        self.arrowFrom = arrowFrom
-        self.arrowTo = arrowTo
-        self.repeatLabel = repeatLabel
-        self.line = 0  # set by layout (setLine)
-        self.myNumber = 0  # Java int default (Message.java:57)
-        self.notes = []
-        self.comments = []
-        # New fields for the IR (section 3.1/3.2): 1-based input line that
-        # created this message, and the alternating reply flag.  Compatible
-        # outputs never read them, so they cannot change those outputs.
-        self.srcLine = 0
-        self.isReply = False
+    from_: str = ""
+    to: str = ""
+    caption_raw: str = ""  # ctor input: the raw "a^b" caption
+    filler: str = "-"
+    arrow_from: bool = False
+    arrow_to: bool = True
+    repeat_label: bool = False
+    line: int = 0  # set by layout (setLine)
+    my_number: int = 0  # Java int default (Message.java:57)
+    notes: list[str] = field(default_factory=list)
+    comments: list[str] = field(default_factory=list)
+    # New fields for the IR (DESIGN.md sections 3.1/3.2): 1-based input
+    # line that created this message, and the alternating reply flag.
+    # Compatible outputs never read them, so they cannot change those
+    # outputs.
+    src_line: int = 0
+    is_reply: bool = False
+    caption: list[str] = field(default_factory=list)
+    caption_string: str = ""
 
-    def getLength(self):
+    def __post_init__(self) -> None:
+        self.caption, self.caption_string = digest(self.caption_raw)
+
+    def get_length(self) -> int:
         return len(self.caption)
 
-    def addNote(self, note):
+    def add_note(self, note: str) -> None:
         self.notes.append(note)
 
-    def addComment(self, comment):
+    def add_comment(self, comment: str) -> None:
         self.comments.append(comment)
 
 
-def isSelf(m):
+def is_self(m: Message) -> bool:
     return m.from_ == m.to
 
 
-def isUndirected(m):
-    return not m.arrowFrom and not m.arrowTo
+def is_undirected(m: Message) -> bool:
+    return not m.arrow_from and not m.arrow_to
 
 
-def isNote(m):
-    return isSelf(m) and isUndirected(m)  # made by note/... lines
+def is_note(m: Message) -> bool:
+    return is_self(m) and is_undirected(m)  # made by note/... lines

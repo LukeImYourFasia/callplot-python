@@ -1,13 +1,75 @@
-[project]
-name = "callplot-python"
-version = "0.1.0"
-description = "Bug-compatible Python port of callplot 0.2 (Java), with new modern outputs"
-license = "LGPL-2.1-only"
-authors = [{ name = "Edgar Villanueva" }]
-# Node 24 LTS was the JavaScript port's floor (DESIGN.md 1.2 D2); the Python
-# port's floor is 3.13, and every gate runs on the system's 3.14.4.
-requires-python = ">=3.13"
-dependencies = []  # DESIGN.md 1.2 D2: zero third-party runtime dependencies
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
 
-[project.urls]
-repository = "https://github.com/LukeImYourFasia/callplot-python"
+[project]
+name = "callplot-py"
+version = "0.1.0"
+description = "Draw call-flow (sequence) diagrams from a text file. A Python port of callplot 0.2."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "LGPL-2.1-only"
+license-files = ["LICENSE"]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.8", "mypy>=1.13", "build>=1.2", "twine>=5"]
+
+[project.scripts]
+callplot = "callplot.cli:main"
+plottable = "callplot.plottable:main"
+callplot-prep = "callplot.prep_cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/callplot"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+# docs/ holds the design specs as markdown, and ruff 0.17 would now try to
+# format the illustrative Python blocks inside them: keep them out of the
+# "."-scoped gates (Appendix B)
+extend-exclude = ["docs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "PT", "RUF", "S", "TID"]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"sys".msg = "Only the command modules may do I/O."
+"os".msg = "Only the command modules may do I/O."
+"pathlib".msg = "Only the command modules may do I/O."
+"subprocess".msg = "Only the command modules may do I/O."
+"argparse".msg = "Only the command modules may do I/O."
+
+[tool.ruff.lint.per-file-ignores]
+"src/callplot/cli.py" = ["TID251"]
+"src/callplot/plottable.py" = ["TID251"]
+"src/callplot/prep_cli.py" = ["TID251"]
+"src/callplot/__main__.py" = ["TID251"]
+"tests/**" = ["S101", "S603", "S607", "TID251"]
+# the test harness and the repo tools spawn processes on purpose;
+# fuzz uses random.Random on purpose (seeded, DESIGN-PYTHON.md 4.6)
+"tools/**" = ["S101", "S311", "S603", "S607", "TID251"]
+
+[tool.mypy]
+strict = true
+files = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers"
+markers = [
+    "unit: helper and parser tests",
+    "golden: output equals the stored Java, Xalan, or awk output",
+    "cli: runs the installed commands",
+    "snapshot: output equals an approved new-output snapshot",
+    "fuzz: needs Java 8 and the harness",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["callplot"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true

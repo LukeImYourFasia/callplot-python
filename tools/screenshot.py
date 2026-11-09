@@ -10,22 +10,24 @@ your option) any later version.  A copy of the license is in LICENSE.
 
 Renders the widest tool diagram (docs/diagrams/api.msd, DESIGN.md section
 2.7.3) headless with the repo's puppeteer (from node_modules, which is not
-committed).  The HTML is generated on the spot by this port's own CLI
-(bin/callplot.py), so the pictures always show what the tool draws now; no
-committed page is read.  Notes carried from the JS tool:
+committed).  The HTML is generated on the spot through this port's own API
+(``callplot.api.render``), so the pictures always show what the tool draws
+now; no committed page is read and no command is shelled out (DESIGN-PYTHON.md
+section 3.7: the library call is the honest way for a tool of this repo).
+Notes carried from the JS tool:
 
  - sidebyside needs the viewport 1100 px or wider: the stylesheet switches
    layouts inside @container cpf (min-width:1100px), so a narrower window
    stacks the panes (what a browser does at that width too).
- - wordtable re-wraps the page in the capture harness only: the legacy
-   Word XML head makes Chrome move the body into <head>, so the body
-   region is fed to a blank document here; only the capture works around
-   Chrome's parser.
+ - wordtable re-wraps the page in the capture harness only: the legacy Word
+   XML head makes Chrome move the body into <head>, so the body region is
+   fed to a blank document here; only the capture works around Chrome's
+   parser.
 
 Implementation: the capture itself runs in Node (puppeteer lives in
 node_modules), driven as a module -e from the repo root so the bare
-"puppeteer" import resolves into the repo's node_modules; this tool
-starts it and reports.
+"puppeteer" import resolves into the repo's node_modules; this tool starts
+it and reports.
 """
 
 import json
@@ -34,29 +36,40 @@ import subprocess
 import sys
 import tempfile
 
-PADS = 10      # whitespace trimmed around the content box
-SCALE = 2      # device pixels per CSS pixel: crisp small type
+sys.path.insert(0, os.path.abspath("src"))
+
+from callplot.api import render
+from callplot.constants import Mode
+from callplot.options import HtmlLayout, RenderOptions, parse_table_style
+
+PADS = 10  # whitespace trimmed around the content box
+SCALE = 2  # device pixels per CSS pixel: crisp small type
 
 MSD = "docs/diagrams/api.msd"
 
-# [callplot args, destination, viewport width, viewport height]
+# [mode, options, destination, viewport width, viewport height]
+TABLE_STYLES = ("archtable", "htmltable", "htmltable2", "htmltable3", "nolinks", "wordtable")
+
 SHOTS = [
-    (["-table=" + style, MSD],
-     "docs/images/api-table-%s.png" % style, 1600, 900)
-    for style in ("archtable", "htmltable", "htmltable2", "htmltable3",
-                  "nolinks", "wordtable")
+    (Mode.TABLE, parse_table_style(style), f"docs/images/api-table-{style}.png", 1600, 900)
+    for style in TABLE_STYLES
 ] + [
-    (["-html", MSD], "docs/images/api-html-topbottom.png", 1500, 1200),
-    (["-html=sidebyside", MSD], "docs/images/api-html-sidebyside.png", 1500, 1000),
+    (Mode.HTML, None, "docs/images/api-html-topbottom.png", 1500, 1200),
+    (Mode.HTML, HtmlLayout.SIDEBYSIDE, "docs/images/api-html-sidebyside.png", 1500, 1000),
 ]
 
 
-def render(args):
-    """Ask this port's own CLI to draw one page."""
-    r = subprocess.run(
-        [sys.executable, "bin/callplot.py"] + args,
-        stdout=subprocess.PIPE, check=True)
-    return r.stdout.decode("utf-8", "replace")
+def render_html(mode, table_style, html_layout):
+    """One page through the API (DESIGN-PYTHON.md section 3.7: a string out)."""
+    with open(MSD, encoding="utf-8") as fh:
+        text = fh.read()
+    options = RenderOptions()
+    if table_style is not None:
+        options = options._replace(table_style=table_style)
+    if mode is Mode.HTML and html_layout is not None:
+        # -html=sidebyside forces the layout (DESIGN.md 3.12.6 rule)
+        options = options._replace(html_layout=html_layout)
+    return render(text, mode, options=options)
 
 
 def staged_shots():
@@ -64,15 +77,17 @@ def staged_shots():
     js_shots = []
     tmps = []
     try:
-        for args, dst, width, height in SHOTS:
-            html = render(args)
+        for mode, opt, dst, width, height in SHOTS:
+            if mode is Mode.TABLE:
+                html = render_html(mode, opt, None)
+            else:
+                html = render_html(mode, None, opt)
             if "wordtable" in dst:
                 # harness-only rewrap: body region of the Word page fed to a
                 # blank document, so Chrome keeps the body
                 from_ = html.find("<body")
                 to = html.find("</body>")
-                html = "<!doctype html>\n%s\n" % html[
-                    from_:to if to != -1 else len(html)]
+                html = f"<!doctype html>\n{html[from_ : to if to != -1 else len(html)]}\n"
             fd, path = tempfile.mkstemp(prefix="callplot-shot-", suffix=".html")
             with os.fdopen(fd, "wb") as fh:
                 fh.write(html.encode("utf-8"))
@@ -83,6 +98,7 @@ def staged_shots():
         for path in tmps:
             os.unlink(path)
         raise
+
 
 # the puppeteer capture, run headless; exits non-zero if a shot drew
 # nothing or came out too small
@@ -139,8 +155,7 @@ def main():
     js_shots, tmps = staged_shots()
     try:
         src = JS_TEMPLATE.replace("__SHOTS__", json.dumps(js_shots))
-        r = subprocess.run(["node", "--input-type=module", "-e", src],
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        r = subprocess.run(["node", "--input-type=module", "-e", src], capture_output=True)
     finally:
         for path in tmps:
             os.unlink(path)
@@ -150,7 +165,7 @@ def main():
         sys.stdout.write(out)
     if r.returncode != 0:
         sys.stderr.write(err)
-        print("shots: puppeteer capture failed, exit %s" % r.returncode)
+        print(f"shots: puppeteer capture failed, exit {r.returncode}")
         return 1
     return 0
 

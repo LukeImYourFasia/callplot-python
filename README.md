@@ -9,13 +9,15 @@ bugs and all.
 
 ## Install
 
-Python 3.13 or later; no third-party runtime dependencies. From the repo:
-
 ```sh
-python3 bin/callplot.py --help
-python3 bin/plottable.py -style htmltable3 flow.txt > flow.html
-python3 bin/callplot-prep.py --links trace.txt > flow.txt
+pip install callplot-py        # needs Python 3.12 or newer
 ```
+
+This installs 3 commands: `callplot`, `plottable`, and `callplot-prep`.
+`python3 -m callplot` is the same as `callplot`. In the repo instead of from
+PyPI: `pip install -e '.[dev]'` inside a virtual environment, and the same
+three commands appear in its `bin/` folder of the environment. There is no
+`bin/` folder in this repository.
 
 ## Quick start
 
@@ -33,7 +35,7 @@ f->b/Thank You
 b->f/You're Welcome
 ```
 
-Run `python3 bin/callplot.py fred`:
+Run `callplot fred`:
 
 ```
         Fred          Barney
@@ -67,7 +69,7 @@ Run `python3 bin/callplot.py fred`:
           |              |
 ```
 
-Run `python3 bin/callplot.py -html fred > fred.html` and open it in a browser
+Run `callplot -html fred > fred.html` and open it in a browser
 for the drawn version with a linked detail table.
 
 ## Sample output
@@ -153,8 +155,8 @@ all options.
 ## Annotated tables
 
 ```sh
-python3 bin/callplot.py -table=htmltable3 flow.txt > flow.html
-python3 bin/plottable.py -style htmltable3 flow.txt > flow.html     # same, old command form
+callplot -table=htmltable3 flow.txt > flow.html
+plottable -style htmltable3 flow.txt > flow.html     # same, old command form
 ```
 
 Turn on `opt/messageNumbering/on`. Only numbered messages get a table row.
@@ -164,8 +166,8 @@ annotations. A raw `<` or `&` is an error, as in the original tool.
 ## Import a packet trace
 
 ```sh
-python3 bin/callplot-prep.py trace.txt > flow.txt
-python3 bin/callplot.py -html flow.txt > flow.html
+callplot-prep --links trace.txt > flow.txt
+callplot -html flow.txt > flow.html
 ```
 
 `callplot-prep` reads a text trace with `Date`, `Source Address`, and
@@ -175,13 +177,16 @@ on diagram links; add `--debug-file path` for the converter's debug lines.
 ## Use it as a library
 
 ```python
-import sys
-sys.path.insert(0, "src")  # the pure package under src/callplot
-from callplot import render, MODES
+from callplot import render, Mode
 
-svg = render(text, MODES["SVG"])
-page = render(text, MODES["HTML"], None, {"htmlLayout": "sidebyside"})
+print(render(open("fred", encoding="utf-8").read(), Mode.TEXT))
+svg = render(text, Mode.SVG)
+page = render(text, Mode.HTML, options=RenderOptions(html_layout=HtmlLayout.SIDEBYSIDE))
 ```
+
+`render` is pure: a string in, a whole document out, or a throw. One
+`ctx=RunContext()` shared across calls carries the Graffle ids and the
+stagger alternation over files, like the Java statics.
 
 `render` is pure: a string in, a string out. It throws on bad input.
 
@@ -197,14 +202,18 @@ HTML) escape all text. The known differences are listed in
 ## Development
 
 ```sh
-make test         # unit, golden, CLI, and snapshot suites
-make lint         # compileall over src, bin, tools
-make oracle-check # probe table + trust check: harness vs one JVM per run
+make check        # ruff, mypy --strict, and pytest with coverage (>= 90%)
+make test         # pytest over tests/ (unit, golden, cli, snapshot layers)
 make fuzz         # 10,000 seeded cases x 7 modes, harness oracle vs port
-make syntax       # mermaid-cli + plantuml.jar parse every snapshot
+make oracle-check # probe table + trust check: harness vs one JVM per run
 make refs         # regenerate samples/reference (oracle + approved snapshots)
 make shots        # regenerate the README screenshots (renders docs/diagrams/api.msd)
+make dist         # python -m build + twine check + tools/check_dist.py
 ```
+
+The gate tools are ruff, mypy and pytest from the `dev` extra
+(`pip install -e '.[dev]'`). The CI job `.github/workflows/python.yml` runs
+the same thing on Python 3.12, 3.13 and 3.14.
 
 The golden files come from the original tools: Java 8, Xalan, and mawk. The
 corpus is shared with the callplot-js port; the goldens here are committed

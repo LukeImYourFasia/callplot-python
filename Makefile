@@ -1,49 +1,55 @@
-# Gates for the Python port.  Every target prints node-test-style pass/fail
-# counts (DESIGN.md 5.4 rule 9) and exits non-zero on any failure.
-PY ?= python3
+# Gates for the Python port (DESIGN-PYTHON.md 3.1 and 4.7-4.8).
+# Every gate prints its own counts and exits non-zero on any failure.
 
-.PHONY: test unit golden cli snapshot syntax shots refs fuzz oracle-check check lint clean
+PY ?= python3
+PYTEST ?= .venv/bin/pytest
+
+.PHONY: check test unit golden cli snapshot fuzz oracle-check refs shots dist lint clean
 
 test:
-	$(PY) tools/run-tests.py
+	$(PYTEST)
 
 unit:
-	$(PY) tools/run-tests.py unit
+	$(PYTEST) tests/unit -q
 
 golden:
-	$(PY) tools/run-tests.py golden
+	$(PYTEST) tests/golden -q
 
 cli:
-	$(PY) tools/run-tests.py cli
+	$(PYTEST) tests/cli -q
 
 snapshot:
-	$(PY) tools/run-tests.py snapshot
+	$(PYTEST) tests/golden/test_snapshots.py -q
 
-syntax:
-	$(PY) tools/syntax-check.py
+# DESIGN-PYTHON.md 4.6: the trust check runs first, then the big run.
+FUZZ_ARGS ?= --seed 42 --count 10000
+
+fuzz:
+	$(PYTEST) tests/fuzz_client_check.py
+	$(PY) tools/fuzz.py $(FUZZ_ARGS)
+
+oracle-check:
+	$(PYTEST) tests/fuzz_client_check.py
+
+refs:
+	$(PYTEST) tests/golden/test_reference.py -q
 
 shots:
 	$(PY) tools/screenshot.py
 
-refs:
-	$(PY) tools/gen-reference.py
-
-# DESIGN.md 4.5 runs at scale: the gate passes the seed/count defaults (fuzz.py
-# exits 2 without them).
-FUZZ_ARGS ?= --seed 42 --count 10000
-
-fuzz:
-	$(PY) tools/fuzz.py $(FUZZ_ARGS)
-
-oracle-check:
-	$(PY) tools/oracle-check.py
-
-check: lint
-	$(PY) tools/run-tests.py
+dist:
+	$(PY) -m build
+	-twine check dist/*
+	$(PY) tools/check_dist.py
 
 lint:
-	$(PY) -m compileall -q src bin tools
+	.venv/bin/ruff check .
+	.venv/bin/ruff format --check .
+	.venv/bin/mypy
+
+check: lint test
 
 clean:
-	rm -rf src/__pycache__ src/callplot/__pycache__ src/callplot/render/__pycache__ \
-		tools/__pycache__ test/unit/__pycache__ test/golden/__pycache__
+	rm -rf .mypy_cache .ruff_cache dist coverage .coverage*
+	rm -rf src/callplot/__pycache__ tools/__pycache__ tests/__pycache__
+	rm -rf tests/*/__pycache__
