@@ -1,0 +1,101 @@
+# CI for the Python port of callplot (DESIGN-PYTHON.md section 2.6).
+#
+# One workflow file, three jobs:
+#   check  - matrix over Python 3.12/3.13/3.14, lint + types + tests, no Java
+#   dist   - build the sdist/wheel and check it, no Java
+#   fuzz   - nightly via cron, needs Java 8; trust check before the big run
+#
+# Path note: the repository root IS the project (there is no python/ subdir),
+# so the design's ./python[dev] is simply .[dev] here and python/tools/fuzz.py
+# is tools/fuzz.py. ruff, mypy and pytest settings all come from pyproject.toml.
+#
+# Schema note: GitHub allows cron only at the top level of a workflow file
+# (on.schedule applies to the whole file), so the schedule lives here and each
+# job picks its trigger with a job-level `if` on github.event_name:
+# check and dist run on push; fuzz runs nightly and via the manual
+# workflow_dispatch button (DESIGN-PYTHON.md 2.6 says "manual or nightly").
+# There is no oracle-regeneration step anywhere: the goldens under test/ are
+# committed data, and reference/ holds the committed Java .class files.
+
+name: python
+
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    # nightly, a couple of times a day (01:00 and 13:00 UTC)
+    - cron: "0 1,13 * * *"
+
+jobs:
+  check:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.13", "3.14"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Create venv and pip install -e '.[dev]'
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -e '.[dev]'
+      - name: ruff check
+        run: .venv/bin/ruff check .
+      - name: ruff format check
+        run: .venv/bin/ruff format --check .
+      - name: mypy (config from pyproject.toml)
+        run: .venv/bin/mypy
+      - name: pytest with coverage, fuzz deselected (no Java needed here)
+        run: .venv/bin/pytest --cov -m "not fuzz"
+
+  dist:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Set up Python 3.13 (the pinned dev version in .python-version)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Create venv and pip install -e '.[dev]' (build and twine live in the dev extra)
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -e '.[dev]'
+      - name: Build sdist and wheel
+        run: .venv/bin/python -m build
+      - name: twine check dist/*
+        run: .venv/bin/twine check dist/*
+      - name: Wheel contents check
+        run: .venv/bin/python tools/check_dist.py
+
+  fuzz:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Set up Python 3.13 (steps mirror the check job, minus coverage)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install Java 8 (openjdk-8 ships in Ubuntu universe on the ubuntu2004/2204 images; if an image ever drops it, fall back to a PPA via add-apt-repository)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-8
+          java -version
+      - name: Create venv and pip install -e '.[dev]'
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -e '.[dev]'
+      - name: Compile the fuzz harness (reference/build-tools/ is gitignored, so CI builds FuzzOracle.class; the reference/build/ .class files are committed)
+        run: javac -nowarn -d reference/build-tools tools/oracle/FuzzOracle.java
+      - name: Harness-client trust check, must run before the big fuzz run
+        run: .venv/bin/pytest -m fuzz tests/fuzz_client_check.py
+      - name: Differential fuzz run
+        run: .venv/bin/python tools/fuzz.py --seed 1 --count 2000

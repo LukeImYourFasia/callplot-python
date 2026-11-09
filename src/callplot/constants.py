@@ -1,4 +1,4 @@
-"""Mode bits for the renderers.
+"""Mode bits for the renderers (DESIGN.md sections 1.4 and 2.2).
 
 Copyright (C) 2004 dynamicsoft, Inc.
 
@@ -7,37 +7,31 @@ under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation; either version 2.1 of the License, or (at
 your option) any later version.  A copy of the license is in LICENSE.
 
-Port of CallplotConstants.java:30-49 (Python by Edgar Villanueva).
-VML_X_SIZE and VML_BOX_PERCENT are unused by the program (see Flow.java).
+Port of CallplotConstants.java:30-49.  VML_X_SIZE and VML_BOX_PERCENT are
+unused by the program (see Flow.java).  Bit values are internal: no golden
+or CLI output depends on them.  The new bits follow DESIGN.md section 2.2
+exactly (TABLE at 0x200, so HTML keeps the section's 0x100).
 
-Bit values are internal: no golden or CLI output depends on them.
-The new bits follow DESIGN.md section 2.2 exactly (TABLE at 0x200, so
-HTML keeps the section's 0x100).
+DESIGN-PYTHON.md section 2.3: ``Mode`` is an ``IntFlag``, and VXML is an
+alias member so ``case Mode.VXML:`` in api.py matches the combined flag.
 """
 
-MODES = {
-    "TEXT": 0x01,
-    "PIC": 0x02,
-    "XML": 0x04,
-    "VML": 0x08,
-    "SVG": 0x10,
-    "GRAFFLE": 0x20,
-    "MERMAID": 0x40,
-    "PLANTUML": 0x80,
-    "HTML": 0x100,
-    "TABLE": 0x200,
-}
+from enum import IntFlag
 
-TEXT = MODES["TEXT"]
-PIC = MODES["PIC"]
-XML = MODES["XML"]
-VML = MODES["VML"]
-SVG = MODES["SVG"]
-GRAFFLE = MODES["GRAFFLE"]
-MERMAID = MODES["MERMAID"]
-PLANTUML = MODES["PLANTUML"]
-HTML = MODES["HTML"]
-TABLE = MODES["TABLE"]
+
+class Mode(IntFlag):
+    TEXT = 0x01
+    PIC = 0x02
+    XML = 0x04
+    VML = 0x08
+    SVG = 0x10
+    GRAFFLE = 0x20
+    MERMAID = 0x40
+    PLANTUML = 0x80
+    HTML = 0x100
+    TABLE = 0x200
+    VXML = VML | XML
+
 
 GRAFFLE_MULT = 14
 GRAFFLE_TOP_MARG = 15

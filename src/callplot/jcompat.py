@@ -7,67 +7,106 @@ under the terms of the GNU Lesser General Public License as published by
 the Free Software Foundation; either version 2.1 of the License, or (at
 your option) any later version.  A copy of the license is in LICENSE.
 
-Every renderer must format numbers through fmtI/fmtD and index buffers
-through CharBuf.  No standard-library I/O here: this file is part of the
-pure core (DESIGN.md section 4.6, criterion 5).
-
-Text is a Python str.  Java indexes UTF-16 code units; Python indexes
-code points.  The oracle corpus (fixtures, goldens, snapshots) contains
-no astral characters, so the two agree for everything the tool is ever
-asked to render; that caveat is pinned in test/unit/test_corpus.py.
+DESIGN-PYTHON.md section 3.3: this file holds the Python way of every
+helper.  Text inside the port is held as unit strings (section 3.2): to_units
+runs first in render()/prep(), from_units last.  No standard-library I/O
+here: this file is part of the pure core (DESIGN-PYTHON.md PD7).
 """
 
 import math
 import re
+from collections.abc import Sequence
 
-# --- Error model: names after the Java exceptions -------------------------
-
-
-class CallplotError(Exception):
-    """Base of every expected (operational) failure."""
-
-
-class NumberFormatError(CallplotError):
-    pass
-
-
-class IllegalArgumentError(CallplotError):
-    pass
+from callplot.errors import (
+    CallplotArithmeticError,
+    CallplotError,
+    CallplotIndexError,
+    NegativeArraySizeError,
+    NumberFormatError,
+)
 
 
-class IndexError(CallplotError):
-    pass
+def to_units(s: str) -> str:
+    """First step of render()/prep(): replace every character above U+FFFF
+    with its two surrogate code units, as Java stores a char[].
+
+    If no such character exists the text is returned unchanged (the common
+    case; the whole corpus is like this).
+    """
+    if all(ord(c) < 0x10000 for c in s):
+        return s
+    res: list[str] = []
+    for c in s:
+        cp = ord(c)
+        if cp > 0xFFFF:
+            cp -= 0x10000
+            res.append(chr(0xD800 + (cp >> 10)) + chr(0xDC00 + (cp & 0x3FF)))
+        else:
+            res.append(c)
+    return "".join(res)
 
 
-class NullPointerError(CallplotError):
-    pass
+def from_units(s: str) -> str:
+    """Last step of render()/prep(): join each valid surrogate pair back
+    into one character.  A lone surrogate stays as it is (it encodes to
+    '?' through the command writer, like Java writes it)."""
+    if not any(0xD800 <= ord(c) <= 0xDFFF for c in s):
+        return s
+    res: list[str] = []
+    i = 0
+    n = len(s)
+    while i < n:
+        code = ord(s[i])
+        if 0xD800 <= code <= 0xDBFF and i + 1 < n and 0xDC00 <= ord(s[i + 1]) <= 0xDFFF:
+            hi = code - 0xD800
+            lo = ord(s[i + 1]) - 0xDC00
+            res.append(chr(0x10000 + (hi << 10) + lo))
+            i += 2
+        else:
+            res.append(s[i])
+            i += 1
+    return "".join(res)
 
 
-class ArithmeticError(CallplotError):
-    pass
-
-
-class NegativeArraySizeError(CallplotError):
-    pass
-
-
-class JavaRuntimeException(Exception):
-    """Flow.java throws a bare java RuntimeException (JS used bare Error).
-    Not a CallplotError: the same exit-1 path in bin/, and stderr is never
-    compared against a golden.  Kept distinct so catch sites match Java."""
+def read_lines(text: str) -> list[str]:
+    """Java BufferedReader.readLine (DESIGN-PYTHON.md section 3.2): split on
+    \\r\\n, \\r or \\n only; "" and a text ending in a line end drop the last
+    (empty) item.  NEVER use str.splitlines(): it also splits on \\x0b,
+    \\x0c, \\x1c-\\x1e, \\x85 and the Unicode line separators."""
+    if text == "":
+        return []
+    lines: list[str] = []
+    n = len(text)
+    start = 0
+    i = 0
+    while i < n:
+        ch = text[i]
+        if ch == "\n":
+            lines.append(text[start:i])
+            i += 1
+            start = i
+        elif ch == "\r":
+            lines.append(text[start:i])
+            i += 2 if i + 1 < n and text[i + 1] == "\n" else 1
+            start = i
+        else:
+            i += 1
+    if start < n:
+        lines.append(text[start:])
+    return lines
 
 
 # --- Number formatting ----------------------------------------------------
 
 
-def fmtI(n):
+def fmt_i(n: int) -> str:
     """Java String concatenation of an int ("" + int)."""
     if not isinstance(n, int) or isinstance(n, bool):
         raise CallplotError("not a Java int: " + str(n))
     return str(n)
 
 
-def _java_double_digits_exp(x):
+def _java_double_digits_exp(x: float) -> tuple[str, int]:
     """Shortest decimal digits + decimal-point index for a finite double.
 
     Returns (digits, n): value == int(digits) * 10 ** (n - len(digits)),
@@ -78,9 +117,13 @@ def _java_double_digits_exp(x):
     # Python repr is plain decimal or %e style; parse both into digits/n.
     if "e" in s or "E" in s:
         m = re.match(r"^(\d+)(?:\.(\d+))?[eE]([-+]?\d+)$", s)
+        if m is None:
+            raise AssertionError  # repr of a double always matches this shape
         intpart, frac, exp = m.group(1), m.group(2) or "", int(m.group(3))
     else:
         m = re.match(r"^(\d+)(?:\.(\d+))?$", s)
+        if m is None:
+            raise AssertionError  # repr of a double always matches this shape
         intpart, frac, exp = m.group(1), m.group(2) or "", 0
     digits = intpart + frac
     n = len(intpart) + exp
@@ -93,7 +136,7 @@ def _java_double_digits_exp(x):
     return digits, n
 
 
-def fmtD(x):
+def fmt_d(x: float) -> str:
     """Java Double.toString on OpenJDK 1.8.0_504 (section 3.5 table).
 
     Python's repr is the same shortest round-trip form, so the plain and
@@ -125,17 +168,29 @@ def fmtD(x):
 # --- Java int arithmetic --------------------------------------------------
 
 
-def idiv(a, b):
+def idiv(a: int, b: int) -> int:
     """Java int / int: truncating toward zero."""
     if b == 0:
-        raise ArithmeticError("/ by zero")
+        raise CallplotArithmeticError("/ by zero")
     q = abs(a) // abs(b)
     return -q if (a < 0) != (b < 0) else q
 
 
-def parseJavaInt(s):
+def fdiv(a: float, b: float) -> float:
+    """Java double / double (DESIGN-PYTHON.md section 3.3): division by
+    +-0.0 follows IEEE 754 (inf/NaN, sign = sign of a times the sign of
+    the zero), it does NOT raise like Python's a / b."""
+    if b == 0.0:
+        if math.isnan(a) or a == 0.0:
+            return math.nan
+        neg = (a < 0.0) ^ (math.copysign(1.0, b) < 0.0)
+        return -math.inf if neg else math.inf
+    return a / b
+
+
+def parse_java_int(s: str) -> int:
     """Integer.parseInt (strict). Java 8 accepts a leading + or -."""
-    if not re.match(r"^[+-]?[0-9]+$", s):
+    if not re.fullmatch(r"[+-]?[0-9]+", s, re.ASCII):
         raise NumberFormatError('For input string: "' + s + '"')
     v = int(s)
     if v < -2147483648 or v > 2147483647:
@@ -146,7 +201,7 @@ def parseJavaInt(s):
 # --- JS number printing (the -html geometry is JS arithmetic) -------------
 
 
-def jsNum(v):
+def js_num(v: float) -> str:
     """Number -> string the way JavaScript template literals do it: an
     integral double prints without a decimal point ("75", "116"), and a
     non-integral one prints with the shortest round-trip decimal, same
@@ -161,19 +216,19 @@ def jsNum(v):
     return repr(v)
 
 
-def jsRound(v):
+def js_round(v: float) -> int:
     """Math.round: half toward +Infinity (Python round() is half-to-even)."""
     return math.floor(v + 0.5)
 
 
-def arrAt(a, i):
+def arr_at(a: list[str], i: int) -> str:
     """Java array/[] access: out-of-bounds throws."""
     if i < 0 or i >= len(a):
-        raise IndexError("Index out of range")
+        raise CallplotIndexError("Index out of range")
     return a[i]
 
 
-def javaTrim(s):
+def java_trim(s: str) -> str:
     """String.trim: strips leading/trailing chars with code <= U+0020.
     NOT the same as str.strip(), which also strips Unicode spaces."""
     i = 0
@@ -185,19 +240,20 @@ def javaTrim(s):
     return s[i:j]
 
 
-def javaSplit(s, re_):
+def java_split(s: str, pattern: re.Pattern[str]) -> list[str]:
     """String.split(regex) on Java:
       - no match anywhere       -> [s]
       - otherwise               -> segments, with trailing empty strings dropped
       - all segments empty      -> [] (confirmed on OpenJDK 1.8.0_504:
                                     "//".split("/") has length 0)
 
-    re_ is a compiled pattern (str pattern accepted).  Java Regex and
-    Python re agree for the patterns this port uses: the parser's slash
-    rule (Parser.java:75) is a fixed-width lookbehind, which Python re
-    supports natively, so no hand-rolled scanner is needed.
+    ``pattern`` is a compiled pattern with no capturing groups (DESIGN-PYTHON.md
+    section 3.3).  Java Regex and Python re agree for the patterns this
+    port uses: the parser's slash rule (Parser.java:75) is a fixed-width
+    lookbehind, which Python re supports natively, so no hand-rolled
+    scanner is needed.
     """
-    compiled = re.compile(re_) if isinstance(re_, str) else re_
+    compiled = pattern
     if not compiled.search(s):
         return [s]
     segs = compiled.split(s)
@@ -206,7 +262,7 @@ def javaSplit(s, re_):
     return segs
 
 
-def tokenize(s, delim="^"):
+def tokenize(s: str, delim: str = "^") -> list[str]:
     """java.util.StringTokenizer(s, delim): split on each delim char, drop empties."""
     return [t for t in s.split(delim) if len(t) > 0]
 
@@ -219,30 +275,30 @@ class CharBuf:
     Java char[] initializer, not spaces: nothing in the port may rely on
     pre-filled blanks (the text renderer writes every cell each line)."""
 
-    def __init__(self, width):
+    def __init__(self, width: int) -> None:
         if width < 0:
             raise NegativeArraySizeError(str(width))
-        self.a = ["\u0000"] * width
+        self.a: list[str] = ["\u0000"] * width
 
-    def get(self, i):
+    def get(self, i: int) -> str:
         if i < 0 or i >= len(self.a):
-            raise IndexError("Index out of range")
+            raise CallplotIndexError("Index out of range")
         return self.a[i]
 
-    def set(self, i, ch):
+    def set(self, i: int, ch: str) -> None:
         if i < 0 or i >= len(self.a):
-            raise IndexError("Index out of range")
+            raise CallplotIndexError("Index out of range")
         self.a[i] = ch
 
-    def copyIn(self, src, at, n):
+    def copy_in(self, src: Sequence[str], at: int, n: int) -> None:
         """System.arraycopy(src, 0, buf, at, n): bounds of the whole range
         are checked before any write happens."""
         if n < 0 or at < 0 or at + n > len(self.a):
-            raise IndexError("Index out of range")
+            raise CallplotIndexError("Index out of range")
         for k in range(n):
             self.a[at + k] = src[k]
 
-    def sliceString(self, at, n):
+    def slice_string(self, at: int, n: int) -> str:
         """new String(char[], offset, length): read n cells as a string."""
         out = []
         for k in range(n):
