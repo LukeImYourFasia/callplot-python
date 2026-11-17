@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html><body><small><pre><picture>
+        Fred          Barney
+     Flintstone       Rubble
+                      Esquire
+          |              |
+          |Please        |
+          |give          |
+          |me the ball.  |
+          |-------------&gt;|
+          |              |
+          |              |Gives
+          |              |bowling ball
+          |              |
+          |              |
+          |              |
+          |Stuff         |
+          |&lt;-------------|
+          |RTP           |
+          |(real-time    |
+          |protocol)     |
+          |..............|
+          |              |
+          |              |
+          |Thank You     |
+          |-------------&gt;|
+          |              |
+          |              |
+          |You're Welcome|
+          |&lt;-------------|
+          |              |
+        Fred          Barney
+     Flintstone       Rubble
+                      Esquire
+</picture></pre></small><table border="1"><tr><th>Seq</th><th>Message and Details</th><th>Notes</th></tr></table></body></html>

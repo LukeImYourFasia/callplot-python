@@ -1,0 +1,8 @@
+@startuml
+hide footbox
+participant "A" as p1
+participant "B" as p2
+p1 -> p2 : one
+p2 <-[#008080]-> p1 : two
+note right of p1 : n
+@enduml

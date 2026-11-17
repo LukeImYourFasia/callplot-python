@@ -1,0 +1,24 @@
+PlantUML oracle pinned for W13+ (§3.11)
+==========================================
+
+Variant:  plantuml.jar v1.2026.9 (the java8 build, "plantuml-java8-1.2026.9.jar")
+Source:   https://github.com/plantuml/plantuml/releases/download/v1.2026.9/plantuml-java8-1.2026.9.jar
+File:     reference/plantuml.jar
+Bytes:    17,844,304
+SHA-256:  9de63b51b10517b783253e0964d1db9b574506b70ea2aa8c3fa107ac17db8f06
+
+Runs on the pinned JDK (reference/JDK_VERSION: OpenJDK 1.8.0_504, the system
+/usr/bin/java). The jar is used only as an acceptance check for the new PlantUML
+output: `java -jar reference/plantuml.jar -checkonly <file>` must exit 0 for
+every non-empty .puml snapshot (empty snapshots belong to crashing fixtures and
+are skipped; jar exit codes: 0 ok, 200 parse/render error).
+
+No PlantUML rendering is byte-compared; the jar only proves the generated
+files parse. Displayed-text decisions were made visually against the jar's own
+PNG renders (§3.11 deviations, also logged in Appendix B at W13):
+  1. " is escaped as &#34;, not ~" — the jar rejects ~" inside a quoted
+     participant string; &#34; parses in every context (title, participant,
+     message, note) and renders as a literal " there. (&quot; parses but
+     renders literally, so it is not usable.)
+  2. An empty participant label is declared as bare `participant pN` —
+     the jar rejects `participant "" as pN`.

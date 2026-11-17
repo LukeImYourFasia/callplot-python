@@ -1,0 +1,18 @@
+@ 10.0.0.1 alice
+@ 10.0.0.2 proxy
+----------------------------------------
+Date 11/05/2026 10:00:00.000
+Source Address: 10.0.0.1
+Destination Address: 10.0.0.2
+INVITE sip:bob@example.com SIP/2.0
+Via: SIP/2.0/UDP 10.0.0.1
+----------------------------------------
+Date 11/05/2026 10:00:00.120
+Source Address: 10.0.0.2
+Destination Address: 10.0.0.1
+SIP/2.0 100 Trying
+----------------------------------------
+Date 11/05/2026 10:00:00.450
+Source Address: 10.0.0.2
+Destination Address: 10.0.0.3
+INVITE sip:bob@example.com SIP/2.0

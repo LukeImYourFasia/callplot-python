@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/TR/REC-html40" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns:o="urn:schemas-microsoft-com:office:office"><head><meta content="text/html; charset=windows-1252" http-equiv="Content-Type"/><meta content="Word.Document" name="ProgId"/><meta content="Microsoft Word 9" name="Generator"/><meta content="Microsoft Word 9" name="Originator"/><style/></head><body style="tab-interval:.5in" lang="EN-US"><div class="Section1"><pre><picture>
+        alice     proxy   10.0.0.3
+          |(1) INVITE         |
+          |--------&gt;|         |
+          |(2) 100 Trying     |
+          |&lt;--------|         |
+          |         |(3) INVITE
+          |         |--------&gt;|
+</picture></pre><table style="border-collapse:collapse;border:none;mso-border-alt:solid windowtext .5pt;mso-padding-alt:0in 5.4pt 0in 5.4pt" cellpadding="0" cellspacing="0" border="1"><tr><td style="width:48.3pt;border:solid windowtext .5pt;  padding:0in 5.4pt 0in 5.4pt" valign="top" width="64"><p class="MsoNormal"><b>Number<o:p/></b></p></td><td style="width:171.0pt;border:solid windowtext .5pt;border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt" valign="top" width="228"><p class="MsoNormal"><b>Annotation<o:p/></b></p></td><td style="width:3.2in;border:solid windowtext .5pt;border-left:none;mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt" valign="top" width="307"><p class="MsoNormal"><b>Packet<o:p/></b></p></td></tr><tr><td style="width:48.3pt;border:solid windowtext .5pt;border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt" valign="top" width="64"><p class="MsoNormal"><message><a name="t1"/><a href="#m1">1</a></message></p></td><td style="width:171.0pt;border-top:none;border-left:none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt" valign="top" width="228"><p class="MsoNormal">INVITE<br/>
+Date 11/05/2026 10:00:00.000
+<br/>
+    0 from initial
+<br/>
+    36000 from last
+<br/>
+Source Address: 10.0.0.1 (alice)
+<br/>
+Destination Address: 10.0.0.2 (proxy)
+<br/></p></td><td style="width:3.2in;border-top:none;border-left:none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt" valign="top" width="307"><p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;">
+INVITE sip:bob@example.com SIP/2.0
+<br/>
+Via: SIP/2.0/UDP 10.0.0.1
+<br/><o:p/></span></p></td></tr><tr><td style="width:48.3pt;border:solid windowtext .5pt;border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt" valign="top" width="64"><p class="MsoNormal"><message><a name="t2"/><a href="#m2">2</a></message></p></td><td style="width:171.0pt;border-top:none;border-left:none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt" valign="top" width="228"><p class="MsoNormal">100 Trying<br/>
+Date 11/05/2026 10:00:00.120
+<br/>
+    0.12 from initial
+<br/>
+    0.12 from last
+<br/>
+Source Address: 10.0.0.2 (proxy)
+<br/>
+Destination Address: 10.0.0.1 (alice)
+<br/></p></td><td style="width:3.2in;border-top:none;border-left:none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt" valign="top" width="307"><p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;">
+SIP/2.0 100 Trying
+<br/><o:p/></span></p></td></tr><tr><td style="width:48.3pt;border:solid windowtext .5pt;border-top:none;mso-border-top-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt" valign="top" width="64"><p class="MsoNormal"><message><a name="t3"/><a href="#m3">3</a></message></p></td><td style="width:171.0pt;border-top:none;border-left:none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt" valign="top" width="228"><p class="MsoNormal">INVITE<br/>
+Date 11/05/2026 10:00:00.450
+<br/>
+    0.45 from initial
+<br/>
+    0.33 from last
+<br/>
+Source Address: 10.0.0.2 (proxy)
+<br/>
+Destination Address: 10.0.0.3 (a)
+<br/></p></td><td style="width:3.2in;border-top:none;border-left:none;border-bottom:solid windowtext .5pt;border-right:solid windowtext .5pt;mso-border-top-alt:solid windowtext .5pt;mso-border-left-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt" valign="top" width="307"><p class="MsoNormal"><span style="font-family:&quot;Courier New&quot;">
+INVITE sip:bob@example.com SIP/2.0
+<br/><o:p/></span></p></td></tr></table></div></body></html>

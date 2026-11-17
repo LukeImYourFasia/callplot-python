@@ -1,0 +1,7 @@
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException
+	at java.lang.System.arraycopy(Native Method)
+	at com.dynamicsoft.callplot.Player.drawSelf(Player.java:117)
+	at com.dynamicsoft.callplot.Flow.plotOn(Flow.java:344)
+	at com.dynamicsoft.callplot.Flow.plot(Flow.java:80)
+	at com.dynamicsoft.callplot.Main.main(Main.java:73)

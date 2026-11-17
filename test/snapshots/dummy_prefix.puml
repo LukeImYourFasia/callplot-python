@@ -1,0 +1,9 @@
+@startuml
+hide footbox
+participant "A" as p1
+participant "B" as p2
+p2 --> p1 : shown
+' e1 comment: lost
+p1 -> p2 : next
+p2 <-[#008080]-> p1 : after
+@enduml

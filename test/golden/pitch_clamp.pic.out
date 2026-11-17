@@ -1,0 +1,8 @@
+.PS    
+Pa: { box "One"; down; La: line 2.4166666666666665i from last box.s }; right; move 2i
+Pb: { box "Two" "lines"; down; Lb: line 2.4166666666666665i from last box.s }; right; move 2i
+Pc: { box "Four" "line" "caption" "here"; down; Lc: line 2.4166666666666665i from last box.s }; right; move 2i
+{ arrow "x" "" from La.start + (0,-1.3333333333333333) to Lb.start + (0,-1.3333333333333333);  }
+{ arrow "y" "z" "" from Lb.start + (0,-1.8333333333333333) to Lc.start + (0,-1.8333333333333333);  }
+.PE
+

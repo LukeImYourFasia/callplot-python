@@ -1,0 +1,6 @@
+@startuml
+hide footbox
+participant "One\nTwo\nThree\nFour\nFive" as p1
+participant "B" as p2
+p1 -> p2 : msg
+@enduml

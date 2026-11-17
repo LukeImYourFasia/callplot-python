@@ -1,0 +1,15 @@
+----------------------------------------
+Date 11/05/2026 10:00:02.000
+Source Address: 10.0.0.1
+Destination Address: 10.0.0.2
+-INVITE sip:bob@example.com SIP/2.0
+----------------------------------------
+Date 11/05/2026 10:00:02.100
+Source Address: 10.0.0.2
+Destination Address: 10.0.0.1
+-SIP/2.0 180 Ringing
+----------------------------------------
+Date 11/05/2026 10:00:02.900
+Source Address: 10.0.0.2
+Destination Address: 10.0.0.1
+SIP/2.0 200 OK

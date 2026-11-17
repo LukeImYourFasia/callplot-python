@@ -1,0 +1,5 @@
+@startuml
+hide footbox
+participant "A" as p1
+participant "B" as p2
+@enduml

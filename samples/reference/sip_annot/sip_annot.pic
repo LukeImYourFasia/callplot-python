@@ -1,0 +1,21 @@
+.PS    
+Pa: { box "Alice" "UA"; down; La: line 11.25i from last box.s }; right; move 2i
+Pp: { box "Proxy"; down; Lp: line 11.25i from last box.s }; right; move 2i
+Pb: { box "Bob" "UA"; down; Lb: line 11.25i from last box.s }; right; move 2i
+{ arrow "INVITE" "SDP A" "" from La.start + (0,-1.0) to Lp.start + (0,-1.0);  }
+{ arrow "100 Trying" "" from Lp.start + (0,-1.6666666666666667) to La.start + (0,-1.6666666666666667);  }
+{ arrow "INVITE" "SDP A" "" from Lp.start + (0,-2.3333333333333335) to Lb.start + (0,-2.3333333333333335);  }
+{ arrow "180 Ringing" "" from Lb.start + (0,-3.0) to Lp.start + (0,-3.0);  }
+{ arrow "180 Ringing" "" from Lp.start + (0,-3.6666666666666665) to La.start + (0,-3.6666666666666665);  }
+{ line invis "Phone rings" "" from Lb.start + (0,-4.333333333333333) to Lb.start + (0.1,-4.333333333333333);  }
+{ arrow "200 OK" "SDP B" "" from Lb.start + (0,-5.0) to Lp.start + (0,-5.0);  }
+{ arrow "200 OK" "SDP B" "" from Lp.start + (0,-5.666666666666667) to La.start + (0,-5.666666666666667);  }
+{ arrow "ACK" "" from La.start + (0,-6.333333333333333) to Lb.start + (0,-6.333333333333333);  }
+{ line dotted "RTP (Opus)" "" from La.start + (0,-7.0) to Lb.start + (0,-7.0);  }
+{ line invis "Hold timer" "" from La.start + (0,-7.666666666666667) to La.start + (0.1,-7.666666666666667);  }
+{ arrow "BYE" "" from Lb.start + (0,-8.333333333333334) to Lp.start + (0,-8.333333333333334);  }
+{ arrow "200 OK" "" from Lp.start + (0,-9.0) to Lb.start + (0,-9.0);  }
+{ arrow "BYE" "" from Lp.start + (0,-9.666666666666666) to La.start + (0,-9.666666666666666);  }
+{ arrow "200 OK" "" from La.start + (0,-10.333333333333334) to Lp.start + (0,-10.333333333333334);  }
+.PE
+

@@ -1,0 +1,71 @@
+.PS    
+Pc: { box "Caller"; down; Lc: line 21.25i from last box.s }; right; move 2i
+Pg: { box "GW"; down; Lg: line 21.25i from last box.s }; right; move 2i
+Pa: { box "AS"; down; La: line 21.25i from last box.s }; right; move 2i
+Pm: { box "MS"; down; Lm: line 21.25i from last box.s }; right; move 2i
+Ph: { box "Web"; down; Lh: line 21.25i from last box.s }; right; move 2i
+Pr: { box "RADIUS"; down; Lr: line 21.25i from last box.s }; right; move 2i
+Pe: { box "Callee"; down; Le: line 21.25i from last box.s }; right; move 2i
+{ arrow "Call #" "" from Lc.start + (0,-0.6666666666666666) to Lg.start + (0,-0.6666666666666666);  }
+{ arrow "INVITE SDP A" "" from Lg.start + (0,-1.0) to La.start + (0,-1.0);  }
+{ arrow "183 Trying" "" from La.start + (0,-1.3333333333333333) to Lg.start + (0,-1.3333333333333333);  }
+{ arrow "INVITE SDP A" "" from La.start + (0,-1.6666666666666667) to Lm.start + (0,-1.6666666666666667);  }
+{ arrow "HTTP GET" "" from Lm.start + (0,-2.0) to Lh.start + (0,-2.0);  }
+{ arrow "200 OK (VXML)" "" from Lh.start + (0,-2.3333333333333335) to Lm.start + (0,-2.3333333333333335);  }
+{ arrow "200 OK SDP B" "" from Lm.start + (0,-2.6666666666666665) to La.start + (0,-2.6666666666666665);  }
+{ arrow "200 OK SDP B" "" from La.start + (0,-3.0) to Lg.start + (0,-3.0);  }
+{ arrow "ACK" "" from Lg.start + (0,-3.3333333333333335) to La.start + (0,-3.3333333333333335);  }
+{ arrow "ACK" "" from La.start + (0,-3.6666666666666665) to Lm.start + (0,-3.6666666666666665);  }
+{ line dotted "RTP" "" from Lg.start + (0,-4.0) to Lm.start + (0,-4.0);  }
+{ arrow "HTTP POST" "" from Lm.start + (0,-4.333333333333333) to Lh.start + (0,-4.333333333333333);  }
+{ arrow "200 OK" "" from Lh.start + (0,-4.666666666666667) to Lm.start + (0,-4.666666666666667);  }
+{ arrow "Authorize" "" from Lh.start + (0,-5.0) to Lr.start + (0,-5.0);  }
+{ arrow "Balance" "" from Lr.start + (0,-5.333333333333333) to Lh.start + (0,-5.333333333333333);  }
+{ arrow "HTTP POST" "" from Lm.start + (0,-5.666666666666667) to Lh.start + (0,-5.666666666666667);  }
+{ arrow "200 OK" "" from Lh.start + (0,-6.0) to Lm.start + (0,-6.0);  }
+{ arrow "Callee Number" "" from Lh.start + (0,-6.333333333333333) to Lr.start + (0,-6.333333333333333);  }
+{ arrow "Time Remaining" "" from Lr.start + (0,-6.666666666666667) to Lh.start + (0,-6.666666666666667);  }
+{ line dotted "Music" "" from Lg.start + (0,-7.0) to Lm.start + (0,-7.0);  }
+{ arrow "INVITE" "" from La.start + (0,-7.333333333333333) to Le.start + (0,-7.333333333333333);  }
+{ arrow "200 OK" "" from Le.start + (0,-7.666666666666667) to La.start + (0,-7.666666666666667);  }
+{ arrow "INVITE" "" from La.start + (0,-8.0) to Lg.start + (0,-8.0);  }
+{ arrow "200 OK" "" from Lg.start + (0,-8.333333333333334) to La.start + (0,-8.333333333333334);  }
+{ arrow "BYE" "" from La.start + (0,-8.666666666666666) to Lm.start + (0,-8.666666666666666);  }
+{ arrow "200 OK" "" from Lm.start + (0,-9.0) to La.start + (0,-9.0);  }
+{ arrow "ACK" "" from La.start + (0,-9.333333333333334) to Lg.start + (0,-9.333333333333334);  }
+{ arrow "ACK" "" from La.start + (0,-9.666666666666666) to Le.start + (0,-9.666666666666666);  }
+{ line dotted "PHONE CALL" "" from Lg.start + (0,-10.0) to Le.start + (0,-10.0);  }
+{ arrow "INVITE" "" from La.start + (0,-10.333333333333334) to Lm.start + (0,-10.333333333333334);  }
+{ arrow "HTTP GET" "" from Lm.start + (0,-10.666666666666666) to Lh.start + (0,-10.666666666666666);  }
+{ arrow "200 OK (VXML)" "" from Lh.start + (0,-11.0) to Lm.start + (0,-11.0);  }
+{ arrow "200 OK" "" from Lm.start + (0,-11.333333333333334) to La.start + (0,-11.333333333333334);  }
+{ arrow "INVITE (hold)" "" from La.start + (0,-11.666666666666666) to Le.start + (0,-11.666666666666666);  }
+{ arrow "200 OK" "" from Le.start + (0,-12.0) to La.start + (0,-12.0);  }
+{ arrow "INVITE" "" from La.start + (0,-12.333333333333334) to Lg.start + (0,-12.333333333333334);  }
+{ arrow "200 OK" "" from Lg.start + (0,-12.666666666666666) to La.start + (0,-12.666666666666666);  }
+{ arrow "ACK" "" from La.start + (0,-13.0) to Lm.start + (0,-13.0);  }
+{ arrow "ACK" "" from La.start + (0,-13.333333333333334) to Lg.start + (0,-13.333333333333334);  }
+{ line dotted "Time Warning" "" from Lm.start + (0,-13.666666666666666) to Lg.start + (0,-13.666666666666666);  }
+{ arrow "BYE" "" from Lm.start + (0,-14.0) to La.start + (0,-14.0);  }
+{ arrow "200 OK" "" from La.start + (0,-14.333333333333334) to Lm.start + (0,-14.333333333333334);  }
+{ arrow "INVITE" "" from La.start + (0,-14.666666666666666) to Le.start + (0,-14.666666666666666);  }
+{ arrow "200 OK" "" from Le.start + (0,-15.0) to La.start + (0,-15.0);  }
+{ arrow "INVITE" "" from La.start + (0,-15.333333333333334) to Lg.start + (0,-15.333333333333334);  }
+{ arrow "200 OK" "" from Lg.start + (0,-15.666666666666666) to La.start + (0,-15.666666666666666);  }
+{ arrow "ACK" "" from La.start + (0,-16.0) to Le.start + (0,-16.0);  }
+{ arrow "ACK" "" from La.start + (0,-16.333333333333332) to Lg.start + (0,-16.333333333333332);  }
+{ line dotted "PHONE CALL" "" from Lg.start + (0,-16.666666666666668) to Le.start + (0,-16.666666666666668);  }
+{ arrow "INVITE" "" from La.start + (0,-17.0) to Lm.start + (0,-17.0);  }
+{ arrow "HTTP GET" "" from Lm.start + (0,-17.333333333333332) to Lh.start + (0,-17.333333333333332);  }
+{ arrow "200 OK (VXML)" "" from Lh.start + (0,-17.666666666666668) to Lm.start + (0,-17.666666666666668);  }
+{ arrow "200 OK" "" from Lm.start + (0,-18.0) to La.start + (0,-18.0);  }
+{ arrow "BYE" "" from La.start + (0,-18.333333333333332) to Le.start + (0,-18.333333333333332);  }
+{ arrow "200 OK" "" from Le.start + (0,-18.666666666666668) to La.start + (0,-18.666666666666668);  }
+{ arrow "INVITE" "" from La.start + (0,-19.0) to Lg.start + (0,-19.0);  }
+{ arrow "200 OK" "" from Lg.start + (0,-19.333333333333332) to La.start + (0,-19.333333333333332);  }
+{ arrow "ACK" "" from La.start + (0,-19.666666666666668) to Lg.start + (0,-19.666666666666668);  }
+{ line dotted "Post-call Announcement" "" from Lm.start + (0,-20.0) to Lg.start + (0,-20.0);  }
+{ arrow "BYE" "" from La.start + (0,-20.333333333333332) to Lg.start + (0,-20.333333333333332);  }
+{ arrow "200 OK" "" from Lg.start + (0,-20.666666666666668) to La.start + (0,-20.666666666666668);  }
+.PE
+

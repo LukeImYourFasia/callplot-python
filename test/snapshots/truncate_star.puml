@@ -1,0 +1,7 @@
+@startuml
+hide footbox
+participant "A" as p1
+participant "B" as p2
+participant "C" as p3
+p3 -> p1 : 12345678901234567890123456789012345678901234567890123456789012345678901234567890
+@enduml

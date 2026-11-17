@@ -1,0 +1,20 @@
+<plot>
+<picture>
+         One       Two      Three
+                  lines     line
+                            three
+          |         |         |
+          |         |         |
+          |         |         |
+          |msg one  |         |
+          |--------&gt;|         |
+          |         |         |
+          |         |         |
+          |         |msg two  |
+          |         |--------&gt;|
+          |         |         |
+         One       Two      Three
+                  lines     line
+                            three
+</picture>
+</plot>

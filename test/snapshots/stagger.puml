@@ -1,0 +1,11 @@
+@startuml
+hide footbox
+participant "A" as p1
+participant "B" as p2
+participant "C" as p3
+participant "D" as p4
+participant "E" as p5
+p1 -> p2 : one
+p3 -> p4 : two
+p5 -> p1 : three
+@enduml

@@ -1,0 +1,7 @@
+opt/messageNumbering/on
+opt/title/<script>alert("t")</script> & 'q'
+guy/a/<b>A</b>
+guy/b/B "quoted" #1; ~x~ *y*
+a->b/<script>alert(1)</script>^x & y; #z
+!!<img src=x onerror=alert(2)>
+!it's "fine" & <i>ok</i>

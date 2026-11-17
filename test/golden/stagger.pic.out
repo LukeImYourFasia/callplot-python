@@ -1,0 +1,11 @@
+.PS    
+Pa: { box "A"; down; La: line 3.5833333333333335i from last box.s }; right; move 2i
+Pb: { box "B"; down; Lb: line 3.5833333333333335i from last box.s }; right; move 2i
+Pc: { box "C"; down; Lc: line 3.5833333333333335i from last box.s }; right; move 2i
+Pd: { box "D"; down; Ld: line 3.5833333333333335i from last box.s }; right; move 2i
+Pe: { box "E"; down; Le: line 3.5833333333333335i from last box.s }; right; move 2i
+{ arrow "one" "" from La.start + (0,-1.3333333333333333) to Lb.start + (0,-1.3333333333333333);  }
+{ arrow "two" "" from Lc.start + (0,-2.0) to Ld.start + (0,-2.0);  }
+{ arrow "three" "" from Le.start + (0,-2.6666666666666665) to La.start + (0,-2.6666666666666665);  }
+.PE
+

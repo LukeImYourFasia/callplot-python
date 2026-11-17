@@ -1,0 +1,741 @@
+<plot>
+<picture>
+          |         |         |         |         |         |         |
+          |         |         |         |         |         |         |
+          |         |         |         |         |         |         |
+          |(<a href='#t1'>1</a>)<a name='m1'/> Call #         |         |         |         |         |
+          |--------&gt;|         |         |         |         |         |
+          |         |(<a href='#t2'>2</a>)<a name='m2'/> INVITE SDP A   |         |         |         |
+          |         |--------&gt;|         |         |         |         |
+          |         |(<a href='#t3'>3</a>)<a name='m3'/> 183 Trying     |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |         |(<a href='#t4'>4</a>)<a name='m4'/> INVITE SDP A   |         |         |
+          |         |         |--------&gt;|         |         |         |
+          |         |         |         |(<a href='#t5'>5</a>)<a name='m5'/> HTTP GET       |         |
+          |         |         |         |--------&gt;|         |         |
+          |         |         |         |(<a href='#t6'>6</a>)<a name='m6'/> 200 OK (VXML)  |         |
+          |         |         |         |&lt;--------|         |         |
+          |         |         |(<a href='#t7'>7</a>)<a name='m7'/> 200 OK SDP B   |         |         |
+          |         |         |&lt;--------|         |         |         |
+          |         |(<a href='#t8'>8</a>)<a name='m8'/> 200 OK SDP B   |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href='#t9'>9</a>)<a name='m9'/> ACK  |         |         |         |         |
+          |         |--------&gt;|         |         |         |         |
+          |         |         |(<a href='#t10'>10</a>)<a name='m10'/> ACK |         |         |         |
+          |         |         |--------&gt;|         |         |         |
+          |         |(<a href='#t11'>11</a>)<a name='m11'/> RTP |         |         |         |         |
+          |         |...................|         |         |         |
+          |         |         |         |(<a href='#t12'>12</a>)<a name='m12'/> HTTP POST     |         |
+          |         |         |         |--------&gt;|         |         |
+          |         |         |         |(<a href='#t13'>13</a>)<a name='m13'/> 200 OK        |         |
+          |         |         |         |&lt;--------|         |         |
+          |         |         |         |         |(<a href='#t14'>14</a>)<a name='m14'/> Authorize     |
+          |         |         |         |         |--------&gt;|         |
+          |         |         |         |         |(<a href='#t15'>15</a>)<a name='m15'/> Balance       |
+          |         |         |         |         |&lt;--------|         |
+          |         |         |         |(<a href='#t16'>16</a>)<a name='m16'/> HTTP POST     |         |
+          |         |         |         |--------&gt;|         |         |
+          |         |         |         |(<a href='#t17'>17</a>)<a name='m17'/> 200 OK        |         |
+          |         |         |         |&lt;--------|         |         |
+          |         |         |         |         |(<a href='#t18'>18</a>)<a name='m18'/> Callee Number |
+          |         |         |         |         |--------&gt;|         |
+          |         |         |         |         |(<a href='#t19'>19</a>)<a name='m19'/> Time Remaining|
+          |         |         |         |         |&lt;--------|         |
+          |         |(<a href='#t20'>20</a>)<a name='m20'/> Music         |         |         |         |
+          |         |...................|         |         |         |
+          |         |         |(<a href='#t21'>21</a>)<a name='m21'/> INVITE        |         |         |
+          |         |         |--------------------------------------&gt;|
+          |         |         |(<a href='#t22'>22</a>)<a name='m22'/> 200 OK        |         |         |
+          |         |         |&lt;--------------------------------------|
+          |         |(<a href='#t23'>23</a>)<a name='m23'/> INVITE        |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href='#t24'>24</a>)<a name='m24'/> 200 OK        |         |         |         |
+          |         |--------&gt;|         |         |         |         |
+          |         |         |(<a href='#t25'>25</a>)<a name='m25'/> BYE |         |         |         |
+          |         |         |--------&gt;|         |         |         |
+          |         |         |(<a href='#t26'>26</a>)<a name='m26'/> 200 OK        |         |         |
+          |         |         |&lt;--------|         |         |         |
+          |         |(<a href='#t27'>27</a>)<a name='m27'/> ACK |         |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |         |(<a href='#t28'>28</a>)<a name='m28'/> ACK |         |         |         |
+          |         |         |--------------------------------------&gt;|
+          |         |(<a href='#t29'>29</a>)<a name='m29'/> PHONE CALL    |         |         |         |
+          |         |.................................................|
+          |         |         |(<a href='#t30'>30</a>)<a name='m30'/> INVITE        |         |         |
+          |         |         |--------&gt;|         |         |         |
+          |         |         |         |(<a href='#t31'>31</a>)<a name='m31'/> HTTP GET      |         |
+          |         |         |         |--------&gt;|         |         |
+          |         |         |         |(<a href='#t32'>32</a>)<a name='m32'/> 200 OK (VXML) |         |
+          |         |         |         |&lt;--------|         |         |
+          |         |         |(<a href='#t33'>33</a>)<a name='m33'/> 200 OK        |         |         |
+          |         |         |&lt;--------|         |         |         |
+          |         |         |(<a href='#t34'>34</a>)<a name='m34'/> INVITE (hold) |         |         |
+          |         |         |--------------------------------------&gt;|
+          |         |         |(<a href='#t35'>35</a>)<a name='m35'/> 200 OK        |         |         |
+          |         |         |&lt;--------------------------------------|
+          |         |(<a href='#t36'>36</a>)<a name='m36'/> INVITE        |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href='#t37'>37</a>)<a name='m37'/> 200 OK        |         |         |         |
+          |         |--------&gt;|         |         |         |         |
+          |         |         |(<a href='#t38'>38</a>)<a name='m38'/> ACK |         |         |         |
+          |         |         |--------&gt;|         |         |         |
+          |         |(<a href='#t39'>39</a>)<a name='m39'/> ACK |         |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href='#t40'>40</a>)<a name='m40'/> Time Warning  |         |         |         |
+          |         |...................|         |         |         |
+          |         |         |(<a href='#t41'>41</a>)<a name='m41'/> BYE |         |         |         |
+          |         |         |&lt;--------|         |         |         |
+          |         |         |(<a href='#t42'>42</a>)<a name='m42'/> 200 OK        |         |         |
+          |         |         |--------&gt;|         |         |         |
+          |         |         |(<a href='#t43'>43</a>)<a name='m43'/> INVITE        |         |         |
+          |         |         |--------------------------------------&gt;|
+          |         |         |(<a href='#t44'>44</a>)<a name='m44'/> 200 OK        |         |         |
+          |         |         |&lt;--------------------------------------|
+          |         |(<a href='#t45'>45</a>)<a name='m45'/> INVITE        |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href='#t46'>46</a>)<a name='m46'/> 200 OK        |         |         |         |
+          |         |--------&gt;|         |         |         |         |
+          |         |         |(<a href='#t47'>47</a>)<a name='m47'/> ACK |         |         |         |
+          |         |         |--------------------------------------&gt;|
+          |         |(<a href='#t48'>48</a>)<a name='m48'/> ACK |         |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href='#t49'>49</a>)<a name='m49'/> PHONE CALL    |         |         |         |
+          |         |.................................................|
+          |         |         |(<a href='#t50'>50</a>)<a name='m50'/> INVITE        |         |         |
+          |         |         |--------&gt;|         |         |         |
+          |         |         |         |(<a href='#t51'>51</a>)<a name='m51'/> HTTP GET      |         |
+          |         |         |         |--------&gt;|         |         |
+          |         |         |         |(<a href='#t52'>52</a>)<a name='m52'/> 200 OK (VXML) |         |
+          |         |         |         |&lt;--------|         |         |
+          |         |         |(<a href='#t53'>53</a>)<a name='m53'/> 200 OK        |         |         |
+          |         |         |&lt;--------|         |         |         |
+          |         |         |(<a href='#t54'>54</a>)<a name='m54'/> BYE |         |         |         |
+          |         |         |--------------------------------------&gt;|
+          |         |         |(<a href='#t55'>55</a>)<a name='m55'/> 200 OK        |         |         |
+          |         |         |&lt;--------------------------------------|
+          |         |(<a href='#t56'>56</a>)<a name='m56'/> INVITE        |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href='#t57'>57</a>)<a name='m57'/> 200 OK        |         |         |         |
+          |         |--------&gt;|         |         |         |         |
+          |         |(<a href='#t58'>58</a>)<a name='m58'/> ACK |         |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href='#t59'>59</a>)<a name='m59'/> Post-call Announcement  |         |         |
+          |         |...................|         |         |         |
+          |         |(<a href='#t60'>60</a>)<a name='m60'/> BYE |         |         |         |         |
+          |         |&lt;--------|         |         |         |         |
+          |         |(<a href='#t61'>61</a>)<a name='m61'/> 200 OK        |         |         |         |
+          |         |--------&gt;|         |         |         |         |
+          |         |         |         |         |         |         |
+       Caller      GW        AS        MS        Web     RADIUS    Callee
+</picture>
+<message>
+<number>1</number>
+<captions>
+<caption>Call #</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>2</number>
+<captions>
+<caption>INVITE SDP A</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>3</number>
+<captions>
+<caption>183 Trying</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>4</number>
+<captions>
+<caption>INVITE SDP A</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>5</number>
+<captions>
+<caption>HTTP GET</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>6</number>
+<captions>
+<caption>200 OK (VXML)</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>7</number>
+<captions>
+<caption>200 OK SDP B</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>8</number>
+<captions>
+<caption>200 OK SDP B</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>9</number>
+<captions>
+<caption>ACK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>10</number>
+<captions>
+<caption>ACK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>11</number>
+<captions>
+<caption>RTP</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>12</number>
+<captions>
+<caption>HTTP POST</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>13</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>14</number>
+<captions>
+<caption>Authorize</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>15</number>
+<captions>
+<caption>Balance</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>16</number>
+<captions>
+<caption>HTTP POST</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>17</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>18</number>
+<captions>
+<caption>Callee Number</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>19</number>
+<captions>
+<caption>Time Remaining</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>20</number>
+<captions>
+<caption>Music</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>21</number>
+<captions>
+<caption>INVITE</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>22</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>23</number>
+<captions>
+<caption>INVITE</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>24</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>25</number>
+<captions>
+<caption>BYE</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>26</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>27</number>
+<captions>
+<caption>ACK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>28</number>
+<captions>
+<caption>ACK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>29</number>
+<captions>
+<caption>PHONE CALL</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>30</number>
+<captions>
+<caption>INVITE</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>31</number>
+<captions>
+<caption>HTTP GET</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>32</number>
+<captions>
+<caption>200 OK (VXML)</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>33</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>34</number>
+<captions>
+<caption>INVITE (hold)</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>35</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>36</number>
+<captions>
+<caption>INVITE</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>37</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>38</number>
+<captions>
+<caption>ACK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>39</number>
+<captions>
+<caption>ACK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>40</number>
+<captions>
+<caption>Time Warning</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>41</number>
+<captions>
+<caption>BYE</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>42</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>43</number>
+<captions>
+<caption>INVITE</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>44</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>45</number>
+<captions>
+<caption>INVITE</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>46</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>47</number>
+<captions>
+<caption>ACK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>48</number>
+<captions>
+<caption>ACK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>49</number>
+<captions>
+<caption>PHONE CALL</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>50</number>
+<captions>
+<caption>INVITE</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>51</number>
+<captions>
+<caption>HTTP GET</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>52</number>
+<captions>
+<caption>200 OK (VXML)</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>53</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>54</number>
+<captions>
+<caption>BYE</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>55</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>56</number>
+<captions>
+<caption>INVITE</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>57</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>58</number>
+<captions>
+<caption>ACK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>59</number>
+<captions>
+<caption>Post-call Announcement</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>60</number>
+<captions>
+<caption>BYE</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>61</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+</plot>

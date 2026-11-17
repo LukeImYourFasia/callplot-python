@@ -1,0 +1,53 @@
+opt/linePitch/2
+opt/messageNumbering/on
+opt/topLabel/off
+opt/bottomLabel/on
+guy/c/Caller
+guy/g/GW
+guy/a/AS
+guy/m/MS
+guy/h/Web
+guy/r/RADIUS
+guy/e/Callee
+c->g/Call #
+g->a/INVITE SDP A/183 Trying
+a->m/INVITE SDP A
+m->h/HTTP GET/200 OK (VXML)
+m->a/200 OK SDP B
+a->g/200 OK SDP B
+g->a/ACK
+a->m/ACK
+g..m/RTP
+m->h/HTTP POST/200 OK
+h->r/Authorize/Balance
+m->h/HTTP POST/200 OK
+h->r/Callee Number/Time Remaining
+g..m/Music
+a->e/INVITE/200 OK
+a->g/INVITE/200 OK
+a->m/BYE/200 OK
+a->g/ACK
+a->e/ACK
+g..e/PHONE CALL
+a->m/INVITE
+m->h/HTTP GET/200 OK (VXML)
+m->a/200 OK
+a->e/INVITE (hold)/200 OK
+a->g/INVITE/200 OK
+a->m/ACK
+a->g/ACK
+m..g/Time Warning
+m->a/BYE/200 OK
+a->e/INVITE/200 OK
+a->g/INVITE/200 OK
+a->e/ACK
+a->g/ACK
+g..e/PHONE CALL
+a->m/INVITE
+m->h/HTTP GET/200 OK (VXML)
+m->a/200 OK
+a->e/BYE/200 OK
+a->g/INVITE/200 OK
+a->g/ACK
+m..g/Post-call Announcement
+a->g/BYE/200 OK

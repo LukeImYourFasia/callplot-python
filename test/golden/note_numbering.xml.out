@@ -1,0 +1,66 @@
+<plot>
+<picture>
+          A         B
+          |         |
+          |         |
+          |         |
+          |(<a href='#t1'>1</a>)<a name='m1'/> req  |
+          |--------&gt;|
+          |         |
+          |         |
+          |(<a href='#t2'>2</a>)<a name='m2'/> note one
+          |         |
+          |         |
+          |         |
+          |(<a href='#t3'>3</a>)<a name='m3'/> resp |
+          |&lt;--------|
+          |         |
+          |         |
+          |         |(<a href='#t4'>4</a>)<a name='m4'/> note two
+          |         |
+          |         |
+          |         |
+          |         |
+          |         |
+</picture>
+<message>
+<number>1</number>
+<captions>
+<caption>req</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>2</number>
+<captions>
+<caption>note one</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>3</number>
+<captions>
+<caption>resp</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>4</number>
+<captions>
+<caption>note two</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+</plot>

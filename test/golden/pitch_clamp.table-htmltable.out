@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html><body><pre><picture>
+         One       Two      Four
+                  lines     line
+                           caption
+                            here
+          |         |         |
+          |         |         |
+          |         |         |
+          |x        |         |
+          |--------&gt;|         |
+          |         |y        |
+          |         |z        |
+          |         |--------&gt;|
+          |         |         |
+          |         |         |
+</picture></pre><table border="1"/></body></html>

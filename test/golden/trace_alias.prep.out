@@ -1,0 +1,21 @@
+opt/messageNumbering/on
+opt/xml/on
+opt/crunch/on
+opt/links/off
+guy/alice/alice
+opt/stagger/on
+guy/a/10.0.0.5
+alice->a/MESSAGE
+!!Date 11/05/2026 10:00:03.000
+!!    0 from initial
+!!    36003 from last
+!!Source Address: 10.0.0.1 (alice)
+!!Destination Address: 10.0.0.5 (a)
+!MESSAGE sip:bob@example.com SIP/2.0
+alice->a/202 Accepted
+!!Date 11/05/2026 10:00:03.500
+!!    0.5 from initial
+!!    0.5 from last
+!!Source Address: 10.0.0.9 (alice)
+!!Destination Address: 10.0.0.5 (a)
+!SIP/2.0 202 Accepted

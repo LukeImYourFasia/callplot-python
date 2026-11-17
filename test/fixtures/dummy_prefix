@@ -1,0 +1,7 @@
+guy/a/A
+guy/b/B
+-a->b/hidden/shown
+!lost
+a->b/next
+-note/a/hidnote
+b..a/after

@@ -1,0 +1,7 @@
+@startuml
+hide footbox
+participant "A" as p1
+participant "B" as p2
+p1 -> p1 : loop back
+p1 -> p2 : (1) x
+@enduml

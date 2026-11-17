@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html><body><pre><picture>
+          A         B
+          |         |
+          |         |
+          |         |
+          |loop back|
+          |         |
+          |         |
+          |         |
+          |(<a href="#t1">1</a>)<a name="m1"/> x    |
+          |--------&gt;|
+          |         |
+          |         |
+          |         |
+          |         |
+</picture></pre><table border="true"><tr><td><message><a name="t1"/><a href="#m1">1</a></message></td><td/><td><tt/></td></tr></table></body></html>

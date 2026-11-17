@@ -1,0 +1,14 @@
+opt/vmlStyle/foobar
+opt/vmlFont/Impact
+opt/vmlTextSize/12
+opt/vmlArrowStyle/ArrowType='Double'
+opt/vmlDottedStyle/DashStyle='dash'
+opt/vmlBoxStyle/fillcolor='blue'
+opt/vmlTextStyle/FONT-FAMILY:Custom;FONT-SIZE:8pt
+opt/vmlBoxTextStyle/FONT-FAMILY:Custom;FONT-SIZE:8pt;V-TEXT-ALIGN:center
+opt/vmlBoxWidthPercentage/120
+guy/a/A
+guy/b/B
+a->b/one
+b..a/two
+note/a/n

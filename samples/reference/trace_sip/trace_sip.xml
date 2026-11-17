@@ -1,0 +1,98 @@
+<plot>
+<picture>
+        alice     proxy   10.0.0.3
+          |(1) INVITE         |
+          |--------&gt;|         |
+          |(2) 100 Trying     |
+          |&lt;--------|         |
+          |         |(3) INVITE
+          |         |--------&gt;|
+</picture>
+<message>
+<number>1</number>
+<captions>
+<caption>INVITE</caption>
+</captions>
+<notes>
+<note>
+Date 11/05/2026 10:00:00.000
+</note>
+<note>
+    0 from initial
+</note>
+<note>
+    36000 from last
+</note>
+<note>
+Source Address: 10.0.0.1 (alice)
+</note>
+<note>
+Destination Address: 10.0.0.2 (proxy)
+</note>
+</notes>
+<comments>
+<comment>
+INVITE sip:bob@example.com SIP/2.0
+</comment>
+<comment>
+Via: SIP/2.0/UDP 10.0.0.1
+</comment>
+</comments>
+</message>
+<message>
+<number>2</number>
+<captions>
+<caption>100 Trying</caption>
+</captions>
+<notes>
+<note>
+Date 11/05/2026 10:00:00.120
+</note>
+<note>
+    0.12 from initial
+</note>
+<note>
+    0.12 from last
+</note>
+<note>
+Source Address: 10.0.0.2 (proxy)
+</note>
+<note>
+Destination Address: 10.0.0.1 (alice)
+</note>
+</notes>
+<comments>
+<comment>
+SIP/2.0 100 Trying
+</comment>
+</comments>
+</message>
+<message>
+<number>3</number>
+<captions>
+<caption>INVITE</caption>
+</captions>
+<notes>
+<note>
+Date 11/05/2026 10:00:00.450
+</note>
+<note>
+    0.45 from initial
+</note>
+<note>
+    0.33 from last
+</note>
+<note>
+Source Address: 10.0.0.2 (proxy)
+</note>
+<note>
+Destination Address: 10.0.0.3 (a)
+</note>
+</notes>
+<comments>
+<comment>
+INVITE sip:bob@example.com SIP/2.0
+</comment>
+</comments>
+</message>
+</plot>

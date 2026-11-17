@@ -1,0 +1,9 @@
+.PS    
+Pa: { box "A"; down; La: line 3.75i from last box.s }; right; move 2i
+Pb: { box "B"; down; Lb: line 3.75i from last box.s }; right; move 2i
+{ arrow "req" "" from La.start + (0,-0.8333333333333334) to Lb.start + (0,-0.8333333333333334);  }
+{ line invis "note one" "" from La.start + (0,-1.5) to La.start + (0.1,-1.5);  }
+{ arrow "resp" "" from Lb.start + (0,-2.1666666666666665) to La.start + (0,-2.1666666666666665);  }
+{ line invis "note two" "" from Lb.start + (0,-2.8333333333333335) to Lb.start + (0.1,-2.8333333333333335);  }
+.PE
+

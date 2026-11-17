@@ -1,0 +1,22 @@
+opt/messageNumbering/on
+opt/xml/on
+opt/crunch/on
+opt/links/off
+guy/a/192.168.1.10
+guy/b/192.168.1.20
+a->b/GET
+!!Date 11/05/2026 10:00:01.000
+!!    0 from initial
+!!    36001 from last
+!!Source Address: 192.168.1.10
+!!Destination Address: 192.168.1.20 (b)
+!GET /index.html HTTP/1.1
+!Host: example.com
+b->a/200 OK
+!!Date 11/05/2026 10:00:01.250
+!!    0.25 from initial
+!!    0.25 from last
+!!Source Address: 192.168.1.20
+!!Destination Address: 192.168.1.10 (a)
+!HTTP/1.1 200 OK
+!Content-Type: text/html

@@ -1,0 +1,66 @@
+<plot>
+<picture>
+          A         B
+          |         |
+          |         |
+          |         |
+          |(<a href='#t1'>1</a>)<a name='m1'/> (abc) x
+          |--------&gt;|
+          |         |
+          |         |
+          |(<a href='#t2'>2</a>)<a name='m2'/> (<a href='#t3'>3</a>)<a name='m3'/> y
+          |&lt;--------|
+          |         |
+          |         |
+          |(<a href='#t3'>3</a>)<a name='m3'/> a&lt;b&gt;c & d
+          |--------&gt;|
+          |         |
+          |         |
+          |(<a href='#t4'>4</a>)<a name='m4'/> (5   |
+          |&lt;--------|
+          |         |
+          |         |
+          |         |
+          |         |
+</picture>
+<message>
+<number>1</number>
+<captions>
+<caption>(abc) x</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>2</number>
+<captions>
+<caption>(+3) y</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>3</number>
+<captions>
+<caption>a<b>c & d</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>4</number>
+<captions>
+<caption>(5</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+</plot>

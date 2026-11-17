@@ -1,0 +1,18 @@
+<plot>
+<picture>
+         One       Two      Four
+                  lines     line
+                           caption
+                            here
+          |         |         |
+          |         |         |
+          |         |         |
+          |x        |         |
+          |--------&gt;|         |
+          |         |y        |
+          |         |z        |
+          |         |--------&gt;|
+          |         |         |
+          |         |         |
+</picture>
+</plot>

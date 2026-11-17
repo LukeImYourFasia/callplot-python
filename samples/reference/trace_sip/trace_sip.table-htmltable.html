@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html><body><pre><picture>
+        alice     proxy   10.0.0.3
+          |(1) INVITE         |
+          |--------&gt;|         |
+          |(2) 100 Trying     |
+          |&lt;--------|         |
+          |         |(3) INVITE
+          |         |--------&gt;|
+</picture></pre><table border="1"><tr><td><message><a name="t1"/><a href="#m1">1</a></message></td><td>INVITE<br/>
+Date 11/05/2026 10:00:00.000
+<br/>
+    0 from initial
+<br/>
+    36000 from last
+<br/>
+Source Address: 10.0.0.1 (alice)
+<br/>
+Destination Address: 10.0.0.2 (proxy)
+<br/></td><td><tt>
+INVITE sip:bob@example.com SIP/2.0
+<br/>
+Via: SIP/2.0/UDP 10.0.0.1
+<br/></tt></td></tr><tr><td><message><a name="t2"/><a href="#m2">2</a></message></td><td>100 Trying<br/>
+Date 11/05/2026 10:00:00.120
+<br/>
+    0.12 from initial
+<br/>
+    0.12 from last
+<br/>
+Source Address: 10.0.0.2 (proxy)
+<br/>
+Destination Address: 10.0.0.1 (alice)
+<br/></td><td><tt>
+SIP/2.0 100 Trying
+<br/></tt></td></tr><tr><td><message><a name="t3"/><a href="#m3">3</a></message></td><td>INVITE<br/>
+Date 11/05/2026 10:00:00.450
+<br/>
+    0.45 from initial
+<br/>
+    0.33 from last
+<br/>
+Source Address: 10.0.0.2 (proxy)
+<br/>
+Destination Address: 10.0.0.3 (a)
+<br/></td><td><tt>
+INVITE sip:bob@example.com SIP/2.0
+<br/></tt></td></tr></table></body></html>

@@ -1,0 +1,112 @@
+# CI for the Python port of callplot (DESIGN-PYTHON.md section 2.6).
+#
+# One workflow file, three jobs:
+#   check  - matrix over Python 3.12/3.13/3.14, lint + types + tests, no Java
+#   dist   - build the sdist/wheel and check it, no Java
+#   fuzz   - manual only (workflow_dispatch button), builds the harness with Temurin 17 (setup-java);
+#     trust check before the big run
+#
+# Path note: the repository root IS the project (there is no python/ subdir),
+# so the design's ./python[dev] is simply .[dev] here and python/tools/fuzz.py
+# is tools/fuzz.py. ruff, mypy and pytest settings all come from pyproject.toml.
+#
+# Trigger note: DESIGN-PYTHON.md 2.6 allows the fuzz job to be manual OR nightly.
+# Manual was chosen: the corpus is deterministic (seed 1, count 2000) and the oracle
+# .class files under reference/ are committed data, so a nightly rerun of the same
+# tree against the same corpus proves nothing new - it only burns CI. fuzz therefore
+# runs when someone pushes the button, right after a change worth re-checking.
+# check and dist still run on push; the job-level `if` on github.event_name picks
+# each job's trigger.
+# There is no oracle-regeneration step anywhere: the goldens under test/ are
+# committed data, and reference/ holds the committed Java .class files.
+
+name: python
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  check:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.13", "3.14"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Create venv and pip install -e '.[dev]'
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -e '.[dev]'
+      - name: ruff check
+        run: .venv/bin/ruff check .
+      - name: ruff format check
+        run: .venv/bin/ruff format --check .
+      - name: mypy (config from pyproject.toml)
+        run: .venv/bin/mypy
+      - name: pytest with coverage, fuzz deselected (no Java needed here)
+        run: .venv/bin/pytest --cov -m "not fuzz"
+
+  dist:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Set up Python 3.13 (the pinned dev version in .python-version)
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Create venv and pip install -e '.[dev]' (build and twine live in the dev extra)
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -e '.[dev]'
+      - name: Build sdist and wheel
+        run: .venv/bin/python -m build
+      - name: twine check dist/*
+        run: .venv/bin/twine check dist/*
+      - name: Wheel contents check
+        run: .venv/bin/python tools/check_dist.py
+
+  fuzz:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Set up Python 3.13 (steps mirror the check job, minus coverage)
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      # apt has no openjdk-8 on the current Ubuntu images (it left universe when
+      # ubuntu-latest moved to 24.04), so Java comes from setup-java, exactly as
+      # the callplot-js ci.yml does: the committed callplot classes under
+      # reference/build/ are JDK 1.8.0_504 bytecode, forward-compatible on any
+      # newer JVM, and only FuzzOracle is rebuilt below by this job's own javac.
+      - name: Java 17 (Temurin via setup-java, the callplot-js precedent)
+        uses: actions/setup-java@v6
+        with:
+          java-version: "17"
+          distribution: temurin
+      - name: Create venv and pip install -e '.[dev]'
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -e '.[dev]'
+      # reference/build-tools/ is gitignored, so a fresh CI checkout has no such
+      # folder, and the JDK 1.8 javac refuses to invent one for -d (a newer javac
+      # does): create it first, which is right for either.  The reference/build/
+      # .class files ARE committed, so only FuzzOracle.class needs building.
+      - name: Compile the fuzz harness (reference/build-tools/ is gitignored, so CI builds FuzzOracle.class; the reference/build/ .class files are committed)
+        run: |
+          mkdir -p reference/build-tools
+          javac -nowarn -d reference/build-tools tools/oracle/FuzzOracle.java
+      - name: Harness-client trust check, must run before the big fuzz run
+        run: .venv/bin/pytest -m fuzz tests/fuzz_client_check.py
+      - name: Differential fuzz run
+        run: .venv/bin/python tools/fuzz.py --seed 1 --count 2000

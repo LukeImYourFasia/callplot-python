@@ -1,0 +1,81 @@
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+Usage: callplot [-?|--help] [-pic|-vml|-svg|-xml|-graffle] {-|file}
+
+ -? --help: print this help
+ -pic: format output for pic(1), not as ASCII-art.
+ -svg: format output as Scalable Vector Graphics
+ -vml: format output as Vector Markup Language for IE and MS Office.
+ -xml: format output as XML.
+ -vxml: format output as XML, but with a VML plot.
+ -graffle: format output as OmniGraffle v5 XML.
+
+File Format:
+opt/name/value          // set option 'name' to value 'value'
+
+guy/alias/label         // declare an entity with nickname 'alias' and label 'label'
+
+x->y/Caption            // declare a message from the entity with nickname 'x' to 
+                        // the entity with nickname 'y' with the label 'caption'
+                        // to include forward slashes, escape them (e.g. '\/')
+
+x->y/cap1/cap2          // declare a message from the entity with nickname 'x' to 
+                        // the entity with nickname 'y' with the label 'cap1'
+                        // followed by a response in the reverse direction with
+                        // caption 'cap2'
+
+x..y/Caption            // draw an undirected dotted line from the entity with 
+                        // nickname 'x' to the entity with nickname 'y' with 
+                        // the label 'caption'
+
+x--y/Caption            // draw an undirected dotted line from the entity with 
+                        // nickname 'x' to the entity with nickname 'y' with 
+                        // the label 'caption' shown for each entity line in graffle format
+
+note/x/Text             // Draw the text to the right of the line for entity 'x'
+
+The captions and note test can be broken across lines with ^
+(caret). In this case, the last line is drawn above the arrow, the
+next to last line above that, and so on.
+
+These are the options that exist now:
+
+opt/startLine/{integer}            // initial line # for messages
+
+opt/startColumn/{integer}          // leftmost column for entities
+
+opt/linePitch/{integer}            // # of lines between messages
+
+opt/columnPitch/{integer}          // # of cols between entities
+
+opt/topLabel/{boolean}             // label entities at top?
+
+opt/bottomLabel/{boolean}          // label entities at bottom?
+
+opt/messageNumbering/{boolean}     // number messages in '(#) text' format?
+
+opt/noteNumbering/{boolean}        // number notes as well as messages?
+
+opt/crunch/{boolean}               // elide lines that would have been just space and 
+				   // vertical bars (ascii-art only)
+opt/stagger/{boolean}               // stagger the boxes to allow longer labels 
+
+opt/vmlStyle/{string}		   // re-define the line style for VML output
+default:: Weight='2pt'
+
+opt/vmlArrowStyle/{string}         // re-define the arrow style for VML output
+default: EndArrow='Open'
+
+opt/vmlDottedStyle/{string}	   // re-define the dotted line style for VML output
+default: DashStyle='dot'
+
+opt/vmlTextStyle/{string}	   // re-define the text style for VML output
+default: style='font:normal normal normal 9pt Courier'
+
+opt/vmlBoxStyle/{string}	   // re-define the style applied to the rectangle
+default: fillcolor='red'	   // at the top of each column 
+
+opt/vmlBoxWidthPercentage/{integer} // re-define the %-age of the column filled by 
+default: 85			    // the rectangle at the top of a column
+
+boolean options accept 'on', 'true' and 'yes' as meaning true, and their opposites as false.
+

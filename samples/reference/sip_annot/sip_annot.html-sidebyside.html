@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Basic SIP call through a proxy</title>
+<style>
+.cpf{--cpf-page:#ffffff;--cpf-ink:#17232e;--cpf-mut:#5d6d7a;
+--cpf-line:#b7c2cc;--cpf-head:#e8eef4;--cpf-accent:#2f6b8f;
+--cpf-hl:rgba(255,212,89,.28);--cpf-note-fill:#fff8dd;--cpf-note-line:#c8b45f;
+--cpf-media:#008080;--cpf-pill:#eef3f8;
+container-type:inline-size;container-name:cpf;
+font-family:ui-sans-serif,system-ui,sans-serif;font-size:14px;
+color:var(--cpf-ink);background:var(--cpf-page)}
+@media (prefers-color-scheme:dark){.cpf{--cpf-page:#101821;--cpf-ink:#dbe4ec;
+--cpf-mut:#93a4b1;--cpf-line:#3a4652;--cpf-head:#1c2632;--cpf-accent:#4182ad;
+--cpf-hl:rgba(255,212,89,.16);--cpf-note-fill:#2c2b1c;--cpf-note-line:#c8b45f;
+--cpf-media:#3fc0b6;--cpf-pill:#243040}}
+.cpf-head h1{font-size:20px;margin:0}
+.cpf-head p{margin:0;color:var(--cpf-mut)}
+.cpf-radio{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.cpf-switch{display:inline-block;margin-top:8px}
+.cpf-switch label{cursor:pointer;margin-right:14px}
+.cpf:has(.cpf-radio[id$="lay-tb"]:focus-visible) .cpf-switch label[for$="lay-tb"]{outline:2px solid var(--cpf-accent);outline-offset:2px}
+.cpf:has(.cpf-radio[id$="lay-sbs"]:focus-visible) .cpf-switch label[for$="lay-sbs"]{outline:2px solid var(--cpf-accent);outline-offset:2px}
+.cpf-main{display:grid;grid-template-columns:1fr}
+.cpf-scroll{overflow-x:auto}
+.cpf-tscroll{overflow:auto}
+@container cpf (min-width:1100px){
+.cpf:has(.cpf-radio[id$="lay-sbs"]:checked) .cpf-main{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);height:var(--cpf-pane-h,100vh)}
+.cpf:has(.cpf-radio[id$="lay-sbs"]:checked) .cpf-flow,.cpf:has(.cpf-radio[id$="lay-sbs"]:checked) .cpf-detail{height:100%;overflow:hidden;display:flex;flex-direction:column}
+.cpf:has(.cpf-radio[id$="lay-sbs"]:checked) .cpf-scroll,.cpf:has(.cpf-radio[id$="lay-sbs"]:checked) .cpf-tscroll{flex:1;overflow:auto}
+}
+.cpf-svg{display:block}
+.lf{stroke:var(--cpf-line)}
+.pf-box{fill:var(--cpf-head);stroke:var(--cpf-line)}
+.lb,.cap,.bn{font-size:13px}
+.lb{font-family:ui-sans-serif,system-ui,sans-serif}
+.cap{font-family:ui-monospace,Menlo,Consolas,monospace}
+.ln{stroke:var(--cpf-ink);stroke-width:1.5}
+.cpf .ev-media .ln{stroke:var(--cpf-media)}
+.ah{stroke:none}
+.nt{fill:var(--cpf-note-fill);stroke:var(--cpf-note-line)}
+.bdg{fill:var(--cpf-accent)}
+.bn{font-family:ui-monospace,Menlo,Consolas,monospace}
+.badge text-decoration:none
+.hl{opacity:0}
+.cpf g:target>.hl{opacity:1;fill:var(--cpf-hl)}
+.ev{scroll-margin:40px 120px}
+@media (prefers-reduced-motion:reduce){.hl{transition:none}}
+@media (prefers-reduced-motion:no-reduce){.hl{transition:opacity .18s ease}}
+table{border-collapse:collapse;min-width:760px}
+th,td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--cpf-line)}
+thead th{position:sticky;top:0;z-index:2;background:var(--cpf-head);color:var(--cpf-ink)}
+table th[scope="row"]{position:sticky;left:0;z-index:1;background:var(--cpf-page)}
+.back{color:var(--cpf-mut)}
+tr:target th,tr:target td{background:var(--cpf-hl)}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;background:var(--cpf-pill)}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}
+td:nth-child(6){text-align:right;font-variant-numeric:tabular-nums}
+@media print{.cpf-radio{display:none}.cpf-switch{display:none}.cpf-main{grid-template-columns:1fr}.cpf-flow,.cpf-detail{height:auto}}
+
+</style>
+</head>
+<body>
+<div class="cpf">
+<input type="radio" name="layout" id="lay-tb" class="cpf-radio">
+<input type="radio" name="layout" id="lay-sbs" class="cpf-radio" checked>
+<header class="cpf-head">
+<h1>Basic SIP call through a proxy</h1>
+<p>3 participants · 15 events</p>
+<div class="cpf-switch" role="group" aria-label="Layout">
+<label for="lay-tb">Top and bottom</label>
+<label for="lay-sbs">Side by side</label>
+</div>
+</header>
+<div class="cpf-main">
+<section class="cpf-flow" aria-label="Diagram"><div class="cpf-scroll">
+<svg class="cpf-svg" xmlns="http://www.w3.org/2000/svg" width="541.5" height="866" viewBox="0 0 541.5 866" role="img" aria-label="Call flow diagram">
+<line class="lf" x1="103" x2="103" y1="62" y2="854" stroke="var(--cpf-line, #b7c2cc)" stroke-dasharray="1 3"/>
+<line class="lf" x1="253" x2="253" y1="62" y2="854" stroke="var(--cpf-line, #b7c2cc)" stroke-dasharray="1 3"/>
+<line class="lf" x1="403" x2="403" y1="62" y2="854" stroke="var(--cpf-line, #b7c2cc)" stroke-dasharray="1 3"/>
+<g class="pf">
+<rect class="pf-box" x="76" y="16" width="54" height="46" rx="4" fill="var(--cpf-head, #e8eef4)" stroke="var(--cpf-line, #b7c2cc)"/>
+<text class="lb" x="103" y="27" fill="var(--cpf-ink, #17232e)" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" text-anchor="middle">Alice</text>
+<text class="lb" x="103" y="43" fill="var(--cpf-ink, #17232e)" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" text-anchor="middle">UA</text>
+</g>
+<g class="pf">
+<rect class="pf-box" x="226" y="16" width="54" height="30" rx="4" fill="var(--cpf-head, #e8eef4)" stroke="var(--cpf-line, #b7c2cc)"/>
+<text class="lb" x="253" y="27" fill="var(--cpf-ink, #17232e)" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" text-anchor="middle">Proxy</text>
+</g>
+<g class="pf">
+<rect class="pf-box" x="383.6" y="16" width="38.8" height="46" rx="4" fill="var(--cpf-head, #e8eef4)" stroke="var(--cpf-line, #b7c2cc)"/>
+<text class="lb" x="403" y="27" fill="var(--cpf-ink, #17232e)" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" text-anchor="middle">Bob</text>
+<text class="lb" x="403" y="43" fill="var(--cpf-ink, #17232e)" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" text-anchor="middle">UA</text>
+</g>
+<g class="ev ev-message" id="flow-e1">
+<rect class="hl" x="0" y="84" width="100%" height="62" fill="none"/>
+<line class="ln" x1="103" y1="139" x2="244" y2="139" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="253,139 244,135 244,143" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="178" y="104" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">INVITE</text>
+<text class="cap" x="178" y="120" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">SDP A</text>
+<a class="badge" href="#detail-e1">
+<circle class="bdg" cx="178" cy="139" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="178" y="143" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">1</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e2">
+<rect class="hl" x="0" y="146" width="100%" height="46" fill="none"/>
+<line class="ln" x1="253" y1="185" x2="112" y2="185" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="103,185 112,181 112,189" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="178" y="166" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">100 Trying</text>
+<a class="badge" href="#detail-e2">
+<circle class="bdg" cx="178" cy="185" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="178" y="189" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">2</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e3">
+<rect class="hl" x="0" y="192" width="100%" height="62" fill="none"/>
+<line class="ln" x1="253" y1="247" x2="394" y2="247" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="403,247 394,243 394,251" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="212" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">INVITE</text>
+<text class="cap" x="328" y="228" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">SDP A</text>
+<a class="badge" href="#detail-e3">
+<circle class="bdg" cx="328" cy="247" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="251" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">3</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e4">
+<rect class="hl" x="0" y="254" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="293" x2="262" y2="293" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="253,293 262,289 262,297" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="274" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">180 Ringing</text>
+<a class="badge" href="#detail-e4">
+<circle class="bdg" cx="328" cy="293" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="297" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">4</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e5">
+<rect class="hl" x="0" y="300" width="100%" height="46" fill="none"/>
+<line class="ln" x1="253" y1="339" x2="112" y2="339" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="103,339 112,335 112,343" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="178" y="320" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">180 Ringing</text>
+<a class="badge" href="#detail-e5">
+<circle class="bdg" cx="178" cy="339" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="178" y="343" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">5</text>
+</a>
+</g>
+<g class="ev ev-note" id="flow-e6">
+<rect class="hl" x="0" y="346" width="100%" height="46" fill="none"/>
+<rect class="nt" x="415" y="372" width="98.5" height="28" rx="4" fill="var(--cpf-note-fill, #fff8dd)" stroke="var(--cpf-note-line, #c8b45f)"/>
+<text class="cap" x="464.25" y="366" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">Phone rings</text>
+<a class="badge" href="#detail-e6">
+<circle class="bdg" cx="403" cy="377" r="5" fill="var(--cpf-accent, #2f6b8f)"/>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e7">
+<rect class="hl" x="0" y="392" width="100%" height="62" fill="none"/>
+<line class="ln" x1="403" y1="447" x2="262" y2="447" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="253,447 262,443 262,451" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="412" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<text class="cap" x="328" y="428" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">SDP B</text>
+<a class="badge" href="#detail-e7">
+<circle class="bdg" cx="328" cy="447" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="451" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">6</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e8">
+<rect class="hl" x="0" y="454" width="100%" height="62" fill="none"/>
+<line class="ln" x1="253" y1="509" x2="112" y2="509" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="103,509 112,505 112,513" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="178" y="474" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<text class="cap" x="178" y="490" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">SDP B</text>
+<a class="badge" href="#detail-e8">
+<circle class="bdg" cx="178" cy="509" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="178" y="513" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">7</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e9">
+<rect class="hl" x="0" y="516" width="100%" height="46" fill="none"/>
+<line class="ln" x1="103" y1="555" x2="394" y2="555" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="403,555 394,551 394,559" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="253" y="536" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">ACK</text>
+<a class="badge" href="#detail-e9">
+<circle class="bdg" cx="253" cy="555" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="253" y="559" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">8</text>
+</a>
+</g>
+<g class="ev ev-media" id="flow-e10">
+<rect class="hl" x="0" y="562" width="100%" height="46" fill="none"/>
+<line class="ln" x1="103" y1="601" x2="394" y2="601" stroke="#008080" stroke-dasharray="5 4"/>
+<text class="cap" x="253" y="582" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">RTP (Opus)</text>
+<a class="badge" href="#detail-e10">
+<circle class="bdg" cx="253" cy="601" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="253" y="605" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">9</text>
+</a>
+</g>
+<g class="ev ev-self" id="flow-e11">
+<rect class="hl" x="0" y="608" width="100%" height="54" fill="none"/>
+<polyline class="ln" points="103,638 137,638 137,656 103,656" stroke="var(--cpf-ink, #17232e)" fill="none"/>
+<polygon class="ah" points="103,656 112,652 112,660" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="143" y="628" text-anchor="start" fill="var(--cpf-ink, #17232e)" font-size="12.5">Hold timer</text>
+<a class="badge" href="#detail-e11">
+<circle class="bdg" cx="103" cy="643" r="5" fill="var(--cpf-accent, #2f6b8f)"/>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e12">
+<rect class="hl" x="0" y="662" width="100%" height="46" fill="none"/>
+<line class="ln" x1="403" y1="701" x2="262" y2="701" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="253,701 262,697 262,705" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="682" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">BYE</text>
+<a class="badge" href="#detail-e12">
+<circle class="bdg" cx="328" cy="701" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="705" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">10</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e13">
+<rect class="hl" x="0" y="708" width="100%" height="46" fill="none"/>
+<line class="ln" x1="253" y1="747" x2="394" y2="747" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="403,747 394,743 394,751" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="328" y="728" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e13">
+<circle class="bdg" cx="328" cy="747" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="328" y="751" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">11</text>
+</a>
+</g>
+<g class="ev ev-message" id="flow-e14">
+<rect class="hl" x="0" y="754" width="100%" height="46" fill="none"/>
+<line class="ln" x1="253" y1="793" x2="112" y2="793" stroke="var(--cpf-ink, #17232e)"/>
+<polygon class="ah" points="103,793 112,789 112,797" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="178" y="774" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">BYE</text>
+<a class="badge" href="#detail-e14">
+<circle class="bdg" cx="178" cy="793" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="178" y="797" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">12</text>
+</a>
+</g>
+<g class="ev ev-reply" id="flow-e15">
+<rect class="hl" x="0" y="800" width="100%" height="46" fill="none"/>
+<line class="ln" x1="103" y1="839" x2="244" y2="839" stroke="var(--cpf-ink, #17232e)" stroke-dasharray="6 4"/>
+<polygon class="ah" points="253,839 244,835 244,843" fill="var(--cpf-ink, #17232e)"/>
+<text class="cap" x="178" y="820" text-anchor="middle" fill="var(--cpf-ink, #17232e)" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="12.5">200 OK</text>
+<a class="badge" href="#detail-e15">
+<circle class="bdg" cx="178" cy="839" r="10" fill="var(--cpf-accent, #2f6b8f)"/>
+<text class="bn" x="178" y="843" font-size="12" text-anchor="middle" fill="var(--cpf-page, #ffffff)">13</text>
+</a>
+</g>
+</svg>
+</div></section>
+<section class="cpf-detail" aria-label="Details"><div class="cpf-tscroll">
+<table class="cpf-table">
+<thead><tr><th>#</th><th>Kind</th><th>From → To</th><th>Message and details</th><th>Notes</th><th>Line</th></tr></thead>
+<tbody>
+<tr id="detail-e1">
+<th class="k" scope="row"><a class="back" href="#flow-e1" aria-label="Back to message 1 in the diagram">↑ 1</a></th>
+<td><span class="pill">message</span></td>
+<td>Alice UA → Proxy</td>
+<td><strong>INVITE</strong><br><strong>SDP A</strong><br><code>Alice offers PCMU and Opus.</code></td>
+<td>—</td>
+<td>6</td>
+</tr>
+<tr id="detail-e2">
+<th class="k" scope="row"><a class="back" href="#flow-e2" aria-label="Back to message 2 in the diagram">↑ 2</a></th>
+<td><span class="pill">message</span></td>
+<td>Proxy → Alice UA</td>
+<td><strong>100 Trying</strong></td>
+<td><ul><li>Stops INVITE retransmits from Alice.</li></ul></td>
+<td>8</td>
+</tr>
+<tr id="detail-e3">
+<th class="k" scope="row"><a class="back" href="#flow-e3" aria-label="Back to message 3 in the diagram">↑ 3</a></th>
+<td><span class="pill">message</span></td>
+<td>Proxy → Bob UA</td>
+<td><strong>INVITE</strong><br><strong>SDP A</strong></td>
+<td>—</td>
+<td>10</td>
+</tr>
+<tr id="detail-e4">
+<th class="k" scope="row"><a class="back" href="#flow-e4" aria-label="Back to message 4 in the diagram">↑ 4</a></th>
+<td><span class="pill">message</span></td>
+<td>Bob UA → Proxy</td>
+<td><strong>180 Ringing</strong></td>
+<td>—</td>
+<td>11</td>
+</tr>
+<tr id="detail-e5">
+<th class="k" scope="row"><a class="back" href="#flow-e5" aria-label="Back to message 5 in the diagram">↑ 5</a></th>
+<td><span class="pill">message</span></td>
+<td>Proxy → Alice UA</td>
+<td><strong>180 Ringing</strong></td>
+<td>—</td>
+<td>12</td>
+</tr>
+<tr id="detail-e6">
+<th class="k" scope="row"><a class="back" href="#flow-e6" aria-label="Back to this event in the diagram">↑ ·</a></th>
+<td><span class="pill">note</span></td>
+<td>note on Bob UA</td>
+<td><strong>Phone rings</strong></td>
+<td>—</td>
+<td>13</td>
+</tr>
+<tr id="detail-e7">
+<th class="k" scope="row"><a class="back" href="#flow-e7" aria-label="Back to message 6 in the diagram">↑ 6</a></th>
+<td><span class="pill">message</span></td>
+<td>Bob UA → Proxy</td>
+<td><strong>200 OK</strong><br><strong>SDP B</strong><br><code>Bob answers. SDP B selects Opus.</code></td>
+<td>—</td>
+<td>14</td>
+</tr>
+<tr id="detail-e8">
+<th class="k" scope="row"><a class="back" href="#flow-e8" aria-label="Back to message 7 in the diagram">↑ 7</a></th>
+<td><span class="pill">message</span></td>
+<td>Proxy → Alice UA</td>
+<td><strong>200 OK</strong><br><strong>SDP B</strong></td>
+<td>—</td>
+<td>16</td>
+</tr>
+<tr id="detail-e9">
+<th class="k" scope="row"><a class="back" href="#flow-e9" aria-label="Back to message 8 in the diagram">↑ 8</a></th>
+<td><span class="pill">message</span></td>
+<td>Alice UA → Bob UA</td>
+<td><strong>ACK</strong><br><code>ACK goes end to end.</code></td>
+<td><ul><li>The proxy did not Record-Route.</li></ul></td>
+<td>17</td>
+</tr>
+<tr id="detail-e10">
+<th class="k" scope="row"><a class="back" href="#flow-e10" aria-label="Back to message 9 in the diagram">↑ 9</a></th>
+<td><span class="pill">media</span></td>
+<td>Alice UA ⋯ Bob UA</td>
+<td><strong>RTP (Opus)</strong></td>
+<td>—</td>
+<td>20</td>
+</tr>
+<tr id="detail-e11">
+<th class="k" scope="row"><a class="back" href="#flow-e11" aria-label="Back to this event in the diagram">↑ ·</a></th>
+<td><span class="pill">self</span></td>
+<td>Alice UA → Alice UA</td>
+<td><strong>Hold timer</strong></td>
+<td>—</td>
+<td>21</td>
+</tr>
+<tr id="detail-e12">
+<th class="k" scope="row"><a class="back" href="#flow-e12" aria-label="Back to message 10 in the diagram">↑ 10</a></th>
+<td><span class="pill">message</span></td>
+<td>Bob UA → Proxy</td>
+<td><strong>BYE</strong></td>
+<td>—</td>
+<td>22</td>
+</tr>
+<tr id="detail-e13">
+<th class="k" scope="row"><a class="back" href="#flow-e13" aria-label="Back to message 11 in the diagram">↑ 11</a></th>
+<td><span class="pill">reply</span></td>
+<td>Proxy → Bob UA</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>22</td>
+</tr>
+<tr id="detail-e14">
+<th class="k" scope="row"><a class="back" href="#flow-e14" aria-label="Back to message 12 in the diagram">↑ 12</a></th>
+<td><span class="pill">message</span></td>
+<td>Proxy → Alice UA</td>
+<td><strong>BYE</strong></td>
+<td>—</td>
+<td>23</td>
+</tr>
+<tr id="detail-e15">
+<th class="k" scope="row"><a class="back" href="#flow-e15" aria-label="Back to message 13 in the diagram">↑ 13</a></th>
+<td><span class="pill">reply</span></td>
+<td>Alice UA → Proxy</td>
+<td><strong>200 OK</strong></td>
+<td>—</td>
+<td>23</td>
+</tr>
+</tbody>
+</table>
+</div></section>
+</div>
+</div>
+</body>
+</html>

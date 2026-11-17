@@ -1,0 +1,28 @@
+@startuml
+hide footbox
+participant "alice" as p1
+participant "proxy" as p2
+participant "10.0.0.3" as p3
+p1 -> p2 : (1) INVITE
+' e1 note: Date 11~/05~/2026 10:00:00.000
+' e1 note:     0 from initial
+' e1 note:     36000 from last
+' e1 note: Source Address: 10.0.0.1 (alice)
+' e1 note: Destination Address: 10.0.0.2 (proxy)
+' e1 comment: INVITE sip:bob@example.com SIP~/2.0
+' e1 comment: Via: SIP~/2.0~/UDP 10.0.0.1
+p2 -> p1 : (2) 100 Trying
+' e2 note: Date 11~/05~/2026 10:00:00.120
+' e2 note:     0.12 from initial
+' e2 note:     0.12 from last
+' e2 note: Source Address: 10.0.0.2 (proxy)
+' e2 note: Destination Address: 10.0.0.1 (alice)
+' e2 comment: SIP~/2.0 100 Trying
+p2 -> p3 : (3) INVITE
+' e3 note: Date 11~/05~/2026 10:00:00.450
+' e3 note:     0.45 from initial
+' e3 note:     0.33 from last
+' e3 note: Source Address: 10.0.0.2 (proxy)
+' e3 note: Destination Address: 10.0.0.3 (a)
+' e3 comment: INVITE sip:bob@example.com SIP~/2.0
+@enduml

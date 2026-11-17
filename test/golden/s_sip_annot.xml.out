@@ -1,0 +1,220 @@
+<plot>
+<picture>
+        Alice     Proxy      Bob
+         UA                  UA
+          |         |         |
+          |         |         |
+          |(<a href='#t1'>1</a>)<a name='m1'/> INVITE         |
+          |SDP A    |         |
+          |--------&gt;|         |
+          |         |         |
+          |         |         |
+          |(<a href='#t2'>2</a>)<a name='m2'/> 100 Trying     |
+          |&lt;--------|         |
+          |         |         |
+          |         |(<a href='#t3'>3</a>)<a name='m3'/> INVITE
+          |         |SDP A    |
+          |         |--------&gt;|
+          |         |         |
+          |         |         |
+          |         |(<a href='#t4'>4</a>)<a name='m4'/> 180 Ringing
+          |         |&lt;--------|
+          |         |         |
+          |         |         |
+          |(<a href='#t5'>5</a>)<a name='m5'/> 180 Ringing    |
+          |&lt;--------|         |
+          |         |         |
+          |         |         |
+          |         |         |Phone rings
+          |         |         |
+          |         |         |
+          |         |(<a href='#t6'>6</a>)<a name='m6'/> 200 OK
+          |         |SDP B    |
+          |         |&lt;--------|
+          |         |         |
+          |(<a href='#t7'>7</a>)<a name='m7'/> 200 OK         |
+          |SDP B    |         |
+          |&lt;--------|         |
+          |         |         |
+          |         |         |
+          |(<a href='#t8'>8</a>)<a name='m8'/> ACK  |         |
+          |------------------&gt;|
+          |         |         |
+          |         |         |
+          |(<a href='#t9'>9</a>)<a name='m9'/> RTP (Opus)     |
+          |...................|
+          |         |         |
+          |         |         |
+          |Hold timer         |
+          |         |         |
+          |         |         |
+          |         |         |
+          |         |(<a href='#t10'>10</a>)<a name='m10'/> BYE |
+          |         |&lt;--------|
+          |         |         |
+          |         |         |
+          |         |(<a href='#t11'>11</a>)<a name='m11'/> 200 OK
+          |         |--------&gt;|
+          |         |         |
+          |         |         |
+          |(<a href='#t12'>12</a>)<a name='m12'/> BYE |         |
+          |&lt;--------|         |
+          |         |         |
+          |         |         |
+          |(<a href='#t13'>13</a>)<a name='m13'/> 200 OK        |
+          |--------&gt;|         |
+          |         |         |
+          |         |         |
+          |         |         |
+          |         |         |
+</picture>
+<message>
+<number>1</number>
+<captions>
+<caption>INVITE</caption>
+<caption>SDP A</caption>
+</captions>
+<notes>
+<note>
+Alice offers PCMU and Opus.
+</note>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>2</number>
+<captions>
+<caption>100 Trying</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+<comment>
+Stops INVITE retransmits from Alice.
+</comment>
+</comments>
+</message>
+<message>
+<number>3</number>
+<captions>
+<caption>INVITE</caption>
+<caption>SDP A</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>4</number>
+<captions>
+<caption>180 Ringing</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>5</number>
+<captions>
+<caption>180 Ringing</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>6</number>
+<captions>
+<caption>200 OK</caption>
+<caption>SDP B</caption>
+</captions>
+<notes>
+<note>
+Bob answers. SDP B selects Opus.
+</note>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>7</number>
+<captions>
+<caption>200 OK</caption>
+<caption>SDP B</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>8</number>
+<captions>
+<caption>ACK</caption>
+</captions>
+<notes>
+<note>
+ACK goes end to end.
+</note>
+</notes>
+<comments>
+<comment>
+The proxy did not Record-Route.
+</comment>
+</comments>
+</message>
+<message>
+<number>9</number>
+<captions>
+<caption>RTP (Opus)</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>10</number>
+<captions>
+<caption>BYE</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>11</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>12</number>
+<captions>
+<caption>BYE</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>13</number>
+<captions>
+<caption>200 OK</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+</plot>

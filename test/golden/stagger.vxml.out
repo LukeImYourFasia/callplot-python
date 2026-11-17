@@ -1,0 +1,76 @@
+<plot>
+<picture>
+<html xmlns:v='urn:schemas-microsoft-com:vml'
+xmlns='http://www.w3.org/TR/REC-html40'>
+
+<head>
+
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+
+</head>
+
+<body>
+<!-- totalHeight =20-->
+<!-- totalWidth =70-->
+<v:group style='position:relative;left:1pt;top:2pt;width:302pt;height:172pt;' coordsize='70,40' >
+
+<v:rect fillcolor='red' style='position:absolute;left:2.0;top:-4.0;width:16;height:4.0'>  <v:stroke     />
+</v:rect> <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:-1.8;left:2.3;width:16;height:4.0' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="A" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:center'/> 
+ </v:shape> 
+<v:line  from='10.0,0.0' to='10.0,40'>  <v:stroke   />
+</v:line><v:rect fillcolor='red' style='position:absolute;left:12.0;top:2.0;width:16;height:4.0'>  <v:stroke     />
+</v:rect> <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:4.2;left:12.3;width:16;height:4.0' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="B" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:center'/> 
+ </v:shape> 
+<v:line  from='20.0,6.0' to='20.0,40'>  <v:stroke   />
+</v:line><v:rect fillcolor='red' style='position:absolute;left:22.0;top:-4.0;width:16;height:4.0'>  <v:stroke     />
+</v:rect> <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:-1.8;left:22.3;width:16;height:4.0' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="C" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:center'/> 
+ </v:shape> 
+<v:line  from='30.0,0.0' to='30.0,40'>  <v:stroke   />
+</v:line><v:rect fillcolor='red' style='position:absolute;left:32.0;top:2.0;width:16;height:4.0'>  <v:stroke     />
+</v:rect> <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:4.2;left:32.3;width:16;height:4.0' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="D" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:center'/> 
+ </v:shape> 
+<v:line  from='40.0,6.0' to='40.0,40'>  <v:stroke   />
+</v:line><v:rect fillcolor='red' style='position:absolute;left:42.0;top:-4.0;width:16;height:4.0'>  <v:stroke     />
+</v:rect> <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:-1.8;left:42.3;width:16;height:4.0' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="E" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:center'/> 
+ </v:shape> 
+<v:line  from='50.0,0.0' to='50.0,40'>  <v:stroke   />
+</v:line> <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:14;left:11;width:1;height:1' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="one" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:left' /> 
+ </v:shape> 
+ <v:line from='10,16' to='20,16'>
+  <v:stroke     EndArrow='Open' />
+ </v:line>
+ <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:22;left:31;width:1;height:1' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="two" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:left' /> 
+ </v:shape> 
+ <v:line from='30,24' to='40,24'>
+  <v:stroke     EndArrow='Open' />
+ </v:line>
+ <v:shape fillcolor='black' strokeweight='0pt' coordorigin='0 0' coordsize='100 100' style='position:absolute;top:30;left:11;width:1;height:1' path = 'm 0,0 l 100,0  e'>
+ <v:path textpathok='True'/> 
+ <v:textpath on='True' string="three" style='FONT-FAMILY:"courier new";FONT-SIZE:9pt;V-TEXT-ALIGN:left' /> 
+ </v:shape> 
+ <v:line from='50,32' to='10,32'>
+  <v:stroke     EndArrow='Open' />
+ </v:line>
+
+</v:group>
+</body>
+</html>   

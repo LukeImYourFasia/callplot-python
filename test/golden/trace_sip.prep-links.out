@@ -1,0 +1,29 @@
+opt/messageNumbering/on
+opt/xml/on
+opt/crunch/on
+opt/links/on
+guy/alice/alice
+guy/proxy/proxy
+alice->proxy/INVITE
+!!Date 11/05/2026 10:00:00.000
+!!    0 from initial
+!!    36000 from last
+!!Source Address: 10.0.0.1 (alice)
+!!Destination Address: 10.0.0.2 (proxy)
+!INVITE sip:bob@example.com SIP/2.0
+!Via: SIP/2.0/UDP 10.0.0.1
+proxy->alice/100 Trying
+!!Date 11/05/2026 10:00:00.120
+!!    0.12 from initial
+!!    0.12 from last
+!!Source Address: 10.0.0.2 (proxy)
+!!Destination Address: 10.0.0.1 (alice)
+!SIP/2.0 100 Trying
+guy/a/10.0.0.3
+proxy->a/INVITE
+!!Date 11/05/2026 10:00:00.450
+!!    0.45 from initial
+!!    0.33 from last
+!!Source Address: 10.0.0.2 (proxy)
+!!Destination Address: 10.0.0.3 (a)
+!INVITE sip:bob@example.com SIP/2.0

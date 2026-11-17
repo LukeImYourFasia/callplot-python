@@ -1,0 +1,8 @@
+@startuml
+hide footbox
+participant "One" as p1
+participant "Two\nlines" as p2
+participant "Three\nline\nthree" as p3
+p1 -> p2 : msg one
+p2 -> p3 : msg two
+@enduml

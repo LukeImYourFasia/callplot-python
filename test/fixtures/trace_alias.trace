@@ -1,0 +1,13 @@
+@ 10.0.0.1 alice
+@ 10.0.0.9 alice
+@opt/stagger/on
+----------------------------------------
+Date 11/05/2026 10:00:03.000
+Source Address: 10.0.0.1
+Destination Address: 10.0.0.5
+MESSAGE sip:bob@example.com SIP/2.0
+----------------------------------------
+Date 11/05/2026 10:00:03.500
+Source Address: 10.0.0.9
+Destination Address: 10.0.0.5
+SIP/2.0 202 Accepted

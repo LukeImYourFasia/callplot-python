@@ -1,0 +1,6 @@
+.PS    
+Pa: { box "A1"; down; La: line 1.75i from last box.s }; right; move 2i
+Pa: { box "A2"; down; La: line 1.75i from last box.s }; right; move 2i
+{ line invis "x" "" from La.start + (0,-0.8333333333333334) to La.start + (0.1,-0.8333333333333334);  }
+.PE
+

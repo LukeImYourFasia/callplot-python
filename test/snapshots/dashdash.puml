@@ -1,0 +1,10 @@
+@startuml
+hide footbox
+participant "A" as p1
+participant "B" as p2
+participant "C" as p3
+participant "D" as p4
+p1 <-[#008080]-> p4 : RTP
+p2 <-[#008080]-> p3 : x\ny
+p1 <-[#008080]-> p4 : dots
+@enduml

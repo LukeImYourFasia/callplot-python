@@ -1,0 +1,4 @@
+{
+  "cmd": "plottable",
+  "args": ["-debug", "-style", "htmltable3", "s_sip_annot"]
+}

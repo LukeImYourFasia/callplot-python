@@ -1,0 +1,85 @@
+<plot>
+<picture>
+        Fred          Barney
+          |              |
+          |              |
+          |              |
+          |(<a href='#t1'>1</a>)<a name='m1'/> Please    |
+          |-------------&gt;|
+          |              |
+          |              |
+          |              |Gives bowling ball
+          |              |
+          |              |
+          |              |
+          |(<a href='#t2'>2</a>)<a name='m2'/> Stuff     |
+          |&lt;-------------|
+          |              |
+          |              |
+          |(<a href='#t3'>3</a>)<a name='m3'/> Thank You |
+          |-------------&gt;|
+          |              |
+          |              |
+          |(<a href='#t4'>4</a>)<a name='m4'/> You're Welcome
+          |&lt;-------------|
+          |              |
+          |              |
+          |              |
+          |              |
+</picture>
+<message>
+<number>1</number>
+<captions>
+<caption>Please</caption>
+</captions>
+<notes>
+<note>
+Fred is asking Barney for his bowling ball nicely.
+</note>
+</notes>
+<comments>
+<comment>
+Fred: "Please"
+</comment>
+</comments>
+</message>
+<message>
+<number>2</number>
+<captions>
+<caption>Stuff</caption>
+</captions>
+<notes>
+<note>
+Barney gives Fred the ball.
+</note>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>3</number>
+<captions>
+<caption>Thank You</caption>
+</captions>
+<notes>
+<note>
+Fred thanks Barney
+</note>
+</notes>
+<comments>
+</comments>
+</message>
+<message>
+<number>4</number>
+<captions>
+<caption>You're Welcome</caption>
+</captions>
+<notes>
+<note>
+Barney replies
+</note>
+</notes>
+<comments>
+</comments>
+</message>
+</plot>

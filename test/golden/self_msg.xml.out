@@ -1,0 +1,28 @@
+<plot>
+<picture>
+          A         B
+          |         |
+          |         |
+          |         |
+          |loop back|
+          |         |
+          |         |
+          |         |
+          |(<a href='#t1'>1</a>)<a name='m1'/> x    |
+          |--------&gt;|
+          |         |
+          |         |
+          |         |
+          |         |
+</picture>
+<message>
+<number>1</number>
+<captions>
+<caption>x</caption>
+</captions>
+<notes>
+</notes>
+<comments>
+</comments>
+</message>
+</plot>

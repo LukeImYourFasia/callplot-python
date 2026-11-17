@@ -1,0 +1,3 @@
+Picked up JAVA_TOOL_OPTIONS: -Dfile.encoding=UTF-8
+
+file:///tmp/tmp.X6mS1R3vlW; Line 11; Column 15; XSLT Error (javax.xml.transform.TransformerException): The entity name must immediately follow the '&' in the entity reference.

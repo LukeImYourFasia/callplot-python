@@ -1,0 +1,23 @@
+opt/messageNumbering/on
+opt/title/Basic SIP call through a proxy
+guy/a/Alice^UA
+guy/p/Proxy
+guy/b/Bob^UA
+a->p/INVITE^SDP A
+!!Alice offers PCMU and Opus.
+p->a/100 Trying
+!Stops INVITE retransmits from Alice.
+p->b/INVITE^SDP A
+b->p/180 Ringing
+p->a/180 Ringing
+note/b/Phone rings
+b->p/200 OK^SDP B
+!!Bob answers. SDP B selects Opus.
+p->a/200 OK^SDP B
+a->b/ACK
+!!ACK goes end to end.
+!The proxy did not Record-Route.
+a..b/RTP (Opus)
+a->a/Hold timer
+b->p/BYE/200 OK
+p->a/BYE/200 OK

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html><body><small><small><pre><picture>
+          A         B
+          |         |
+          |         |
+          |         |
+          |(<a href="#t1">1</a>)<a name="m1"/> req  |
+          |--------&gt;|
+          |         |
+          |         |
+          |(<a href="#t2">2</a>)<a name="m2"/> note one
+          |         |
+          |         |
+          |         |
+          |(<a href="#t3">3</a>)<a name="m3"/> resp |
+          |&lt;--------|
+          |         |
+          |         |
+          |         |(<a href="#t4">4</a>)<a name="m4"/> note two
+          |         |
+          |         |
+          |         |
+          |         |
+          |         |
+</picture></pre></small></small><table border="1"><tr><th>Seq</th><th>Message and Details</th><th>Notes</th></tr><tr><td><message><a name="t1"/><a href="#m1">1</a></message></td><td><strong>req</strong><br/></td><td/></tr><tr><td><message><a name="t2"/><a href="#m2">2</a></message></td><td><strong>note one</strong><br/></td><td/></tr><tr><td><message><a name="t3"/><a href="#m3">3</a></message></td><td><strong>resp</strong><br/></td><td/></tr><tr><td><message><a name="t4"/><a href="#m4">4</a></message></td><td><strong>note two</strong><br/></td><td/></tr></table></body></html>

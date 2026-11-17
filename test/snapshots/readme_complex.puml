@@ -1,0 +1,71 @@
+@startuml
+hide footbox
+participant "Caller" as p1
+participant "GW" as p2
+participant "AS" as p3
+participant "MS" as p4
+participant "Web" as p5
+participant "RADIUS" as p6
+participant "Callee" as p7
+p1 -> p2 : (1) Call #
+p2 -> p3 : (2) INVITE SDP A
+p3 --> p2 : (3) 183 Trying
+p3 -> p4 : (4) INVITE SDP A
+p4 -> p5 : (5) HTTP GET
+p5 --> p4 : (6) 200 OK (VXML)
+p4 -> p3 : (7) 200 OK SDP B
+p3 -> p2 : (8) 200 OK SDP B
+p2 -> p3 : (9) ACK
+p3 -> p4 : (10) ACK
+p2 <-[#008080]-> p4 : (11) RTP
+p4 -> p5 : (12) HTTP POST
+p5 --> p4 : (13) 200 OK
+p5 -> p6 : (14) Authorize
+p6 --> p5 : (15) Balance
+p4 -> p5 : (16) HTTP POST
+p5 --> p4 : (17) 200 OK
+p5 -> p6 : (18) Callee Number
+p6 --> p5 : (19) Time Remaining
+p2 <-[#008080]-> p4 : (20) Music
+p3 -> p7 : (21) INVITE
+p7 --> p3 : (22) 200 OK
+p3 -> p2 : (23) INVITE
+p2 --> p3 : (24) 200 OK
+p3 -> p4 : (25) BYE
+p4 --> p3 : (26) 200 OK
+p3 -> p2 : (27) ACK
+p3 -> p7 : (28) ACK
+p2 <-[#008080]-> p7 : (29) PHONE CALL
+p3 -> p4 : (30) INVITE
+p4 -> p5 : (31) HTTP GET
+p5 --> p4 : (32) 200 OK (VXML)
+p4 -> p3 : (33) 200 OK
+p3 -> p7 : (34) INVITE (hold)
+p7 --> p3 : (35) 200 OK
+p3 -> p2 : (36) INVITE
+p2 --> p3 : (37) 200 OK
+p3 -> p4 : (38) ACK
+p3 -> p2 : (39) ACK
+p4 <-[#008080]-> p2 : (40) Time Warning
+p4 -> p3 : (41) BYE
+p3 --> p4 : (42) 200 OK
+p3 -> p7 : (43) INVITE
+p7 --> p3 : (44) 200 OK
+p3 -> p2 : (45) INVITE
+p2 --> p3 : (46) 200 OK
+p3 -> p7 : (47) ACK
+p3 -> p2 : (48) ACK
+p2 <-[#008080]-> p7 : (49) PHONE CALL
+p3 -> p4 : (50) INVITE
+p4 -> p5 : (51) HTTP GET
+p5 --> p4 : (52) 200 OK (VXML)
+p4 -> p3 : (53) 200 OK
+p3 -> p7 : (54) BYE
+p7 --> p3 : (55) 200 OK
+p3 -> p2 : (56) INVITE
+p2 --> p3 : (57) 200 OK
+p3 -> p2 : (58) ACK
+p4 <-[#008080]-> p2 : (59) Post~-call Announcement
+p3 -> p2 : (60) BYE
+p2 --> p3 : (61) 200 OK
+@enduml

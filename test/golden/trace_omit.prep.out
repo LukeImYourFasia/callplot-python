@@ -1,0 +1,17 @@
+opt/messageNumbering/on
+opt/xml/on
+opt/crunch/on
+opt/links/off
+guy/a/10.0.0.1
+guy/b/10.0.0.2
+-a->b/INVITE
+!-INVITE sip:bob@example.com SIP/2.0
+-b->a/180 Ringing
+!-SIP/2.0 180 Ringing
+b->a/200 OK
+!!Date 11/05/2026 10:00:02.900
+!!    0.9 from initial
+!!    0.8 from last
+!!Source Address: 10.0.0.2
+!!Destination Address: 10.0.0.1 (a)
+!SIP/2.0 200 OK

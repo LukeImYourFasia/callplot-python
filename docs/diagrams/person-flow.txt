@@ -1,0 +1,82 @@
+      Engineer        Terminal        callplot          Files          Browser
+          |               |               |               |               |
+          |               |               |               |               |
+          |(1) write calls.msd            |               |               |
+          |guy, arrows, ! comments        |               |               |
+          |---------------------------------------------->|               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |(2) callplot -html calls.msd > calls.html      |               |
+          |-------------->|               |               |               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |(3) run command|               |               |
+          |               |-------------->|               |               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |(4) read calls.msd             |
+          |               |               |-------------->|               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |(5) text       |               |
+          |               |               |<--------------|               |
+          |               |               |               |               |
+          |               |               |parse, layout, draw            |
+          |               |               |diagram + table + links        |
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |(6) one HTML page on stdout    |               |
+          |               |<--------------|               |               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |(7) save calls.html            |               |
+          |               |------------------------------>|               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |(8) open calls.html            |               |               |
+          |-------------------------------------------------------------->|
+          |               |               |               |               |
+          |               |               |               |(9) load the file
+          |               |               |               |no server, no network
+          |               |               |               |<--------------|
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |               |(10) self-contained page
+          |               |               |               |-------------->|
+          |               |               |               |               |
+          |               |               |               |               |
+          |(11) diagram on top, table below               |               |
+          |<--------------------------------------------------------------|
+          |               |               |               |               |
+          |               |               |               |               |
+          |(12) click badge 7 on the diagram              |               |
+          |-------------------------------------------------------------->|
+          |               |               |               |               |
+          |               |               |               |               |jump to row 7
+          |               |               |               |               |row is highlighted
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |(13) click row 7 back link     |               |               |
+          |-------------------------------------------------------------->|
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |               |               |scroll diagram to event 7
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |               |               |The back link is in the left c*
+          |               |               |               |               |It stays in view when the tabl*
+          |               |               |               |               |
+          |               |               |               |               |
+          |(14) switch to side by side    |               |               |
+          |radio switch, no JS            |               |               |
+          |-------------------------------------------------------------->|
+          |               |               |               |               |
+          |               |               |               |               |
+          |(15) edit calls.msd, run callplot again        |               |
+          |-------------->|               |               |               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |               |               |
+          |               |               |               |               |

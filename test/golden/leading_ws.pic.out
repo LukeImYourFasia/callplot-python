@@ -1,0 +1,6 @@
+.PS    
+Pb: { box "B"; down; Lb: line 1.75i from last box.s }; right; move 2i
+Pc: { box "C"; down; Lc: line 1.75i from last box.s }; right; move 2i
+{ arrow "x" "" from Lb.start + (0,-0.8333333333333334) to Lc.start + (0,-0.8333333333333334);  }
+.PE
+
